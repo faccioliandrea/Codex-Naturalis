@@ -1,0 +1,924 @@
+{
+    "cards": [
+        {
+            "id": "062",
+            "centerSymbol": "BUTTERFLY",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "063",
+            "centerSymbol": "BUTTERFLY",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "064",
+            "centerSymbol": "BUTTERFLY",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "065",
+            "centerSymbol": "BUTTERFLY",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "POTION"
+                }
+            ]
+        },
+        {
+            "id": "066",
+            "centerSymbol": "BUTTERFLY",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "SCROLL"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "067",
+            "centerSymbol": "BUTTERFLY",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "068",
+            "centerSymbol": "BUTTERFLY",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "069",
+            "centerSymbol": "BUTTERFLY",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                }
+            ]
+        },
+        {
+            "id": "070",
+            "centerSymbol": "BUTTERFLY",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                }
+            ]
+        },
+        {
+            "id": "071",
+            "centerSymbol": "BUTTERFLY",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "072",
+            "centerSymbol": "WOLF",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "073",
+            "centerSymbol": "WOLF",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "074",
+            "centerSymbol": "WOLF",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                }
+            ]
+        },
+        {
+            "id": "075",
+            "centerSymbol": "WOLF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "FEATHER"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                }
+            ]
+        },
+        {
+            "id": "076",
+            "centerSymbol": "WOLF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "SCROLL"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "077",
+            "centerSymbol": "WOLF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "POTION"
+                }
+            ]
+        },
+        {
+            "id": "078",
+            "centerSymbol": "WOLF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "079",
+            "centerSymbol": "WOLF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": "WOLF"
+                }
+            ]
+        },
+        {
+            "id": "080",
+            "centerSymbol": "WOLF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                }
+            ]
+        },
+        {
+            "id": "081",
+            "centerSymbol": "WOLF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "082",
+            "centerSymbol": "LEAF",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "083",
+            "centerSymbol": "LEAF",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "084",
+            "centerSymbol": "LEAF",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                }
+            ]
+        },
+        {
+            "id": "085",
+            "centerSymbol": "LEAF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "SCROLL"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                }
+            ]
+        },
+        {
+            "id": "086",
+            "centerSymbol": "LEAF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "POTION"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "087",
+            "centerSymbol": "LEAF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "FEATHER"
+                }
+            ]
+        },
+        {
+            "id": "088",
+            "centerSymbol": "LEAF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "089",
+            "centerSymbol": "LEAF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                }
+            ]
+        },
+        {
+            "id": "090",
+            "centerSymbol": "LEAF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "091",
+            "centerSymbol": "LEAF",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                }
+            ]
+        },
+        {
+            "id": "092",
+            "centerSymbol": "MUSHROOM",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                }
+            ]
+        },
+        {
+            "id": "093",
+            "centerSymbol": "MUSHROOM",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "094",
+            "centerSymbol": "MUSHROOM",
+            "points": 1,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "095",
+            "centerSymbol": "MUSHROOM",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "SCROLL"
+                }
+            ]
+        },
+        {
+            "id": "096",
+            "centerSymbol": "MUSHROOM",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "POTION"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "097",
+            "centerSymbol": "MUSHROOM",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "FEATHER"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "LEAF"
+                }
+            ]
+        },
+        {
+            "id": "098",
+            "centerSymbol": "MUSHROOM",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "099",
+            "centerSymbol": "MUSHROOM",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                }
+            ]
+        },
+        {
+            "id": "100",
+            "centerSymbol": "MUSHROOM",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                }
+            ]
+        },
+        {
+            "id": "101",
+            "centerSymbol": "MUSHROOM",
+            "points": 0,
+            "corners": [
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": false,
+                    "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "MUSHROOM"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "cards": [
+        {
+            "id": "008",
+            "points": 2,
+            "direction": "TOPLEFT",
+            "verticalKingdom": "BUTTERFLY",
+            "horizontalKingdom": "WOLF"
+        },
+        {
+            "id": "009",
+            "points": 2,
+            "direction": "TOPRIGHT",
+            "verticalKingdom": "WOLF",
+            "horizontalKingdom": "MUSHROOM"
+        },
+        {
+            "id": "010",
+            "points": 2,
+            "direction": "BOTTOMLEFT",
+            "verticalKingdom": "LEAF",
+            "horizontalKingdom": "BUTTERFLY"
+        },
+        {
+            "id": "011",
+            "points": 2,
+            "direction": "BOTTOMRIGHT",
+            "verticalKingdom": "MUSHROOM",
+            "horizontalKingdom": "LEAF"
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "cards": [
+        {
+            "id": "012",
+            "points": 2,
+            "isPrimary": true,
+            "kingdom": "BUTTERFLY"
+        },
+        {
+            "id": "013",
+            "points": 2,
+            "isPrimary": false,
+            "kingdom": "WOLF"
+        },
+        {
+            "id": "014",
+            "points": 2,
+            "isPrimary": true,
+            "kingdom": "LEAF"
+        },
+        {
+            "id": "015",
+            "points": 2,
+            "isPrimary": false,
+            "kingdom": "MUSHROOM"
+        }
+    ]
+}

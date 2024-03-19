@@ -1,0 +1,92 @@
+{
+    "cards":  [
+        {
+            "id": "000",
+            "points": 2,
+            "goalRequirements": [
+                {
+                    "symbol": "FEATHER",
+                    "quantity": 2
+                }
+            ]
+        },
+        {
+            "id": "001",
+            "points": 2,
+            "goalRequirements": [
+                {
+                    "symbol": "POTION",
+                    "quantity": 2
+                }
+            ]
+        },
+        {
+            "id": "002",
+            "points": 2,
+            "goalRequirements": [
+                {
+                    "symbol": "SCROLL",
+                    "quantity": 2
+                }
+            ]
+        },
+        {
+            "id": "003",
+            "points": 2,
+            "goalRequirements": [
+                {
+                    "symbol": "FEATHER",
+                    "quantity": 1
+                },
+                {
+                    "symbol": "POTION",
+                    "quantity": 1
+                },
+                {
+                    "symbol": "SCROLL",
+                    "quantity": 1
+                }
+            ]
+        },
+        {
+            "id": "004",
+            "points": 2,
+            "goalRequirements": [
+                {
+                    "symbol": "BUTTERFLY",
+                    "quantity": 3
+                }
+            ]
+        },
+        {
+            "id": "005",
+            "points": 2,
+            "goalRequirements": [
+                {
+                    "symbol": "WOLF",
+                    "quantity": 3
+                }
+            ]
+        },
+        {
+            "id": "006",
+            "points": 2,
+            "goalRequirements": [
+                {
+                    "symbol": "LEAF",
+                    "quantity": 3
+                }
+            ]
+        },
+        {
+            "id": "007",
+            "points": 2,
+            "goalRequirements": [
+                {
+                    "symbol": "MUSHROOM",
+                    "quantity": 3
+                }
+            ]
+        }
+    ]
+}
