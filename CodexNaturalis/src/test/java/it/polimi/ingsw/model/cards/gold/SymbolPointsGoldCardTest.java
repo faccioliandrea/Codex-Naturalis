@@ -57,13 +57,8 @@ public class SymbolPointsGoldCardTest implements ConstructorTest {
         requirements[0] = requirement_1;
         requirements[1] = requirement_2;
         SymbolPointsGoldCard goldCard = new SymbolPointsGoldCard(id, coord, flipped, centerSymbol, corners, points, requirements, pointsSymbol);
-
-        goldCard.flipCard();
         assertEquals(corners, goldCard.getCorners());
-
         goldCard.setFlipped(true);
-        goldCard.flipCard();
-
         for (Corner corner: goldCard.getCorners()) {
             assertFalse(corner.isCovered());
             assertNull(corner.getSymbol());

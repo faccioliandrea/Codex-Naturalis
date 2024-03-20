@@ -56,6 +56,8 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         requirements[1] = requirement_2;
         FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, coord, flipped, centerSymbol, corners, points, requirements);
         assertEquals(goldCard.getPoints(), goldCard.calculatePoints(null));
+        goldCard.setFlipped(true);
+        assertEquals(0, goldCard.calculatePoints(null));
     }
 
     @Test
@@ -74,13 +76,8 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         requirements[0] = requirement_1;
         requirements[1] = requirement_2;
         FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, coord, flipped, centerSymbol, corners, points, requirements);
-
-        goldCard.flipCard();
         assertEquals(corners, goldCard.getCorners());
-
         goldCard.setFlipped(true);
-        goldCard.flipCard();
-
         for (Corner corner: goldCard.getCorners()) {
             assertFalse(corner.isCovered());
             assertNull(corner.getSymbol());

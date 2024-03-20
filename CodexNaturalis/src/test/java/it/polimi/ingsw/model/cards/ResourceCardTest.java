@@ -41,11 +41,8 @@ public class ResourceCardTest implements ConstructorTest {
         corners[1] = new Corner(false, null);
         int points = 5;
         ResourceCard resourceCard = new ResourceCard(id, coord, flipped, centerSymbol, corners, points);
-        resourceCard.flipCard();
         assertEquals(corners, resourceCard.getCorners());
         resourceCard.setFlipped(true);
-        resourceCard.flipCard();
-
         for (Corner corner: resourceCard.getCorners()) {
             assertFalse(corner.isCovered());
             assertNull(corner.getSymbol());

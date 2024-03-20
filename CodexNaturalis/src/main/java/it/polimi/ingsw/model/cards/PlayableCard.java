@@ -10,7 +10,7 @@ import java.util.Collections;
  */
 public abstract class PlayableCard extends Card {
     private CardSymbolKingdom centerSymbol;
-    private Corner[] corners;
+
     private int points;
 
     /**
@@ -19,13 +19,12 @@ public abstract class PlayableCard extends Card {
      * @param coord Coordinates of the card (once placed)
      * @param flipped Front/back of the card
      * @param centerSymbol Center Symbol
-     * @param corners Corners
+     * @param frontCorners Front corners
      * @param points Points given once the card is placed
      */
-    public PlayableCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] corners, int points) {
-        super(id, coord, flipped);
+    public PlayableCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points) {
+        super(id, coord, flipped, frontCorners, Collections.nCopies(4, new Corner(false, null)).toArray(new Corner[4]));
         this.centerSymbol = centerSymbol;
-        this.corners = corners;
         this.points = points;
     }
 
@@ -34,7 +33,7 @@ public abstract class PlayableCard extends Card {
      * @return points
      */
     public int getPoints() {
-        return points;
+        return this.getFlipped() ? 0 : points;
     }
 
     /**
@@ -42,26 +41,6 @@ public abstract class PlayableCard extends Card {
      * @return centerSymbol
      */
     public CardSymbolKingdom getCenterSymbol() {
-        return centerSymbol;
-    }
-
-    /**
-     * Getter for corners attribute
-     * @return corners
-     */
-    public Corner[] getCorners() {
-        return corners;
-    }
-
-    /**
-     * Method to manage the state of the card when flipped and placed
-     * Sets the card corners to not covered and w/o symbol if the attribute flipped is true
-     */
-    @Override
-    public void flipCard() {
-        if(this.getFlipped()) {
-            Corner availableCorner = new Corner(false, null);
-            this.corners = Collections.nCopies(4, availableCorner).toArray(new Corner[4]);
-        }
+        return this.getFlipped() ? null : centerSymbol;
     }
 }

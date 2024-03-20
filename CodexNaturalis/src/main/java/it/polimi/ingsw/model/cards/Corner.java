@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.enumeration.CardSymbol;
  * Class representing the corner of a Card
  */
 public class Corner {
+
     private boolean covered;
     private CardSymbol symbol;
 
@@ -33,5 +34,12 @@ public class Corner {
      */
     public CardSymbol getSymbol() {
         return symbol;
+    }
+
+    /**
+     * Setter for covered attribute
+     */
+    public void setCovered(boolean covered) {
+        this.covered = covered;
     }
 }

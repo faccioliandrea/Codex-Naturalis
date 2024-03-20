@@ -17,16 +17,16 @@ public class FixedPointsGoldCard extends GoldCard {
      * @param coord Coordinates of the card (once placed)
      * @param flipped Front/back of the card
      * @param centerSymbol Center Symbol
-     * @param corners Corners
+     * @param frontCorners Corners
      * @param points Points given once the card is placed
      * @param requirements Requirements to place the card
      */
-    public FixedPointsGoldCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] corners, int points, GoldCardRequirement[] requirements) {
-        super(id, coord, flipped, centerSymbol, corners, points, requirements);
+    public FixedPointsGoldCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements) {
+        super(id, coord, flipped, centerSymbol, frontCorners, points, requirements);
     }
 
     @Override
     public int calculatePoints(Board board) {
-        return this.getPoints();
+        return this.getFlipped() ? 0 : this.getPoints();
     }
 }

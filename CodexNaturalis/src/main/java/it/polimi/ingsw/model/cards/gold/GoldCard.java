@@ -19,12 +19,12 @@ public abstract class GoldCard extends PlayableCard {
      * @param coord Coordinates of the card (once placed)
      * @param flipped Front/back of the card
      * @param centerSymbol Center Symbol
-     * @param corners Corners
+     * @param frontCorners Corners
      * @param points Points given once the card is placed
      * @param requirements Requirements to place the card
      */
-    public GoldCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] corners, int points, GoldCardRequirement[] requirements) {
-        super(id, coord, flipped, centerSymbol, corners, points);
+    public GoldCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements) {
+        super(id, coord, flipped, centerSymbol, frontCorners, points);
         this.requirements = requirements;
     }
 
@@ -40,18 +40,6 @@ public abstract class GoldCard extends PlayableCard {
      * @return requirements
      */
     public GoldCardRequirement[] getRequirements() {
-        return requirements;
-    }
-
-    /**
-     * Method to manage the state of the card when flipped and placed
-     * Sets the card corners to not covered and w/o symbol if the attribute flipped is true and removes all requirements
-     */
-    @Override
-    public void flipCard() {
-        if(this.getFlipped()) {
-            this.requirements = null;
-        }
-        super.flipCard();
+        return this.getFlipped() ? null : requirements;
     }
 }

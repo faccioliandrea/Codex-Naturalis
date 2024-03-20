@@ -10,22 +10,24 @@ public abstract class Card {
     private Point coord;
     private Boolean flipped;
 
+    private Corner[] frontCorners;
+    private Corner[] backCorners;
+
     /**
      * Default constructor
      * @param id Card ID
      * @param coord Coordinates of the card (once placed)
      * @param flipped Front/back of the card
+     * @param frontCorners Front corners of the card
+     * @param backCorners Back corners of the card
      */
-    public Card(String id, Point coord, Boolean flipped) {
+    public Card(String id, Point coord, Boolean flipped, Corner[] frontCorners, Corner[] backCorners) {
         this.id = id;
         this.coord = coord;
         this.flipped = flipped;
+        this.frontCorners = frontCorners;
+        this.backCorners = backCorners;
     }
-
-    /**
-     * Abstract method to flip the card when placing it on the Board.
-     */
-    public abstract void flipCard();
 
     /**
      * Getter for ID attribute
@@ -49,6 +51,13 @@ public abstract class Card {
         return flipped;
     }
 
+    /**
+     * Getter for corners
+     * @return corners
+     */
+    public Corner[] getCorners() {
+        return flipped ? backCorners : frontCorners;
+    }
 
     /**
      * Setter for coordinates attribute
@@ -63,4 +72,6 @@ public abstract class Card {
     public void setFlipped(Boolean flipped) {
         this.flipped = flipped;
     }
+
+    // TODO: Method to cover an angle
 }

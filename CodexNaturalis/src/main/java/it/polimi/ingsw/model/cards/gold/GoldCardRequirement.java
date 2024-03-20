@@ -17,4 +17,20 @@ public class GoldCardRequirement {
         this.requiredSymbol = requiredSymbol;
         this.quantity = quantity;
     }
+
+    /**
+     * Getter for requiredSymbol
+     * @return requiredSymbol
+     */
+    public CardSymbolKingdom getRequiredSymbol() {
+        return requiredSymbol;
+    }
+
+    /**
+     * Getter for quantity
+     * @return quantity
+     */
+    public int getQuantity() {
+        return quantity;
+    }
 }
