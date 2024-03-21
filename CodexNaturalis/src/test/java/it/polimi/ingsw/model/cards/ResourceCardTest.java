@@ -15,7 +15,7 @@ public class ResourceCardTest implements ConstructorTest {
     public void testConstructor() {
         String id = "000";
         Point coord = new Point(1,1);
-        Boolean flipped = false;
+        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -25,16 +25,16 @@ public class ResourceCardTest implements ConstructorTest {
         assertEquals(id, resourceCard.getId());
         assertEquals(coord, resourceCard.getCoord());
         assertEquals(flipped, resourceCard.getFlipped());
-        assertEquals(centerSymbol, resourceCard.getCenterSymbol());
         assertEquals(corners, resourceCard.getCorners());
         assertEquals(points, resourceCard.getPoints());
+        assertEquals(centerSymbol, resourceCard.getCardKingdom());
     }
 
     @Test
     public void testFlipCard() {
         String id = "000";
         Point coord = new Point(1,1);
-        Boolean flipped = false;
+        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -42,10 +42,15 @@ public class ResourceCardTest implements ConstructorTest {
         int points = 5;
         ResourceCard resourceCard = new ResourceCard(id, coord, flipped, centerSymbol, corners, points);
         assertEquals(corners, resourceCard.getCorners());
+        assertEquals(centerSymbol, resourceCard.getCardKingdom());
+        assertNull(resourceCard.getCenterSymbol());
+
         resourceCard.setFlipped(true);
+
         for (Corner corner: resourceCard.getCorners()) {
             assertFalse(corner.isCovered());
             assertNull(corner.getSymbol());
         }
+        assertEquals(0, resourceCard.getPoints());
     }
 }

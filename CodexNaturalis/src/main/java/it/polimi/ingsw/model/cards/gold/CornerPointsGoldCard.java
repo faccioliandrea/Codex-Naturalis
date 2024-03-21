@@ -20,7 +20,7 @@ public class CornerPointsGoldCard extends GoldCard {
      * @param points Points given once the card is placed
      * @param requirements Requirements to place the card
      */
-    public CornerPointsGoldCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements) {
+    public CornerPointsGoldCard(String id, Point coord, boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements) {
         super(id, coord, flipped, centerSymbol, frontCorners, points, requirements);
     }
 

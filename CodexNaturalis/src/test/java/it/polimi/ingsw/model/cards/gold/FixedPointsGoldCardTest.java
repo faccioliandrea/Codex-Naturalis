@@ -17,7 +17,7 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
     public void testConstructor() {
         String id = "000";
         Point coord = new Point(1,1);
-        Boolean flipped = false;
+        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -32,7 +32,7 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         assertEquals(id, goldCard.getId());
         assertEquals(coord, goldCard.getCoord());
         assertEquals(flipped, goldCard.getFlipped());
-        assertEquals(centerSymbol, goldCard.getCenterSymbol());
+        assertEquals(centerSymbol, goldCard.getCardKingdom());
         assertEquals(corners, goldCard.getCorners());
         assertEquals(points, goldCard.getPoints());
         assertEquals(requirements, goldCard.getRequirements());
@@ -43,7 +43,7 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
     public void calculatePoints() {
         String id = "000";
         Point coord = new Point(1,1);
-        Boolean flipped = false;
+        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -55,16 +55,14 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         requirements[0] = requirement_1;
         requirements[1] = requirement_2;
         FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, coord, flipped, centerSymbol, corners, points, requirements);
-        assertEquals(goldCard.getPoints(), goldCard.calculatePoints(null));
-        goldCard.setFlipped(true);
-        assertEquals(0, goldCard.calculatePoints(null));
+        assertEquals(points, goldCard.calculatePoints(null));
     }
 
     @Test
     public void testFlipCard() {
         String id = "000";
         Point coord = new Point(1,1);
-        Boolean flipped = false;
+        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);

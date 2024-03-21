@@ -25,7 +25,7 @@ public class SymbolPointsGoldCard extends GoldCard {
      * @param requirements Requirements to place the card
      * @param pointsSymbol Symbol for which the user gets points based on how many are present on the board
      */
-    public SymbolPointsGoldCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements, CardSymbolObject pointsSymbol) {
+    public SymbolPointsGoldCard(String id, Point coord, boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements, CardSymbolObject pointsSymbol) {
         super(id, coord, flipped, centerSymbol, frontCorners, points, requirements);
         this.pointsSymbol = pointsSymbol;
     }

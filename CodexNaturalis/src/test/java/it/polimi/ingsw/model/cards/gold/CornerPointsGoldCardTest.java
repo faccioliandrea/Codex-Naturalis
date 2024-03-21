@@ -16,7 +16,7 @@ public class CornerPointsGoldCardTest implements ConstructorTest {
     public void testConstructor() {
         String id = "000";
         Point coord = new Point(1,1);
-        Boolean flipped = false;
+        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -31,7 +31,7 @@ public class CornerPointsGoldCardTest implements ConstructorTest {
         assertEquals(id, goldCard.getId());
         assertEquals(coord, goldCard.getCoord());
         assertEquals(flipped, goldCard.getFlipped());
-        assertEquals(centerSymbol, goldCard.getCenterSymbol());
+        assertEquals(centerSymbol, goldCard.getCardKingdom());
         assertEquals(corners, goldCard.getCorners());
         assertEquals(points, goldCard.getPoints());
         assertEquals(requirements, goldCard.getRequirements());
@@ -41,7 +41,7 @@ public class CornerPointsGoldCardTest implements ConstructorTest {
     public void testFlipCard() {
         String id = "000";
         Point coord = new Point(1,1);
-        Boolean flipped = false;
+        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -54,11 +54,16 @@ public class CornerPointsGoldCardTest implements ConstructorTest {
         requirements[1] = requirement_2;
         CornerPointsGoldCard goldCard = new CornerPointsGoldCard(id, coord, flipped, centerSymbol, corners, points, requirements);
         assertEquals(corners, goldCard.getCorners());
+        assertEquals(centerSymbol, goldCard.getCardKingdom());
+        assertNull(goldCard.getCenterSymbol());
+
         goldCard.setFlipped(true);
+
         for (Corner corner: goldCard.getCorners()) {
             assertFalse(corner.isCovered());
             assertNull(corner.getSymbol());
         }
+        assertEquals(0, goldCard.getPoints());
         assertNull(goldCard.getRequirements());
     }
 }

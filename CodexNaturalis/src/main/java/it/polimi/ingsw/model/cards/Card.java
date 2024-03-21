@@ -8,7 +8,7 @@ import java.awt.*;
 public abstract class Card {
     private String id;
     private Point coord;
-    private Boolean flipped;
+    private boolean flipped;
 
     private Corner[] frontCorners;
     private Corner[] backCorners;
@@ -21,7 +21,7 @@ public abstract class Card {
      * @param frontCorners Front corners of the card
      * @param backCorners Back corners of the card
      */
-    public Card(String id, Point coord, Boolean flipped, Corner[] frontCorners, Corner[] backCorners) {
+    public Card(String id, Point coord, boolean flipped, Corner[] frontCorners, Corner[] backCorners) {
         this.id = id;
         this.coord = coord;
         this.flipped = flipped;
@@ -47,12 +47,12 @@ public abstract class Card {
      * Getter for flipped attribute
      * @return flipped
      */
-    public Boolean getFlipped() {
+    public boolean getFlipped() {
         return flipped;
     }
 
     /**
-     * Getter for corners
+     * Getter for corners based on its flip status
      * @return corners
      */
     public Corner[] getCorners() {
@@ -69,7 +69,7 @@ public abstract class Card {
     /**
      * Setter for flipped attribute
      */
-    public void setFlipped(Boolean flipped) {
+    public void setFlipped(boolean flipped) {
         this.flipped = flipped;
     }
 

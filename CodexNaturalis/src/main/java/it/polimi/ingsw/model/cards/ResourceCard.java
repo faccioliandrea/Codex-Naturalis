@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
+import it.polimi.ingsw.model.player.Board;
 
 import java.awt.*;
 
@@ -18,7 +19,12 @@ public class ResourceCard extends PlayableCard {
      * @param frontCorners Corners
      * @param points Points given once the card is placed
      */
-    public ResourceCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points) {
+    public ResourceCard(String id, Point coord, boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points) {
         super(id, coord, flipped, centerSymbol, frontCorners, points);
+    }
+
+    @Override
+    public int calculatePoints(Board board) {
+        return this.getPoints();
     }
 }

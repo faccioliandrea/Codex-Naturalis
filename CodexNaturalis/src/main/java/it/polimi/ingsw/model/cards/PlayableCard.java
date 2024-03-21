@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
+import it.polimi.ingsw.model.player.Board;
 
 import java.awt.*;
 import java.util.Collections;
@@ -22,7 +23,7 @@ public abstract class PlayableCard extends Card {
      * @param frontCorners Front corners
      * @param points Points given once the card is placed
      */
-    public PlayableCard(String id, Point coord, Boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points) {
+    public PlayableCard(String id, Point coord, boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points) {
         super(id, coord, flipped, frontCorners, Collections.nCopies(4, new Corner(false, null)).toArray(new Corner[4]));
         this.centerSymbol = centerSymbol;
         this.points = points;
@@ -37,10 +38,23 @@ public abstract class PlayableCard extends Card {
     }
 
     /**
-     * Getter for centerSymbol attribute
+     * Getter for centerSymbol attribute based on its flip status
      * @return centerSymbol
      */
     public CardSymbolKingdom getCenterSymbol() {
-        return this.getFlipped() ? null : centerSymbol;
+        return this.getFlipped() ? centerSymbol : null;
     }
+
+    /**
+     * Getter for card kingdom attribute
+     * @return card kingdom
+     */
+    public CardSymbolKingdom getCardKingdom() { return centerSymbol; }
+
+    /**
+     * Abstract method to calculate the number of points the user gets when placing the card. Implementation depends on the type of the GoldCard
+     * @param board Board of the player
+     * @return Number of points the player gets once the card has been placed
+     */
+    public abstract int calculatePoints(Board board);
 }
