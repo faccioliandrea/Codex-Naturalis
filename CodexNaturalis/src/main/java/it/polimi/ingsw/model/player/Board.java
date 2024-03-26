@@ -129,6 +129,11 @@ public class Board {
     public ArrayList<Point> availablePositions() {
         ArrayList<Point> available = new ArrayList<>();
 
+        if(this.playedCards.isEmpty()) {
+            available.add(new Point(0,0));
+            return available;
+        }
+
         for (Card c: this.playedCards) {
             for (int i=0; i<c.getCorners().length; i++) {
 
@@ -136,12 +141,15 @@ public class Board {
                         c.getCoord().x + (i % 3 == 0 ? -1 : 1),
                         c.getCoord().y + (i > 1      ? -1 : 1)
                 );
-                if (c.getCorners()[i] != null && !c.getCorners()[i].isCovered()) {
-                    if(!available.contains(neighbor)){
+                if (
+                        c.getCorners()[i] != null
+                        && !c.getCorners()[i].isCovered()
+                        && !available.contains(neighbor)
+                        && this.playedCards.stream().map(Card::getCoord).noneMatch(x -> x.equals(neighbor))
+                ) {
+                    if(getNeighborCorners(neighbor).stream().noneMatch(Objects::isNull)) {
                         available.add(neighbor);
                     }
-                } else {
-                    available.remove(neighbor);
                 }
             }
         }
@@ -159,16 +167,69 @@ public class Board {
 
         Arrays.stream(card.getCorners())
                 .filter(Objects::nonNull)
+                .filter(x -> !x.isCovered())
                 .map(Corner::getSymbol)
                 .filter(Objects::nonNull)
-                .forEach(x -> this.symbols.put(x, this.symbols.get(x) + 1));
+                .forEach(this::increaseSymbolPoints);
         if (card instanceof StarterCard && !card.getFlipped()){
-            Arrays.stream(((StarterCard) card).getCenterSymbols()).forEach(x -> this.symbols.put(x, this.symbols.get(x) + 1));
+            Arrays.stream(((StarterCard) card)
+                    .getCenterSymbols())
+                    .forEach(this::increaseSymbolPoints);
         } else if (card instanceof PlayableCard && card.getFlipped()) {
-            CardSymbolKingdom key = ((PlayableCard) card).getCenterSymbol();
+            increaseSymbolPoints(((PlayableCard) card).getCenterSymbol());
+        }
+
+        getNeighborCorners(card.getCoord()).forEach(this::coverCorner);
+    }
+
+    /**
+     * Sets the Corner {@code covered} attribute to true
+     * and updates the symbols count
+     * @param c Corner
+     */
+    private void coverCorner(Corner c) {
+        c.setCovered(true);
+        if (c.getSymbol() != null) {
+            CardSymbol key = c.getSymbol();
             if (this.symbols.containsKey(key)) {
-                this.symbols.put(key, this.symbols.get(key) + 1);
+                this.symbols.put(key, this.symbols.get(key) - 1);
             }
+        }
+    }
+
+    /**
+     * Returns a List of corners that face a given coordinate
+     * @param coord coordinate pointed to by the corners
+     * @return  List of corners that face a given coordinate
+     */
+    private ArrayList<Corner> getNeighborCorners(Point coord) {
+        ArrayList<Corner> neighborCorners = new ArrayList<>();
+
+        for(Object c: this.playedCards.stream().filter(x -> x.getCoord().distanceSq(coord)==2).toArray()) {
+            int dx = ((Card) c).getCoord().x - coord.x;
+            int dy = ((Card) c).getCoord().y - coord.y;
+
+            if (dx < 0 && dy < 0) {
+                neighborCorners.add(((Card) c).getCorners()[1]);
+            } else if (dx < 0 && dy > 0) {
+                neighborCorners.add(((Card) c).getCorners()[2]);
+            } else if (dx > 0 && dy < 0) {
+                neighborCorners.add(((Card) c).getCorners()[0]);
+            } else if (dx > 0 && dy > 0) {
+                neighborCorners.add(((Card) c).getCorners()[3]);
+            }
+        }
+
+        return neighborCorners;
+    }
+
+    /**
+     * Increases the given symbol counter by 1
+     * @param s symbol
+     */
+    private void increaseSymbolPoints(CardSymbol s) {
+        if (this.symbols.containsKey(s)) {
+            this.symbols.put(s, this.symbols.get(s) + 1);
         }
     }
 }

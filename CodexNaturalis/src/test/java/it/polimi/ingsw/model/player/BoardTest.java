@@ -39,30 +39,95 @@ public class BoardTest implements ConstructorTest {
     }
 
     @Test
-    public void testAvailablePositions() {
+    public void testAvailablePositionsSingleCard() {
         board.setPlayedCards(new ArrayList<>());
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
         corners[2] = new Corner(false, null);
-        ResourceCard c = new ResourceCard("000", new Point(5, 5), false, CardSymbolKingdom.LEAF, corners, 0);
+        ResourceCard c = new ResourceCard("000", CardSymbolKingdom.LEAF, corners, 0);
+        c.setCoord(new Point(5, 5));
         board.addPlayedCard(c);
         ArrayList<Point> available = board.availablePositions();
         assert (available.contains(new Point(6, 4)));
+    }
+
+    @Test
+    public void testAvailablePositionsDoubleCards() {
+        board.setPlayedCards(new ArrayList<>());
+        Corner[] corners = new Corner[4];
+        corners[0] = new Corner(false, CardSymbolObject.SCROLL);
+        corners[2] = new Corner(false, null);
+        ResourceCard c = new ResourceCard("000", CardSymbolKingdom.LEAF, corners, 0);
+        c.setCoord(new Point(5, 5));
+
+        board.addPlayedCard(c);
+        ArrayList<Point> available = board.availablePositions();
+        assert (available.contains(new Point(6, 4)));
+        assert (available.contains(new Point(4, 6)));
+
+        ResourceCard c2 = new ResourceCard("001", CardSymbolKingdom.LEAF, corners, 0);
+        c2.setCoord(new Point(4, 6));
+        c2.setFlipped(true);
+
+        board.addPlayedCard(c2);
+        available = board.availablePositions();
+        assert (available.contains(new Point(6, 4)));
+        assert (available.contains(new Point(3, 7)));
+        assert (available.contains(new Point(3, 5)));
+        assert (available.contains(new Point(5, 7)));
+        assert (!available.contains(new Point(6, 6)));
+        assert (!available.contains(new Point(4, 4)));
+    }
+
+    @Test
+    public void testAvailablePositionsUnavailableCorner() {
+        board.setPlayedCards(new ArrayList<>());
+        Corner[] corners = new Corner[4];
+        corners[0] = new Corner(false, CardSymbolObject.SCROLL);
+        corners[2] = new Corner(false, null);
+        ResourceCard c = new ResourceCard("000", CardSymbolKingdom.LEAF, corners, 0);
+        c.setCoord(new Point(5, 5));
+
+        board.addPlayedCard(c);
+
+        ResourceCard c2 = new ResourceCard("001", CardSymbolKingdom.LEAF, corners, 0);
+        c2.setCoord(new Point(7, 5));
+        c2.setFlipped(true);
+
+        board.addPlayedCard(c2);
+
+        ResourceCard c3 = new ResourceCard("002", CardSymbolKingdom.LEAF, corners, 0);
+        c3.setCoord(new Point(7, 7));
+        // c3.setFlipped(true);
+        // c3.getCorners()[3].setCovered(true);
+
+        board.addPlayedCard(c3);
+
+        ArrayList<Point> available = board.availablePositions();
+        assert (!available.contains(new Point(6, 6)));
     }
 
 
     @Test
     public void testAddToPlayedCards() {
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
+        corners[0] = new Corner(false, CardSymbolObject.SCROLL);
         corners[2] = new Corner(false, null);
-        ResourceCard c = new ResourceCard("000", new Point(5, 5), false, CardSymbolKingdom.LEAF, corners, 0);
-        ResourceCard c2 = new ResourceCard("001", new Point(5, 5), true, CardSymbolKingdom.LEAF, corners, 0);
+        ResourceCard c = new ResourceCard("000", CardSymbolKingdom.LEAF, corners, 0);
+        c.setCoord(new Point(5, 5));
+
+        ResourceCard c2 = new ResourceCard("001",  CardSymbolKingdom.LEAF, corners, 0);
+        c2.setFlipped(true);
+        c2.setCoord(new Point(4, 6));
+
         board.addPlayedCard(c);
-        board.addPlayedCard(c2);
-        assertEquals(c, board.getPlayedCards().get(board.getPlayedCards().size() - 2));
-        assertEquals(c2, board.getPlayedCards().get(board.getPlayedCards().size() - 1));
+        assertEquals(c, board.getPlayedCards().get(board.getPlayedCards().size() - 1));
         assertEquals(1, board.getSymbols().get(CardSymbolObject.SCROLL));
+
+        board.addPlayedCard(c2);
+        assertEquals(c2, board.getPlayedCards().get(board.getPlayedCards().size() - 1));
+        assertEquals(0, board.getSymbols().get(CardSymbolObject.SCROLL));
         assertEquals(1, board.getSymbols().get(CardSymbolKingdom.LEAF));
+        assert c.getCorners()[0].isCovered();
     }
 }
