@@ -16,15 +16,13 @@ public abstract class Card {
     /**
      * Default constructor
      * @param id Card ID
-     * @param coord Coordinates of the card (once placed)
-     * @param flipped Front/back of the card
      * @param frontCorners Front corners of the card
      * @param backCorners Back corners of the card
      */
-    public Card(String id, Point coord, boolean flipped, Corner[] frontCorners, Corner[] backCorners) {
+    public Card(String id, Corner[] frontCorners, Corner[] backCorners) {
         this.id = id;
-        this.coord = coord;
-        this.flipped = flipped;
+        this.coord = null;
+        this.flipped = false;
         this.frontCorners = frontCorners;
         this.backCorners = backCorners;
     }

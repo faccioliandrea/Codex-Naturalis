@@ -17,16 +17,14 @@ public class SymbolPointsGoldCard extends GoldCard {
     /**
      * Default constructor
      * @param id PlayableCard ID
-     * @param coord Coordinates of the card (once placed)
-     * @param flipped Front/back of the card
      * @param centerSymbol Center Symbol
      * @param frontCorners Corners
      * @param points Points given once the card is placed
      * @param requirements Requirements to place the card
      * @param pointsSymbol Symbol for which the user gets points based on how many are present on the board
      */
-    public SymbolPointsGoldCard(String id, Point coord, boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements, CardSymbolObject pointsSymbol) {
-        super(id, coord, flipped, centerSymbol, frontCorners, points, requirements);
+    public SymbolPointsGoldCard(String id, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements, CardSymbolObject pointsSymbol) {
+        super(id, centerSymbol, frontCorners, points, requirements);
         this.pointsSymbol = pointsSymbol;
     }
 

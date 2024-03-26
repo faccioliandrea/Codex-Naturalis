@@ -15,15 +15,13 @@ public abstract class GoldCard extends PlayableCard {
     /**
      * Default constructor
      * @param id PlayableCard ID
-     * @param coord Coordinates of the card (once placed)
-     * @param flipped Front/back of the card
      * @param centerSymbol Center Symbol
      * @param frontCorners Corners
      * @param points Points given once the card is placed
      * @param requirements Requirements to place the card
      */
-    public GoldCard(String id, Point coord, boolean flipped, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements) {
-        super(id, coord, flipped, centerSymbol, frontCorners, points);
+    public GoldCard(String id, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points, GoldCardRequirement[] requirements) {
+        super(id, centerSymbol, frontCorners, points);
         this.requirements = requirements;
     }
 

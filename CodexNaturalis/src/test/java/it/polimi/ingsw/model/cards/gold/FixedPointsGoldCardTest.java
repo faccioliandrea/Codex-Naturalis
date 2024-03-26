@@ -16,8 +16,6 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
     @Test
     public void testConstructor() {
         String id = "000";
-        Point coord = new Point(1,1);
-        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -28,10 +26,8 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         GoldCardRequirement[] requirements = new GoldCardRequirement[2];
         requirements[0] = requirement_1;
         requirements[1] = requirement_2;
-        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, coord, flipped, centerSymbol, corners, points, requirements);
+        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, centerSymbol, corners, points, requirements);
         assertEquals(id, goldCard.getId());
-        assertEquals(coord, goldCard.getCoord());
-        assertEquals(flipped, goldCard.getFlipped());
         assertEquals(centerSymbol, goldCard.getCardKingdom());
         assertEquals(corners, goldCard.getCorners());
         assertEquals(points, goldCard.getPoints());
@@ -42,8 +38,6 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
     @Test
     public void calculatePoints() {
         String id = "000";
-        Point coord = new Point(1,1);
-        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -54,15 +48,13 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         GoldCardRequirement[] requirements = new GoldCardRequirement[2];
         requirements[0] = requirement_1;
         requirements[1] = requirement_2;
-        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, coord, flipped, centerSymbol, corners, points, requirements);
+        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, centerSymbol, corners, points, requirements);
         assertEquals(points, goldCard.calculatePoints(null));
     }
 
     @Test
     public void testFlipCard() {
         String id = "000";
-        Point coord = new Point(1,1);
-        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
@@ -73,7 +65,7 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         GoldCardRequirement[] requirements = new GoldCardRequirement[2];
         requirements[0] = requirement_1;
         requirements[1] = requirement_2;
-        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, coord, flipped, centerSymbol, corners, points, requirements);
+        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, centerSymbol, corners, points, requirements);
         assertEquals(corners, goldCard.getCorners());
         goldCard.setFlipped(true);
         for (Corner corner: goldCard.getCorners()) {

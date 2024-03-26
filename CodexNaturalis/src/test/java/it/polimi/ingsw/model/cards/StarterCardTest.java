@@ -13,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class StarterCardTest implements ConstructorTest {
 
     private String id;
-    private Point coord;
-    private boolean flipped;
     private CardSymbolKingdom[] centerSymbols;
     private Corner[] frontCorners;
     private Corner[] backCorners;
@@ -23,8 +21,6 @@ class StarterCardTest implements ConstructorTest {
     @BeforeEach
     void setup(){
         id = "016";
-        coord = new Point(0,0);
-        flipped = false;
         centerSymbols = new CardSymbolKingdom[3];
         centerSymbols[0] = LEAF;
         centerSymbols[1] = WOLF;
@@ -37,7 +33,7 @@ class StarterCardTest implements ConstructorTest {
         frontCorners[1] = new Corner(false, WOLF);
         frontCorners[2] = new Corner(false, BUTTERFLY);
         frontCorners[3] = new Corner(false, LEAF);
-        starterCard = new StarterCard(id, coord, flipped, frontCorners, backCorners, centerSymbols);
+        starterCard = new StarterCard(id, frontCorners, backCorners, centerSymbols);
     }
 
 
@@ -45,8 +41,6 @@ class StarterCardTest implements ConstructorTest {
     @Test
     public void testConstructor(){
         assertEquals(id, starterCard.getId());
-        assertEquals(coord, starterCard.getCoord());
-        assertEquals(flipped, starterCard.getFlipped());
         assertEquals(frontCorners, starterCard.getCorners());
         assertEquals(centerSymbols, starterCard.getCenterSymbols());
         starterCard.setFlipped(true);

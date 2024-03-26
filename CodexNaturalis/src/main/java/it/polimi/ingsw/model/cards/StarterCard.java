@@ -15,14 +15,12 @@ public class StarterCard extends Card{
      * Default constructor
      *
      * @param id      Card ID
-     * @param coord   Coordinates of the card (once placed)
-     * @param flipped Front/back of the card
      * @param frontCorners Front corners
      * @param backCorners Back corners
      * @param centerSymbols Center symbols of the front of the card
      */
-    public StarterCard(String id, Point coord, Boolean flipped, Corner[] frontCorners, Corner[] backCorners, CardSymbolKingdom[] centerSymbols) {
-        super(id, coord, flipped, frontCorners, backCorners);
+    public StarterCard(String id, Corner[] frontCorners, Corner[] backCorners, CardSymbolKingdom[] centerSymbols) {
+        super(id, frontCorners, backCorners);
         this.centerSymbols = centerSymbols;
     }
 

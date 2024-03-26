@@ -14,17 +14,13 @@ public class ResourceCardTest implements ConstructorTest {
     @Test
     public void testConstructor() {
         String id = "000";
-        Point coord = new Point(1,1);
-        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
         corners[1] = new Corner(false, null);
         int points = 5;
-        ResourceCard resourceCard = new ResourceCard(id, coord, flipped, centerSymbol, corners, points);
+        ResourceCard resourceCard = new ResourceCard(id, centerSymbol, corners, points);
         assertEquals(id, resourceCard.getId());
-        assertEquals(coord, resourceCard.getCoord());
-        assertEquals(flipped, resourceCard.getFlipped());
         assertEquals(corners, resourceCard.getCorners());
         assertEquals(points, resourceCard.getPoints());
         assertEquals(centerSymbol, resourceCard.getCardKingdom());
@@ -33,14 +29,12 @@ public class ResourceCardTest implements ConstructorTest {
     @Test
     public void testFlipCard() {
         String id = "000";
-        Point coord = new Point(1,1);
-        boolean flipped = false;
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(true, CardSymbolObject.SCROLL);
         corners[1] = new Corner(false, null);
         int points = 5;
-        ResourceCard resourceCard = new ResourceCard(id, coord, flipped, centerSymbol, corners, points);
+        ResourceCard resourceCard = new ResourceCard(id, centerSymbol, corners, points);
         assertEquals(corners, resourceCard.getCorners());
         assertEquals(centerSymbol, resourceCard.getCardKingdom());
         assertNull(resourceCard.getCenterSymbol());
