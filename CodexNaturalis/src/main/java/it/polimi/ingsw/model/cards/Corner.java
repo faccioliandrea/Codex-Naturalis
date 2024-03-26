@@ -21,6 +21,15 @@ public class Corner {
     }
 
     /**
+     * Constructor
+     * @param symbol Symbol on the corner
+     */
+    public Corner(CardSymbol symbol) {
+        this.covered = false;
+        this.symbol = symbol;
+    }
+
+    /**
      * Getter for covered attribute
      * @return covered
      */

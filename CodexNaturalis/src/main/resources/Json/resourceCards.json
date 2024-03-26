@@ -7,11 +7,11 @@
             "corners": [
                 {
                     "isPresent": false,
-                    "symbol": "BUTTERFLY"
+                    "symbol": ""
                 },
                 {
                     "isPresent": true,
-                    "symbol": ""
+                    "symbol": "BUTTERFLY"
                 },
                 {
                     "isPresent": true,
@@ -121,20 +121,20 @@
             "points": 0,
             "corners": [
                 {
-                    "isPresent": true,
-                    "symbol": ""
-                },
-                {
-                    "isPresent": true,
-                    "symbol": "BUTTERFLY"
-                },
-                {
-                    "isPresent": true,
-                    "symbol": "BUTTERFLY"
-                },
-                {
                     "isPresent": false,
                     "symbol": ""
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "FEATHER"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "BUTTERFLY"
+                },
+                {
+                    "isPresent": true,
+                    "symbol": "WOLF"
                 }
             ]
         },
@@ -409,7 +409,7 @@
                     "symbol": ""
                 },
                 {
-                    "isPresent": false,
+                    "isPresent": true,
                     "symbol": "WOLF"
                 }
             ]
