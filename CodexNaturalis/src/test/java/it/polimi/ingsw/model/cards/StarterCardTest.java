@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 
 import static it.polimi.ingsw.model.enumeration.CardSymbolKingdom.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,10 +28,10 @@ class StarterCardTest implements ConstructorTest {
         frontCorners[0] = new Corner(false, null);
         frontCorners[1] = new Corner(false, null);
         backCorners = new Corner[4];
-        frontCorners[0] = new Corner(false, MUSHROOM);
-        frontCorners[1] = new Corner(false, WOLF);
-        frontCorners[2] = new Corner(false, BUTTERFLY);
-        frontCorners[3] = new Corner(false, LEAF);
+        backCorners[0] = new Corner(false, MUSHROOM);
+        backCorners[1] = new Corner(false, WOLF);
+        backCorners[2] = new Corner(false, BUTTERFLY);
+        backCorners[3] = new Corner(false, LEAF);
         starterCard = new StarterCard(id, frontCorners, backCorners, centerSymbols);
     }
 
