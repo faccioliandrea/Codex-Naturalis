@@ -2,9 +2,7 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayableCard;
-import it.polimi.ingsw.model.cards.ResourceCard;
 import it.polimi.ingsw.model.cards.StarterCard;
-import it.polimi.ingsw.model.cards.gold.GoldCard;
 import it.polimi.ingsw.model.enumeration.PlayerColor;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
 import it.polimi.ingsw.model.goals.Goal;
