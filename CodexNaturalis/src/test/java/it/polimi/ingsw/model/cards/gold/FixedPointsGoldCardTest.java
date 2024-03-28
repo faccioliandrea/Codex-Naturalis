@@ -6,8 +6,6 @@ import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import it.polimi.ingsw.model.enumeration.CardSymbolObject;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -18,8 +16,8 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         String id = "000";
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[1] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
         int points = 5;
         GoldCardRequirement requirement_1 = new GoldCardRequirement(CardSymbolKingdom.MUSHROOM, 2);
         GoldCardRequirement requirement_2 = new GoldCardRequirement(CardSymbolKingdom.BUTTERFLY, 1);
@@ -40,8 +38,8 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         String id = "000";
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[1] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
         int points = 5;
         GoldCardRequirement requirement_1 = new GoldCardRequirement(CardSymbolKingdom.MUSHROOM, 2);
         GoldCardRequirement requirement_2 = new GoldCardRequirement(CardSymbolKingdom.BUTTERFLY, 1);
@@ -57,8 +55,8 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         String id = "000";
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[1] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
         int points = 5;
         GoldCardRequirement requirement_1 = new GoldCardRequirement(CardSymbolKingdom.MUSHROOM, 2);
         GoldCardRequirement requirement_2 = new GoldCardRequirement(CardSymbolKingdom.BUTTERFLY, 1);

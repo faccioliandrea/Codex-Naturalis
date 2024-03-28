@@ -5,8 +5,6 @@ import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import it.polimi.ingsw.model.enumeration.CardSymbolObject;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResourceCardTest implements ConstructorTest {
@@ -16,8 +14,8 @@ public class ResourceCardTest implements ConstructorTest {
         String id = "000";
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[1] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
         int points = 5;
         ResourceCard resourceCard = new ResourceCard(id, centerSymbol, corners, points);
         assertEquals(id, resourceCard.getId());
@@ -31,8 +29,8 @@ public class ResourceCardTest implements ConstructorTest {
         String id = "000";
         CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[1] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
         int points = 5;
         ResourceCard resourceCard = new ResourceCard(id, centerSymbol, corners, points);
         assertEquals(corners, resourceCard.getCorners());

@@ -44,12 +44,11 @@ class PlayerTest implements ConstructorTest {
     @Test
     void drawCard() {
         String id = "000";
-        CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[1] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
         int points = 5;
-        ResourceCard resourceCard = new ResourceCard(id, centerSymbol, corners, points);
+        ResourceCard resourceCard = new ResourceCard(id, CardSymbolKingdom.MUSHROOM, corners, points);
         player.drawCard(resourceCard);
         assertTrue(player.getHand().contains(resourceCard));
 
@@ -60,8 +59,7 @@ class PlayerTest implements ConstructorTest {
         String id = "003";
         int points = 2;
         boolean isPrimaryDiagonal = false;
-        CardSymbolKingdom kingdom = CardSymbolKingdom.BUTTERFLY;
-        PatternGoalDiagonal patternGoal = new PatternGoalDiagonal(id, points, isPrimaryDiagonal, kingdom);
+        PatternGoalDiagonal patternGoal = new PatternGoalDiagonal(id, points, isPrimaryDiagonal, CardSymbolKingdom.BUTTERFLY);
         String id2 = "001";
         GoalRequirement[] goal2 = new GoalRequirement[2];
         goal2[0] = new GoalRequirement(CardSymbolKingdom.WOLF, 3);
@@ -87,27 +85,26 @@ class PlayerTest implements ConstructorTest {
         centerSymbols[1] = WOLF;
         centerSymbols[2] = MUSHROOM;
         Corner[] frontCorners = new Corner[4];
-        frontCorners[0] = new Corner(false, null);
-        frontCorners[1] = new Corner(false, null);
+        frontCorners[0] = new Corner(null);
+        frontCorners[1] = new Corner(null);
         Corner[] backCorners = new Corner[4];
-        backCorners[0] = new Corner(false, MUSHROOM);
-        backCorners[1] = new Corner(false, WOLF);
-        backCorners[2] = new Corner(false, BUTTERFLY);
-        backCorners[3] = new Corner(false, LEAF);
+        backCorners[0] = new Corner(MUSHROOM);
+        backCorners[1] = new Corner(WOLF);
+        backCorners[2] = new Corner(BUTTERFLY);
+        backCorners[3] = new Corner(LEAF);
         StarterCard starterCard = new StarterCard(id1, frontCorners, backCorners, centerSymbols);
         starterCard.setCoord(new Point(0,0));
 
-        ArrayList<Card> playedCard = new ArrayList<Card>();
+        ArrayList<Card> playedCard = new ArrayList<>();
         playedCard.add(starterCard);
         player.getBoard().setPlayedCards(playedCard);
 
         String id = "001";
-        CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[1] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
         int points = 5;
-        ResourceCard resourceCard = new ResourceCard(id, centerSymbol, corners, points);
+        ResourceCard resourceCard = new ResourceCard(id, CardSymbolKingdom.MUSHROOM, corners, points);
         player.drawCard(resourceCard);
 
         Point coor = new Point(1,1);
@@ -133,27 +130,26 @@ class PlayerTest implements ConstructorTest {
         centerSymbols[1] = WOLF;
         centerSymbols[2] = MUSHROOM;
         Corner[] frontCorners = new Corner[4];
-        frontCorners[0] = new Corner(false, null);
-        frontCorners[1] = new Corner(false, null);
+        frontCorners[0] = new Corner(null);
+        frontCorners[1] = new Corner(null);
         Corner[] backCorners = new Corner[4];
-        backCorners[0] = new Corner(false, MUSHROOM);
-        backCorners[1] = new Corner(false, WOLF);
-        backCorners[2] = new Corner(false, BUTTERFLY);
-        backCorners[3] = new Corner(false, LEAF);
+        backCorners[0] = new Corner(MUSHROOM);
+        backCorners[1] = new Corner(WOLF);
+        backCorners[2] = new Corner(BUTTERFLY);
+        backCorners[3] = new Corner(LEAF);
         StarterCard starterCard = new StarterCard(id1, frontCorners, backCorners, centerSymbols);
         starterCard.setCoord(new Point(0,0));
 
-        ArrayList<Card> playedCard = new ArrayList<Card>();
+        ArrayList<Card> playedCard = new ArrayList<>();
         playedCard.add(starterCard);
         player.getBoard().setPlayedCards(playedCard);
 
         String id = "001";
-        CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[1] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
         int points = 5;
-        ResourceCard resourceCard = new ResourceCard(id, centerSymbol, corners, points);
+        ResourceCard resourceCard = new ResourceCard(id, CardSymbolKingdom.MUSHROOM, corners, points);
         player.drawCard(resourceCard);
 
         Exception exception = assertThrows(InvalidPositionException.class, () -> {

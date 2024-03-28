@@ -4,8 +4,6 @@ import it.polimi.ingsw.model.cards.Corner;
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import it.polimi.ingsw.model.player.Board;
 
-import java.awt.*;
-
 /**
  * Class representing gold cards with points related to the number of corners covered when placing
  */
@@ -27,7 +25,6 @@ public class CornerPointsGoldCard extends GoldCard {
         if (this.getFlipped()) {
             return 0;
         }
-        // TODO: Calculate points based on placement
-        return 0;
+        return (int) (board.getPlayedCards().stream().filter(card -> card.getCoord().distanceSq(this.getCoord()) == 2).count() * this.getPoints());
     }
 }

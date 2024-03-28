@@ -5,8 +5,6 @@ import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import it.polimi.ingsw.model.enumeration.CardSymbolObject;
 import it.polimi.ingsw.model.player.Board;
 
-import java.awt.*;
-
 /**
  * Class representing gold cards with points related to the number of a symbol present on the player board.
  */
@@ -41,7 +39,6 @@ public class SymbolPointsGoldCard extends GoldCard {
         if (this.getFlipped()) {
             return 0;
         }
-        // TODO: Calculate points based on symbol count of board
-        return 0;
+        return board.getSymbols().get(this.pointsSymbol) * this.getPoints();
     }
 }

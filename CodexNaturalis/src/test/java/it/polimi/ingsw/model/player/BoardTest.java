@@ -42,8 +42,8 @@ public class BoardTest implements ConstructorTest {
     public void testAvailablePositionsSingleCard() {
         board.setPlayedCards(new ArrayList<>());
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(true, CardSymbolObject.SCROLL);
-        corners[2] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[2] = new Corner(null);
         ResourceCard c = new ResourceCard("000", CardSymbolKingdom.LEAF, corners, 0);
         c.setCoord(new Point(5, 5));
         board.addPlayedCard(c);
@@ -55,8 +55,8 @@ public class BoardTest implements ConstructorTest {
     public void testAvailablePositionsDoubleCards() {
         board.setPlayedCards(new ArrayList<>());
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(false, CardSymbolObject.SCROLL);
-        corners[2] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[2] = new Corner(null);
         ResourceCard c = new ResourceCard("000", CardSymbolKingdom.LEAF, corners, 0);
         c.setCoord(new Point(5, 5));
 
@@ -83,8 +83,8 @@ public class BoardTest implements ConstructorTest {
     public void testAvailablePositionsUnavailableCorner() {
         board.setPlayedCards(new ArrayList<>());
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(false, CardSymbolObject.SCROLL);
-        corners[2] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[2] = new Corner(null);
         ResourceCard c = new ResourceCard("000", CardSymbolKingdom.LEAF, corners, 0);
         c.setCoord(new Point(5, 5));
 
@@ -111,8 +111,8 @@ public class BoardTest implements ConstructorTest {
     @Test
     public void testAddToPlayedCards() {
         Corner[] corners = new Corner[4];
-        corners[0] = new Corner(false, CardSymbolObject.SCROLL);
-        corners[2] = new Corner(false, null);
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[2] = new Corner(null);
         ResourceCard c = new ResourceCard("000", CardSymbolKingdom.LEAF, corners, 0);
         c.setCoord(new Point(5, 5));
 

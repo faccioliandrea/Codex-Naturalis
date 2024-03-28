@@ -25,13 +25,13 @@ class StarterCardTest implements ConstructorTest {
         centerSymbols[1] = WOLF;
         centerSymbols[2] = MUSHROOM;
         frontCorners = new Corner[4];
-        frontCorners[0] = new Corner(false, null);
-        frontCorners[1] = new Corner(false, null);
+        frontCorners[0] = new Corner(null);
+        frontCorners[1] = new Corner(null);
         backCorners = new Corner[4];
-        backCorners[0] = new Corner(false, MUSHROOM);
-        backCorners[1] = new Corner(false, WOLF);
-        backCorners[2] = new Corner(false, BUTTERFLY);
-        backCorners[3] = new Corner(false, LEAF);
+        backCorners[0] = new Corner(MUSHROOM);
+        backCorners[1] = new Corner(WOLF);
+        backCorners[2] = new Corner(BUTTERFLY);
+        backCorners[3] = new Corner(LEAF);
         starterCard = new StarterCard(id, frontCorners, backCorners, centerSymbols);
     }
 

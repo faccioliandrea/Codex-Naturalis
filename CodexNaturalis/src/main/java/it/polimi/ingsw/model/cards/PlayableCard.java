@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.cards;
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import it.polimi.ingsw.model.player.Board;
 
-import java.awt.*;
 import java.util.Collections;
 
 /**
@@ -22,7 +21,7 @@ public abstract class PlayableCard extends Card {
      * @param points Points given once the card is placed
      */
     public PlayableCard(String id, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points) {
-        super(id, frontCorners, Collections.nCopies(4, new Corner(false, null)).toArray(new Corner[4]));
+        super(id, frontCorners, Collections.nCopies(4, new Corner(null)).toArray(new Corner[4]));
         this.centerSymbol = centerSymbol;
         this.points = points;
     }

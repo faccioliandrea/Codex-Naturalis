@@ -11,10 +11,8 @@ public class CornerTest implements ConstructorTest {
     @Override
     @Test
     public void testConstructor() {
-        boolean covered = false;
         CardSymbol cardSymbol = CardSymbolKingdom.WOLF;
-        Corner corner = new Corner(covered, cardSymbol);
-        assertEquals(covered, corner.isCovered());
+        Corner corner = new Corner(cardSymbol);
         assertEquals(cardSymbol, corner.getSymbol());
     }
 }
