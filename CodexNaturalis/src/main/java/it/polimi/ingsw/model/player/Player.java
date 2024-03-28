@@ -131,6 +131,19 @@ public class Player {
         this.privateGoals = privateGoals;
     }
 
+    /**
+     * Setter for Player's startercard attribute
+     */
+    public void setStarterCard(StarterCard starterCard) {
+        this.starterCard = starterCard;
+    }
+
+    /**
+     * Setter for Player's Board attribute
+     */
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
     /**
      * This method add the drawn Card to player's hand
@@ -176,4 +189,6 @@ public class Player {
         }));
         goalsPoints = board.getPrivateGoal().checkGoal(board);
     }
+
+
 }
