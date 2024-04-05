@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.goals.PatternGoalDiagonal;
 import it.polimi.ingsw.model.goals.PatternGoalL;
 import it.polimi.ingsw.model.player.Board;
-import it.polimi.ingsw.model.testUtility.BoardUtility;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -19,7 +18,7 @@ import static it.polimi.ingsw.model.enumeration.CardSymbolKingdom.*;
 import static it.polimi.ingsw.model.enumeration.CardSymbolKingdom.BUTTERFLY;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CornerPointsGoldCardTest extends BoardUtility implements ConstructorTest, GoldCardTest {
+public class CornerPointsGoldCardTest implements ConstructorTest, GoldCardTest {
 
     @Override
     @Test
