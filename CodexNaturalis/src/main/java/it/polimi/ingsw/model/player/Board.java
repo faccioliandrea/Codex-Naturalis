@@ -38,7 +38,7 @@ public class Board {
     /**
      * Constructor
      * @param privateGoal private Goal
-     * @param sharedGoals lisgt of shared goals
+     * @param sharedGoals List of shared goals
      */
     public Board(Goal privateGoal, ArrayList<Goal> sharedGoals) {
         this.playedCards = new ArrayList<>();

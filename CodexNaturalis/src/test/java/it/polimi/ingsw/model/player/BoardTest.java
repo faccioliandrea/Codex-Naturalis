@@ -98,8 +98,6 @@ public class BoardTest implements ConstructorTest {
 
         ResourceCard c3 = new ResourceCard("002", CardSymbolKingdom.LEAF, corners, 0);
         c3.setCoord(new Point(7, 7));
-        // c3.setFlipped(true);
-        // c3.getCorners()[3].setCovered(true);
 
         board.addPlayedCard(c3);
 
