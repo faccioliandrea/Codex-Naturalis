@@ -2,14 +2,15 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.ConstructorTest;
 import it.polimi.ingsw.model.cards.*;
+import it.polimi.ingsw.model.cards.gold.FixedPointsGoldCard;
+import it.polimi.ingsw.model.cards.gold.GoldCardRequirement;
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import it.polimi.ingsw.model.enumeration.CardSymbolObject;
+import it.polimi.ingsw.model.enumeration.LDirection;
 import it.polimi.ingsw.model.enumeration.PlayerColor;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
-import it.polimi.ingsw.model.goals.Goal;
-import it.polimi.ingsw.model.goals.GoalRequirement;
-import it.polimi.ingsw.model.goals.PatternGoalDiagonal;
-import it.polimi.ingsw.model.goals.SymbolGoal;
+import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
+import it.polimi.ingsw.model.goals.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,13 +26,11 @@ class PlayerTest implements ConstructorTest {
     private PlayerColor playerColor;
     private Player player;
 
-
     @BeforeEach
     void setUp() {
         username = "playerUsername";
         playerColor = PlayerColor.BLUE;
         player = new Player(username, playerColor);
-
     }
 
     @Override
@@ -78,7 +77,14 @@ class PlayerTest implements ConstructorTest {
     }
 
     @Test
-    void successfulPlaceCard() throws InvalidPositionException {
+    void successfulPlaceCard() throws InvalidPositionException, RequirementsNotSatisfied {
+        ArrayList<Goal> sharedGoals = new ArrayList<>();
+        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOMLEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
+        sharedGoals.add(new PatternGoalDiagonal("002", 3, true, CardSymbolKingdom.LEAF));
+        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
+        Board board = new Board(privateGoal, sharedGoals);
+        player.setBoard(board);
+
         String id1 = "016";
         CardSymbolKingdom[] centerSymbols = new CardSymbolKingdom[3];
         centerSymbols[0] = LEAF;
@@ -109,15 +115,62 @@ class PlayerTest implements ConstructorTest {
 
         Point coor = new Point(1,1);
 
-        // TODO: da testare con calculatePoints() e checkGoal()
-        try{
-            player.placeCard(resourceCard, coor);
-        }catch(NullPointerException e){
-            System.out.println("Skipping CalculatePoints() test");
-        }
+        player.placeCard(resourceCard, coor);
+
         assertEquals(resourceCard.getCoord(), coor);
         assertFalse(player.getHand().contains(resourceCard));
         assertTrue(player.getBoard().getPlayedCards().contains(resourceCard));
+
+    }
+
+    @Test
+    void exceptionalPlaceGoldCard() throws InvalidPositionException, RequirementsNotSatisfied {
+        ArrayList<Goal> sharedGoals = new ArrayList<>();
+        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOMLEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
+        sharedGoals.add(new PatternGoalDiagonal("002", 3, true, CardSymbolKingdom.LEAF));
+        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
+        Board board = new Board(privateGoal, sharedGoals);
+        player.setBoard(board);
+
+        String id1 = "016";
+        CardSymbolKingdom[] centerSymbols = new CardSymbolKingdom[3];
+        centerSymbols[0] = MUSHROOM;
+        centerSymbols[1] = LEAF;
+        centerSymbols[2] = MUSHROOM;
+        Corner[] frontCorners = new Corner[4];
+        frontCorners[0] = new Corner(null);
+        frontCorners[1] = new Corner(null);
+        Corner[] backCorners = new Corner[4];
+        backCorners[0] = new Corner(MUSHROOM);
+        backCorners[1] = new Corner(LEAF);
+        backCorners[2] = new Corner(BUTTERFLY);
+        backCorners[3] = new Corner(LEAF);
+        StarterCard starterCard = new StarterCard(id1, frontCorners, backCorners, centerSymbols);
+
+        player.placeCard(starterCard, new Point(0,0));
+
+        String id = "000";
+        CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
+        Corner[] corners = new Corner[4];
+        corners[0] = new Corner(CardSymbolObject.SCROLL);
+        corners[1] = new Corner(null);
+        int points = 5;
+        GoldCardRequirement requirement_1 = new GoldCardRequirement(CardSymbolKingdom.MUSHROOM, 2);
+        GoldCardRequirement requirement_2 = new GoldCardRequirement(CardSymbolKingdom.BUTTERFLY, 1);
+        GoldCardRequirement[] requirements = new GoldCardRequirement[2];
+        requirements[0] = requirement_1;
+        requirements[1] = requirement_2;
+        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, centerSymbol, corners, points, requirements);
+        player.drawCard(goldCard);
+
+        Point coor = new Point(1,1);
+
+        Exception exception = assertThrows(RequirementsNotSatisfied.class, () -> {
+            player.placeCard(goldCard, coor);
+        });
+        String expectedMessage = "Error: you don't satisfy the requirements!";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
 
     }
 

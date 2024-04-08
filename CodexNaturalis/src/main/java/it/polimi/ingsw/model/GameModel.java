@@ -29,8 +29,6 @@ public class GameModel {
         this.players = players;
         this.currentTurn = 0;
         this.totalTurns = 0;
-
-        this.players = new ArrayList<>();
         this.starterCardDeck = new ArrayList<>();
         this.resourceCardDeck = new ArrayList<>();
         this.goldCardDeck = new ArrayList<>();
@@ -109,10 +107,10 @@ public class GameModel {
         }
 
         try {
-            starterCardDeck = new ArrayList<>(List.of(Parser.parser.initStarterCards()));
-            resourceCardDeck = new ArrayList<>(List.of(Parser.parser.initResourceCards()));
-            goldCardDeck = new ArrayList<>(List.of(Parser.parser.initGoldCards()));
-            goalsDeck = new ArrayList<>(List.of(Parser.parser.initGoals()));
+            starterCardDeck = new ArrayList<>(Arrays.asList(Parser.parser.initStarterCards()));
+            resourceCardDeck = new ArrayList<>(Arrays.asList(Parser.parser.initResourceCards()));
+            goldCardDeck = new ArrayList<>(Arrays.asList(Parser.parser.initGoldCards()));
+            goalsDeck = new ArrayList<>(Arrays.asList(Parser.parser.initGoals()));
         } catch (IllegalArgumentException e) {
             // TODO: notify controller
         } catch (FileNotFoundException e) {

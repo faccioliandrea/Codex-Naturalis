@@ -3,12 +3,15 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayableCard;
 import it.polimi.ingsw.model.cards.StarterCard;
+import it.polimi.ingsw.model.cards.gold.GoldCard;
 import it.polimi.ingsw.model.enumeration.PlayerColor;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
+import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
 import it.polimi.ingsw.model.goals.Goal;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /** Class representing a player in the game */
 public class Player {
@@ -16,6 +19,7 @@ public class Player {
     private PlayerColor playerColor;
     private int cardsPoints;
     private int goalsPoints;
+    private int completedGoals;
     private ArrayList<PlayableCard> hand;
     private StarterCard starterCard;
     private ArrayList<Goal> privateGoals;
@@ -31,6 +35,7 @@ public class Player {
         this.playerColor = playerColor;
         this.cardsPoints = 0;
         this.goalsPoints = 0;
+        this.completedGoals = 0;
         this.hand = new ArrayList<PlayableCard>();
         this.starterCard = null;
         privateGoals = null;
@@ -144,6 +149,20 @@ public class Player {
     }
 
     /**
+     * Setter for Player's completedGoals attribute
+     */
+    public int getCompletedGoals() {
+        return completedGoals;
+    }
+
+    /**
+     * Getter for Player's completedGoals attribute
+     */
+    public void setCompletedGoals(int completedGoals) {
+        this.completedGoals = completedGoals;
+    }
+
+    /**
      * This method add the drawn Card to player's hand
      */
     public void drawCard(PlayableCard card){
@@ -160,9 +179,17 @@ public class Player {
     /**
      * This method handles the player's Card selection
      */
-    public void placeCard(Card card, Point coord) throws InvalidPositionException {
+    public void placeCard(Card card, Point coord) throws InvalidPositionException, RequirementsNotSatisfied {
        if(!board.availablePositions().contains(coord)) throw new InvalidPositionException();
+       if(card instanceof GoldCard){
+           if(!Arrays.stream(((GoldCard) card).getRequirements()).allMatch(x->x.getQuantity()<=board.getSymbols().get(x.getRequiredSymbol()))){
+               throw new RequirementsNotSatisfied();
+           }
+       }
        card.setCoord(coord);
+       if(card instanceof PlayableCard){
+           cardsPoints+=((PlayableCard) card).calculatePoints(board);
+       }
        board.addPlayedCard(card);
        removeFromHand(card);
        calculatePoints();
@@ -182,11 +209,20 @@ public class Player {
      * This method calculates the points scored by the player thanks to the two sharedGoals and the privateGoal
      */
     private void calculatePoints(){
+        goalsPoints = 0;
+        completedGoals = 0;
         board.getSharedGoals().forEach((goal -> {
-            goalsPoints = goal.checkGoal(board);
+            if(goal.checkGoal(board)!=0){
+                goalsPoints += goal.checkGoal(board);
+                completedGoals += 1;
+            }
         }));
-        goalsPoints = board.getPrivateGoal().checkGoal(board);
+        if(board.getPrivateGoal().checkGoal(board)!=0){
+            goalsPoints += board.getPrivateGoal().checkGoal(board);
+            completedGoals += 1;
+        }
     }
+
 
 
 }
