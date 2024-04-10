@@ -180,19 +180,19 @@ public class Player {
      * This method handles the player's Card selection
      */
     public void placeCard(Card card, Point coord) throws InvalidPositionException, RequirementsNotSatisfied {
-       if(!board.availablePositions().contains(coord)) throw new InvalidPositionException();
-       if(card instanceof GoldCard){
+        if(!board.availablePositions().contains(coord)) throw new InvalidPositionException();
+        if(card instanceof GoldCard){
            if(!Arrays.stream(((GoldCard) card).getRequirements()).allMatch(x->x.getQuantity()<=board.getSymbols().get(x.getRequiredSymbol()))){
                throw new RequirementsNotSatisfied();
            }
-       }
-       card.setCoord(coord);
-       if(card instanceof PlayableCard){
+        }
+        card.setCoord(coord);
+        board.addPlayedCard(card);
+        if(card instanceof PlayableCard){
            cardsPoints+=((PlayableCard) card).calculatePoints(board);
-       }
-       board.addPlayedCard(card);
-       removeFromHand(card);
-       calculatePoints();
+        }
+        removeFromHand(card);
+        calculatePoints();
     }
     /**
      * This method is called when a Card is placed; it removes the Card from Player's hand

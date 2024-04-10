@@ -84,18 +84,17 @@ public class SymbolPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
         board = new Board(privateGoal, sharedGoals);
 
-        ArrayList<Card> playedCard = new ArrayList<>();
-        playedCard.add(starterCard());
         player.setBoard(board);
-        player.getBoard().setPlayedCards(playedCard);
 
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(CardSymbolObject.SCROLL);
         corners[1] = new Corner(null);
         int points = 1;
-        SymbolPointsGoldCard goldCard = new SymbolPointsGoldCard("00", CardSymbolKingdom.BUTTERFLY, corners, points, null, CardSymbolObject.SCROLL);
-
-        //assertDoesNotThrow( () -> player.placeCard(starterCard(), new Point(0,0)), "Invalid position");
+        GoldCardRequirement requirement_1 = new GoldCardRequirement(CardSymbolKingdom.MUSHROOM, 1);
+        GoldCardRequirement[] requirements = new GoldCardRequirement[1];
+        requirements[0] = requirement_1;
+        SymbolPointsGoldCard goldCard = new SymbolPointsGoldCard("00", CardSymbolKingdom.BUTTERFLY, corners, points, requirements, CardSymbolObject.SCROLL);
+        assertDoesNotThrow( () -> player.placeCard(starterCard(), new Point(0,0)), "Invalid position");
         assertDoesNotThrow( () -> player.placeCard(playableCardEmpty(), new Point(-1,1)), "Invalid position");
         assertDoesNotThrow( () -> player.placeCard(playableCard2(), new Point(0,2)), "Invalid position");
         assertDoesNotThrow( () -> player.placeCard(playableCardEmpty(), new Point(1,3)), "Invalid position");
@@ -117,12 +116,12 @@ public class SymbolPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         frontCorners[0] = new Corner(null);
         frontCorners[1] = new Corner(null);
         Corner[] backCorners = new Corner[4];
-        frontCorners[0] = new Corner(CardSymbolKingdom.MUSHROOM);
-        frontCorners[1] = new Corner(CardSymbolKingdom.WOLF);
-        frontCorners[2] = new Corner(CardSymbolKingdom.BUTTERFLY);
-        frontCorners[3] = new Corner(CardSymbolKingdom.LEAF);
+        backCorners[0] = new Corner(CardSymbolKingdom.MUSHROOM);
+        backCorners[1] = new Corner(CardSymbolKingdom.WOLF);
+        backCorners[2] = new Corner(CardSymbolKingdom.BUTTERFLY);
+        backCorners[3] = new Corner(CardSymbolKingdom.LEAF);
         StarterCard starterCard = new StarterCard(id,frontCorners,backCorners,centerSymbols);
-        starterCard.setCoord(new Point(0,0));
+        starterCard.setFlipped(true);
         return starterCard;
     }
 
@@ -157,7 +156,7 @@ public class SymbolPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         corners[0] = new Corner(CardSymbolObject.SCROLL);
         corners[1] = new Corner(null);
         corners[2] = new Corner(null);
-        corners[3] = new Corner(null);
+        corners[3] = new Corner(CardSymbolKingdom.MUSHROOM);
         return new ResourceCard("000", CardSymbolKingdom.BUTTERFLY, corners, 0);
     }
 }
