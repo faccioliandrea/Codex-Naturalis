@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import com.google.gson.JsonParseException;
 import it.polimi.ingsw.model.cards.PlayableCard;
-import it.polimi.ingsw.model.enumeration.PlayerColor;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.cards.ResourceCard;
@@ -141,15 +140,15 @@ public class GameModel {
         this.players.forEach(x -> x.setStarterCard(this.starterCardDeck.remove(0)));
 
         // sets same shared goals for all players
-        this.players.forEach(x -> x.getBoard().setSharedGoals((ArrayList<Goal>) goalsDeck.subList(0,1)));
+        this.players.forEach(x -> x.getBoard().setSharedGoals(new ArrayList<Goal>(goalsDeck.subList(0,2))));
         // sets private goals for each player
         for (int i=0, j=0; i<this.players.size() && j<goalsDeck.size(); i++, j += 2) {
-            this.players.get(i).setPrivateGoals((ArrayList<Goal>) goalsDeck.subList(j,j+1));
+            this.players.get(i).setPrivateGoals(new ArrayList<Goal>(goalsDeck.subList(j,j+2)));
         }
 
         // sets hand
         for (int i=0, j=0; i<this.players.size(); i++, j += 2) {
-            Collection<ResourceCard> pair = this.resourceCardDeck.subList(j, j+1);
+            Collection<ResourceCard> pair = this.resourceCardDeck.subList(j, j+2);
             ArrayList<PlayableCard> tmp = new ArrayList<>(pair);
             this.resourceCardDeck.removeAll(pair);
             tmp.add(this.goldCardDeck.remove(0));
