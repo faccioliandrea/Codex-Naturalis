@@ -9,20 +9,20 @@ import java.util.Collections;
  * Abstract class for Playable Cards (Resource and Gold cards)
  */
 public abstract class PlayableCard extends Card {
-    private CardSymbolKingdom centerSymbol;
+    private CardSymbolKingdom kingdomSymbol;
 
     private int points;
 
     /**
      * Default constructor
      * @param id PlayableCard ID
-     * @param centerSymbol Center Symbol
+     * @param kingdomSymbol Kingdom Symbol
      * @param frontCorners Front corners
      * @param points Points given once the card is placed
      */
-    public PlayableCard(String id, CardSymbolKingdom centerSymbol, Corner[] frontCorners, int points) {
+    public PlayableCard(String id, CardSymbolKingdom kingdomSymbol, Corner[] frontCorners, int points) {
         super(id, frontCorners, Collections.nCopies(4, new Corner(null)).toArray(new Corner[4]));
-        this.centerSymbol = centerSymbol;
+        this.kingdomSymbol = kingdomSymbol;
         this.points = points;
     }
 
@@ -39,14 +39,14 @@ public abstract class PlayableCard extends Card {
      * @return centerSymbol
      */
     public CardSymbolKingdom getCenterSymbol() {
-        return this.getFlipped() ? centerSymbol : null;
+        return this.getFlipped() ? kingdomSymbol : null;
     }
 
     /**
      * Getter for card kingdom attribute
      * @return card kingdom
      */
-    public CardSymbolKingdom getCardKingdom() { return centerSymbol; }
+    public CardSymbolKingdom getCardKingdom() { return kingdomSymbol; }
 
     /**
      * Abstract method to calculate the number of points the user gets when placing the card. Implementation depends on the type of the GoldCard
