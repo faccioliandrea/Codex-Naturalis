@@ -29,7 +29,7 @@ class GameModelTest implements ConstructorTest{
         players.add(player2);
         players.add(player3);
         players.add(player4);
-        gameModel = new GameModel(gameId, players);
+        assertDoesNotThrow(() -> {gameModel = new GameModel(gameId, players);});
     }
 
     @Test
