@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.cards.Card;
+
 import java.awt.*;
 
 public class CardInfo {
@@ -13,6 +15,13 @@ public class CardInfo {
         this.coord = coord;
         this.flipped = flipped;
         this.description = description;
+    }
+
+    public CardInfo(Card card) {
+        this.id = card.getId();
+        this.coord = card.getCoord();
+        this.flipped = card.getFlipped();
+        this.description = "";
     }
 
     public String getId() {
