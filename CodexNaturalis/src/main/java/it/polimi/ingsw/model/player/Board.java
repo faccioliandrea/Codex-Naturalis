@@ -173,7 +173,7 @@ public class Board {
                 .forEach(this::increaseSymbolPoints);
         if (card instanceof StarterCard && !card.getFlipped()){
             Arrays.stream(((StarterCard) card)
-                    .getCenterSymbols())
+                    .getConditionalCenterSymbols())
                     .forEach(this::increaseSymbolPoints);
         } else if (card instanceof PlayableCard && card.getFlipped()) {
             increaseSymbolPoints(((PlayableCard) card).getCenterSymbol());

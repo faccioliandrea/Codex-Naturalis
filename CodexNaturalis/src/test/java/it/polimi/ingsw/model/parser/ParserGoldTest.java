@@ -50,9 +50,9 @@ public class ParserGoldTest {
         }
         assertEquals(goldCard.getCardKingdom(), goldCardJson.getCardKingdom());
         assertEquals(goldCard.getPoints(), goldCardJson.getPoints());
-        for(int index = 0; index < goldCardJson.getRequirements().length; index++) {
-            GoldCardRequirement requirementJson = goldCardJson.getRequirements()[index];
-            GoldCardRequirement requirement = goldCard.getRequirements()[index];
+        for(int index = 0; index < goldCardJson.getConditionalRequirements().length; index++) {
+            GoldCardRequirement requirementJson = goldCardJson.getConditionalRequirements()[index];
+            GoldCardRequirement requirement = goldCard.getConditionalRequirements()[index];
             if (requirementJson != null) {
                 assertNotNull(requirement);
                 assertEquals(requirementJson.getRequiredSymbol(), requirement.getRequiredSymbol());
@@ -92,9 +92,9 @@ public class ParserGoldTest {
         }
         assertEquals(goldCard.getCardKingdom(), goldCardJson.getCardKingdom());
         assertEquals(goldCard.getPoints(), goldCardJson.getPoints());
-        for(int index = 0; index < goldCardJson.getRequirements().length; index++) {
-            GoldCardRequirement requirementJson = goldCardJson.getRequirements()[index];
-            GoldCardRequirement requirement = goldCard.getRequirements()[index];
+        for(int index = 0; index < goldCardJson.getConditionalRequirements().length; index++) {
+            GoldCardRequirement requirementJson = goldCardJson.getConditionalRequirements()[index];
+            GoldCardRequirement requirement = goldCard.getConditionalRequirements()[index];
             if (requirementJson != null) {
                 assertNotNull(requirement);
                 assertEquals(requirementJson.getRequiredSymbol(), requirement.getRequiredSymbol());
@@ -135,9 +135,9 @@ public class ParserGoldTest {
         }
         assertEquals(goldCard.getCardKingdom(), goldCardJson.getCardKingdom());
         assertEquals(goldCard.getPoints(), goldCardJson.getPoints());
-        for(int index = 0; index < goldCardJson.getRequirements().length; index++) {
-            GoldCardRequirement requirementJson = goldCardJson.getRequirements()[index];
-            GoldCardRequirement requirement = goldCard.getRequirements()[index];
+        for(int index = 0; index < goldCardJson.getConditionalRequirements().length; index++) {
+            GoldCardRequirement requirementJson = goldCardJson.getConditionalRequirements()[index];
+            GoldCardRequirement requirement = goldCard.getConditionalRequirements()[index];
             if (requirementJson != null) {
                 assertNotNull(requirement);
                 assertEquals(requirementJson.getRequiredSymbol(), requirement.getRequiredSymbol());

@@ -2,8 +2,6 @@ package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 
-import java.awt.*;
-
 /**
  * Class representing a StarterCard of the game
  */
@@ -28,8 +26,12 @@ public class StarterCard extends Card{
      * Getter for centerSymbols attribute
      * @return centerSymbols
      */
-    public CardSymbolKingdom[] getCenterSymbols() {
+    public CardSymbolKingdom[] getConditionalCenterSymbols() {
         return this.getFlipped() ? null : centerSymbols;
+    }
+
+    public CardSymbolKingdom[] getCenterSymbols() {
+        return centerSymbols;
     }
 
 

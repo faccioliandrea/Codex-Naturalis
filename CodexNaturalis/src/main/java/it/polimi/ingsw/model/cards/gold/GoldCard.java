@@ -4,8 +4,6 @@ import it.polimi.ingsw.model.cards.Corner;
 import it.polimi.ingsw.model.cards.PlayableCard;
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 
-import java.awt.*;
-
 /**
  * Abstract class representing a GoldCard of the game
  */
@@ -26,10 +24,18 @@ public abstract class GoldCard extends PlayableCard {
     }
 
     /**
-     * Getter for card requirements based on its flip status
+     * Getter for card requirements
      * @return requirements
      */
     public GoldCardRequirement[] getRequirements() {
+        return requirements;
+    }
+
+    /**
+     * Getter for card requirements based on its flip status
+     * @return requirements
+     */
+    public GoldCardRequirement[] getConditionalRequirements() {
         return this.getFlipped() ? null : requirements;
     }
 }

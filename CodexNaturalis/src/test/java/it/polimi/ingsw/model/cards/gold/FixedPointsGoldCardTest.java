@@ -29,7 +29,7 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         assertEquals(centerSymbol, goldCard.getCardKingdom());
         assertEquals(corners, goldCard.getCorners());
         assertEquals(points, goldCard.getPoints());
-        assertEquals(requirements, goldCard.getRequirements());
+        assertEquals(requirements, goldCard.getConditionalRequirements());
     }
 
     @Override
@@ -70,6 +70,6 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
             assertFalse(corner.isCovered());
             assertNull(corner.getSymbol());
         }
-        assertNull(goldCard.getRequirements());
+        assertNull(goldCard.getConditionalRequirements());
     }
 }

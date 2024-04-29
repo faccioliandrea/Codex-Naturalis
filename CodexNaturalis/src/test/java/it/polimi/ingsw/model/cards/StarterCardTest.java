@@ -41,10 +41,10 @@ class StarterCardTest implements ConstructorTest {
     public void testConstructor(){
         assertEquals(id, starterCard.getId());
         assertEquals(frontCorners, starterCard.getCorners());
-        assertEquals(centerSymbols, starterCard.getCenterSymbols());
+        assertEquals(centerSymbols, starterCard.getConditionalCenterSymbols());
         starterCard.setFlipped(true);
         assertEquals(backCorners, starterCard.getCorners());
-        assertNull(starterCard.getCenterSymbols());
+        assertNull(starterCard.getConditionalCenterSymbols());
     }
 
 }

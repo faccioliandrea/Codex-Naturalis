@@ -53,9 +53,9 @@ public class ParserStarterTest {
                 assertNull(corner);
             }
         }
-        for(int index = 0; index < starterCardJson.getCenterSymbols().length; index++) {
-            CardSymbolKingdom centerSymbolJson = starterCardJson.getCenterSymbols()[index];
-            CardSymbolKingdom centerSymbol = starterCard.getCenterSymbols()[index];
+        for(int index = 0; index < starterCardJson.getConditionalCenterSymbols().length; index++) {
+            CardSymbolKingdom centerSymbolJson = starterCardJson.getConditionalCenterSymbols()[index];
+            CardSymbolKingdom centerSymbol = starterCard.getConditionalCenterSymbols()[index];
             if (centerSymbolJson != null) {
                 assertNotNull(centerSymbol);
                 assertEquals(centerSymbolJson, centerSymbol);

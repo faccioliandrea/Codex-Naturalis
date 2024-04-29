@@ -58,6 +58,22 @@ public abstract class Card {
     }
 
     /**
+     * Getter for back corners
+     * @return corners
+     */
+    public Corner[] getBackCorners() {
+        return backCorners;
+    }
+
+    /**
+     * Getter for front corners
+     * @return corners
+     */
+    public Corner[] getFrontCorners() {
+        return backCorners;
+    }
+
+    /**
      * Setter for coordinates attribute
      */
     public void setCoord(Point coord) {
