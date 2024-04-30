@@ -10,6 +10,6 @@ public class PlayerJoinedMessage extends ServerToClientMessage {
 
     @Override
     public void execute(ClientController controller) {
-        controller.playerJoined(this.username);
+        controller.playerJoinedLobby(this.username);
     }
 }

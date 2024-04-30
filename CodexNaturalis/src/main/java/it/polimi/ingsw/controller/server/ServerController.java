@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.server;
 
+import it.polimi.ingsw.connections.server.ClientConnection;
 import it.polimi.ingsw.controller.CardInfo;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.model.exceptions.InvalidPositionException;
 import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,13 +41,25 @@ public class ServerController {
      * @param username the username of the connection
      */
     public void addConnection(ClientConnection connection, String username){
-        if(connections.containsKey(username) && !connections.get(username).isAlive())
+        if(connections.containsKey(username) && !connections.get(username).getStatus()) {
             connections.replace(username, connection);
-        else if(connections.containsKey(username))
-            connection.invalidUsername();
+            System.out.printf("%s Reconnected%n", username);
+        }
+        else if(connections.containsKey(username)) {
+            try {
+                connection.invalidUsername();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         else{
             connections.put(username, connection);
-            connection.validUsername();
+            try {
+                System.out.printf("%s Connected%n", username);
+                connection.validUsername();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -61,7 +75,11 @@ public class ServerController {
             for (String username : users) {
                 userToGame.put(username, gameId);
                 userToLobby.remove(username);
-                connections.get(username).gameStarted();
+                try {
+                    connections.get(username).gameStarted();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             gameController.startGame(gameId);
             //TODO:aggiunger il ritorno della hand iniziale e la starter card e il privateGoal
@@ -88,7 +106,11 @@ public class ServerController {
             int currTurn = gameController.getCurrentTurn(userToGame.get(user));
             boolean isLastTurn = gameController.isLast(userToGame.get(user));
             ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
-            connections.get(user).initTurn(hand, rd, gd, availablePositions, currTurn, isLastTurn, board);
+            try {
+                connections.get(user).initTurn(hand, rd, gd, availablePositions, currTurn, isLastTurn, board);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
     }
@@ -105,7 +127,11 @@ public class ServerController {
     public void choosePrivateGoal(String user,int index){
         if(checkUserCurrentPlayer(user)) {
             gameController.choosePrivateGoal(userToGame.get(user), index);
-            connections.get(user).privateGoalChosen();
+            try {
+                connections.get(user).privateGoalChosen();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -123,9 +149,17 @@ public class ServerController {
                 gameController.placeCard(userToGame.get(user), card, position);
                 int cardsPoints = gameController.getUserCardsPoints(userToGame.get(user));
                 int GoalsPoints = gameController.getUserGoalsPoints(userToGame.get(user));
-                connections.get(user).placeCardSuccess(cardsPoints, GoalsPoints);
+                try {
+                    connections.get(user).placeCardSuccess(cardsPoints, GoalsPoints);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             } catch (RequirementsNotSatisfied | InvalidPositionException e) {
-                connections.get(user).placeCardFailure();
+                try {
+                    connections.get(user).placeCardFailure();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
     }
@@ -138,7 +172,11 @@ public class ServerController {
     public void drawResource(String user, int index){
         if(checkUserCurrentPlayer(user)) {
             gameController.drawResource(userToGame.get(user), index);
-            connections.get(user).drawSuccess(gameController.getHand(userToGame.get(user)));
+            try {
+                connections.get(user).drawSuccess(gameController.getHand(userToGame.get(user)));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -150,7 +188,11 @@ public class ServerController {
     public void drawGold(String user, int index){
         if(checkUserCurrentPlayer(user)) {
             gameController.drawGold(userToGame.get(user), index);
-            connections.get(user).drawSuccess(gameController.getHand(userToGame.get(user)));
+            try {
+                connections.get(user).drawSuccess(gameController.getHand(userToGame.get(user)));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -166,8 +208,13 @@ public class ServerController {
             int points = gameController.getUserCardsPoints(userToGame.get(user));
             gameController.endTurn(userToGame.get(user));
             for (String username : connections.keySet()) {
-                if (userToGame.get(user).equals(userToGame.get(username)))
-                    connections.get(username).sendStatus(rd, gd, board, points);
+                if (userToGame.get(user).equals(userToGame.get(username))) {
+                    try {
+                        connections.get(username).sendStatus(rd, gd, board, points);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
             if (gameController.isGameFinished(userToGame.get(user)))
                 endGame(userToGame.get(user));
@@ -182,8 +229,13 @@ public class ServerController {
     private void endGame(String gameId){
         HashMap<String, Integer> leaderboard = gameController.endGame(gameId);
         for(String username : userToGame.keySet()){
-            if(userToLobby.get(username).equals(userToLobby.get(username)))
-                connections.get(username).gameEnded(leaderboard);
+            if(userToLobby.get(username).equals(userToLobby.get(username))) {
+                try {
+                    connections.get(username).gameEnded(leaderboard);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
@@ -193,7 +245,11 @@ public class ServerController {
      */
     public void disconnect(String username) {
         if (checkUserConnected(username)) {
-            connections.get(username).close();
+            try {
+                connections.get(username).close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             connections.remove(username);
             userToLobby.remove(username);
         }
@@ -222,18 +278,38 @@ public class ServerController {
      */
     public void addPlayerToLobby(String username, String lobbyId) {
         if (checkUserConnected(username)) {
-            if(!lobbyController.getLobbies().containsKey(lobbyId))
-                connections.get(username).lobbyDoesNotExist();
-            else if(lobbyController.getLobbies().get(lobbyId).isFull())
-                connections.get(username).lobbyFull();
+            if(!lobbyController.getLobbies().containsKey(lobbyId)) {
+                try {
+                    connections.get(username).lobbyDoesNotExist();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else if(lobbyController.getLobbies().get(lobbyId).isFull()) {
+                try {
+                    connections.get(username).lobbyFull();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             else {
                 lobbyController.addPlayer(username, lobbyId);
                 userToLobby.put(username, lobbyId);
-                for (String u : userToLobby.values()) {
-                    if (userToLobby.get(u).equals(lobbyId) && u.equals(username))
-                        connections.get(u).joinLobbySuccess();
-                    else if (userToLobby.get(u).equals(lobbyId) && !u.equals(username))
-                        connections.get(u).playerJoined(username);
+                for (String u : userToLobby.keySet()) {
+                    if (userToLobby.get(u).equals(lobbyId) && u.equals(username)) {
+                        try {
+                            connections.get(u).joinLobbySuccess();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    else if (userToLobby.get(u).equals(lobbyId) && !u.equals(username)) {
+                        try {
+                            connections.get(u).playerJoined(username);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 }
                 if (lobbyController.getLobbies().get(lobbyId).isFull())
                     createGame(lobbyController.getLobbies().get(lobbyId).getUsers());
@@ -246,10 +322,20 @@ public class ServerController {
      */
     public void getLobbies(String username) {
         if (checkUserConnected(username)){
-            if (lobbyController.getLobbies().isEmpty())
-                connections.get(username).lobbyDoesNotExist();
-            else
-                connections.get(username).sendLobbies(lobbyController.getLobbies().keySet());
+            if (lobbyController.getLobbies().isEmpty()) {
+                try {
+                    connections.get(username).lobbyDoesNotExist();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else {
+                try {
+                    connections.get(username).lobbyExists(new ArrayList<String>(lobbyController.getLobbies().keySet()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             //the lobbies can't be full, when a lobby is full a game is created and the lobby is removed
         }
     }
@@ -272,7 +358,7 @@ public class ServerController {
     }
 
     //TODO
-//  public void onClientDisconnect(){
-//
-//  }
+  public void onClientDisconnect(ClientConnection c){
+        System.out.println(String.format("Client %s disconnected", c.getRemoteAddr()));
+  }
 }

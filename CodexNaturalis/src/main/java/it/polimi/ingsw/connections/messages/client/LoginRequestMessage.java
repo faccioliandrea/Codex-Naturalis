@@ -4,6 +4,10 @@ import it.polimi.ingsw.controller.server.ServerController;
 public class LoginRequestMessage extends ClientToServerMessage {
     private String username;
 
+    public String getUsername(){
+        return username;
+    }
+
     public LoginRequestMessage(String username) {
         this.username = username;
     }

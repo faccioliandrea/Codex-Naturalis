@@ -5,5 +5,7 @@ public class ValidUsernameMessage extends ServerToClientMessage {
     public ValidUsernameMessage() {}
 
     @Override
-    public void execute(ClientController controller) {}
+    public void execute(ClientController controller) {
+        controller.validUsername();
+    }
 }
