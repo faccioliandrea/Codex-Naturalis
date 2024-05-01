@@ -74,10 +74,10 @@ public class Client {
                 try {
                     socket = new Socket(address, port);
                     connected = true;
-                    ServerConnection conn = new SocketServerConnection(matchController, socket);
+                    SocketServerConnection conn = new SocketServerConnection(matchController, socket);
                     matchController.setConnection(conn);
                     new Thread(conn).start();
-                    matchController.loginRequest();
+                    matchController.getConnectionBridge().loginRequest();
                 } catch (IOException  e) {
                     ui.printDebug("Could not connect to the server. Retrying...");
                 }

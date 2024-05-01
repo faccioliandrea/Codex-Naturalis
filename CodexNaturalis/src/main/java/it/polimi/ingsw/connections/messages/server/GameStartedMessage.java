@@ -1,11 +1,11 @@
 package it.polimi.ingsw.connections.messages.server;
-import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class GameStartedMessage extends ServerToClientMessage {
     public GameStartedMessage() {}
 
     @Override
-    public void execute(ClientController controller) {
-        controller.gameStarted();
+    public void execute(ConnectionBridge bridge) {
+        bridge.gameStarted();
     }
 }

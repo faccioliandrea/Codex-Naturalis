@@ -14,7 +14,7 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class SocketServerConnection implements ServerConnection {
+public class SocketServerConnection implements ServerConnection, Runnable {
     private final ClientController controller;
     private InputStreamRunnable inputStream;
     private OutputStreamRunnable outputStream;
@@ -46,7 +46,7 @@ public class SocketServerConnection implements ServerConnection {
 
             while (this.isAlive) {
                 ServerToClientMessage msg = (ServerToClientMessage) queue.take();
-                msg.execute(controller);
+                msg.execute(controller.getConnectionBridge());
             }
         } catch (IOException | InterruptedException e ) {
             this.isAlive = false;
@@ -74,52 +74,42 @@ public class SocketServerConnection implements ServerConnection {
         }
     }
 
-    @Override
     public void loginRequest(String username) throws IOException {
         this.outputStream.sendMessage(new LoginRequestMessage(username));
     }
 
-    @Override
     public void getLobby(String username) throws IOException{
         this.outputStream.sendMessage(new GetLobbyMessage(username));
     }
 
-    @Override
     public void joinLobby(String username, String id) throws IOException {
         this.outputStream.sendMessage(new JoinLobbyMessage(username, id));
     }
 
-    @Override
     public void createLobbyAndJoin(String username, int playerNum) throws IOException {
         this.outputStream.sendMessage(new CreateLobbyAndJoinMessage(username, playerNum));
     }
 
-    @Override
     public void choosePrivateGoal(String username, int index) throws IOException {
         this.outputStream.sendMessage(new ChoosePrivateGoalMessage(username, index));
     }
 
-    @Override
     public void initTurnAck(String username) throws IOException {
         this.outputStream.sendMessage(new InitTurnAckMessage(username));
     }
 
-    @Override
     public void placeCard(String username, String cardId, Point pos, boolean flipped) throws IOException {
         this.outputStream.sendMessage(new PlaceCardMessage(username, cardId, pos, flipped));
     }
 
-    @Override
     public void drawResource(String username, int index) throws IOException {
         this.outputStream.sendMessage(new DrawResourceCardMessage(username, index));
     }
 
-    @Override
     public void drawGold(String username, int index) throws IOException {
         this.outputStream.sendMessage(new DrawGoldCardMessage(username, index));
     }
 
-    @Override
     public void endTurn(String username) throws IOException {
         this.outputStream.sendMessage(new EndTurnMessage(username));
     }

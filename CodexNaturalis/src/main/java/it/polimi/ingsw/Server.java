@@ -7,10 +7,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * Hello world!
- *
- */
 public class Server
 {
     private static final int localPort = 5555;

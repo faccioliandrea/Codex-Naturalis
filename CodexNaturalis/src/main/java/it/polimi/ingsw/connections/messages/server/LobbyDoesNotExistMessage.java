@@ -1,11 +1,11 @@
 package it.polimi.ingsw.connections.messages.server;
-import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class LobbyDoesNotExistMessage extends ServerToClientMessage {
     public LobbyDoesNotExistMessage() {}
 
     @Override
-    public void execute(ClientController controller) {
-        controller.lobbyDoesNotExist();
+    public void execute(ConnectionBridge bridge) {
+        bridge.lobbyDoesNotExists();
     }
 }

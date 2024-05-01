@@ -1,11 +1,11 @@
 package it.polimi.ingsw.connections.messages.server;
-import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class PrivateGoalChosenMessage extends ServerToClientMessage {
     public PrivateGoalChosenMessage() {}
 
     @Override
-    public void execute(ClientController controller) {
-        controller.privateGoalChosen();
+    public void execute(ConnectionBridge bridge) {
+        bridge.privateGoalChosen();
     }
 }

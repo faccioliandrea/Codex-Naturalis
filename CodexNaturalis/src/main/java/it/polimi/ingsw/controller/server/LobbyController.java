@@ -44,6 +44,7 @@ public class LobbyController {
      * @param numPlayers the number of players in the lobby
      */
     public void createNewLobby(String lobbyId, int numPlayers) {
+
         lobbies.put(lobbyId, new Lobby(numPlayers));
     }
 }

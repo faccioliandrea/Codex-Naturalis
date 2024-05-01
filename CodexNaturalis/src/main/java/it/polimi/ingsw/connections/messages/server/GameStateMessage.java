@@ -1,16 +1,17 @@
 package it.polimi.ingsw.connections.messages.server;
 import it.polimi.ingsw.controller.CardInfo;
-import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class GameStateMessage extends ServerToClientMessage {
-    private Collection<CardInfo> goldDeck;
-    private Collection<CardInfo> resourceDeck;
-    private Collection<CardInfo> board;
+    private ArrayList<CardInfo> goldDeck;
+    private ArrayList<CardInfo> resourceDeck;
+    private ArrayList<CardInfo> board;
     private int publicPoints;
 
-    public GameStateMessage(Collection<CardInfo> goldDeck, Collection<CardInfo> resourceDeck, Collection<CardInfo> board, int publicPoints) {
+    public GameStateMessage(ArrayList<CardInfo> goldDeck, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> board, int publicPoints) {
         this.goldDeck = goldDeck;
         this.resourceDeck = resourceDeck;
         this.board = board;
@@ -18,7 +19,7 @@ public class GameStateMessage extends ServerToClientMessage {
     }
 
     @Override
-    public void execute(ClientController controller) {
-        controller.gameState(this.resourceDeck, this.goldDeck, this.board, this.publicPoints);
+    public void execute(ConnectionBridge bridge) {
+        bridge.gameState(this.resourceDeck, this.goldDeck, this.board, this.publicPoints);
     }
 }

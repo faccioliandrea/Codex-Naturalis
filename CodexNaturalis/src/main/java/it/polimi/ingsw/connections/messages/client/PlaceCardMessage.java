@@ -1,5 +1,5 @@
 package it.polimi.ingsw.connections.messages.client;
-import it.polimi.ingsw.controller.server.ServerController;
+import it.polimi.ingsw.connections.server.ConnectionBridge;
 import java.awt.*;
 
 public class PlaceCardMessage extends ClientToServerMessage {
@@ -15,7 +15,7 @@ public class PlaceCardMessage extends ClientToServerMessage {
     }
 
     @Override
-    public void execute(ServerController controller) {
-    controller.placeCard(this.username, this.cardID, this.position, this.flipped);
+    public void execute(ConnectionBridge bridge) {
+    bridge.placeCard(this.username, this.cardID, this.position, this.flipped);
     }
 }

@@ -1,17 +1,17 @@
 package it.polimi.ingsw.connections.messages.server;
-import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 
-import java.util.Collection;
+import java.util.ArrayList;
 
 public class LobbyExistsMessage extends ServerToClientMessage {
-    private Collection<String> lobbiesID;
+    private ArrayList<String> lobbiesID;
 
-    public LobbyExistsMessage(Collection<String> lobbiesID) {
+    public LobbyExistsMessage(ArrayList<String> lobbiesID) {
         this.lobbiesID = lobbiesID;
     }
 
     @Override
-    public void execute(ClientController controller) {
-        controller.lobbyExists(this.lobbiesID);
+    public void execute(ConnectionBridge bridge) {
+        bridge.lobbyExists(this.lobbiesID);
     }
 }

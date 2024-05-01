@@ -1,5 +1,5 @@
 package it.polimi.ingsw.connections.messages.server;
-import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class PlayerJoinedMessage extends ServerToClientMessage {
     private String username;
@@ -9,7 +9,7 @@ public class PlayerJoinedMessage extends ServerToClientMessage {
     }
 
     @Override
-    public void execute(ClientController controller) {
-        controller.playerJoinedLobby(this.username);
+    public void execute(ConnectionBridge bridge) {
+        bridge.playerJoinedLobby(this.username);
     }
 }

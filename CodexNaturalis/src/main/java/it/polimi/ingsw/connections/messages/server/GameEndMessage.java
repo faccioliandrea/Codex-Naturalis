@@ -1,5 +1,5 @@
 package it.polimi.ingsw.connections.messages.server;
-import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 import java.util.HashMap;
 
@@ -11,7 +11,7 @@ public class GameEndMessage extends ServerToClientMessage {
     }
 
     @Override
-    public void execute(ClientController controller) {
-        controller.gameEnd(this.leaderBoard);
+    public void execute(ConnectionBridge bridge) {
+        bridge.gameEnd(this.leaderBoard);
     }
 }

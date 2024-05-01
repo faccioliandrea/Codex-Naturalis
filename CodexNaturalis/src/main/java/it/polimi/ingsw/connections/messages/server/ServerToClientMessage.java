@@ -1,7 +1,8 @@
 package it.polimi.ingsw.connections.messages.server;
 import it.polimi.ingsw.connections.messages.Message;
-import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.client.ConnectionBridge;
+
 
 public abstract class ServerToClientMessage implements Message {
-    public abstract void execute(ClientController controller);
+    public abstract void execute(ConnectionBridge bridge);
 }

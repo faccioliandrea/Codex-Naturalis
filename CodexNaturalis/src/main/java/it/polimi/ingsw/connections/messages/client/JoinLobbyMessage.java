@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.messages.client;
-import it.polimi.ingsw.controller.server.ServerController;
+import it.polimi.ingsw.connections.server.ConnectionBridge;
+
 
 public class JoinLobbyMessage extends ClientToServerMessage {
     private String lobbyID;
@@ -10,7 +11,7 @@ public class JoinLobbyMessage extends ClientToServerMessage {
     }
 
     @Override
-    public void execute(ServerController controller) {
-        controller.addPlayerToLobby(this.username, this.lobbyID);
+    public void execute(ConnectionBridge bridge) {
+        bridge.addPlayerToLobby(this.username, this.lobbyID);
     }
 }

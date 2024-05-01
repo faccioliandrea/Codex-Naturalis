@@ -1,5 +1,5 @@
 package it.polimi.ingsw.connections.messages.client;
-import it.polimi.ingsw.controller.server.ServerController;
+import it.polimi.ingsw.connections.server.ConnectionBridge;
 
 public class InitTurnAckMessage extends ClientToServerMessage {
     public InitTurnAckMessage(String username) {
@@ -7,7 +7,7 @@ public class InitTurnAckMessage extends ClientToServerMessage {
     }
 
     @Override
-    public void execute(ServerController controller) {
-        controller.initTurnAck(this.username);
+    public void execute(ConnectionBridge bridge) {
+        bridge.initTurnAck(this.username);
     }
 }

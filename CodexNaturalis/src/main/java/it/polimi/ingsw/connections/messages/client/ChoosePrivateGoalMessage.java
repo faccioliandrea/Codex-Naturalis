@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.messages.client;
-import it.polimi.ingsw.controller.server.ServerController;
+
+import it.polimi.ingsw.connections.server.ConnectionBridge;
 
 public class ChoosePrivateGoalMessage extends ClientToServerMessage {
     private int index;
@@ -10,7 +11,7 @@ public class ChoosePrivateGoalMessage extends ClientToServerMessage {
     }
 
     @Override
-    public void execute(ServerController controller) {
-        controller.choosePrivateGoal(this.username, this.index);
+    public void execute(ConnectionBridge bridge) {
+        bridge.choosePrivateGoal(this.username, this.index);
     }
 }

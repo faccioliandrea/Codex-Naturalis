@@ -1,9 +1,11 @@
 package it.polimi.ingsw.controller.client;
 
 
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.client.ServerConnection;
 import it.polimi.ingsw.connections.client.SocketServerConnection;
 import it.polimi.ingsw.controller.CardInfo;
+import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.view.UserInterface;
 
 import java.awt.*;
@@ -12,63 +14,50 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClientController {
+
     private ServerConnection serverConnection;
 
     private UserInterface ui;
-    String username;
+
+    private String username;
+
+    private ConnectionBridge connectionBridge;
 
     public ClientController(UserInterface ui) {
         this.ui = ui;
+        connectionBridge = new ConnectionBridge(this);
     }
 
-    public void loginRequest() {
+    public String loginRequest() {
         this.username = ui.askForUsername();
-        try {
-            serverConnection.loginRequest(this.username);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return username;
     }
 
     public void invalidUsername(){
         ui.printDebug("username taken");
-        this.loginRequest();
+        connectionBridge.loginRequest();
     }
 
     public void validUsername() {
         ui.printDebug("username ok");
-        this.lobbyRequest();
+        connectionBridge.lobbyRequest();
     }
 
-    public void lobbyRequest() {
-        try {
-            serverConnection.getLobby(username);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
-    }
     public void lobbyDoesNotExist() {
         //TODO: comunicare alla view che non esistono lobby
         ui.printDebug("no lobbies");
         int n = ui.askForPlayerNum();
-        this.createLobbyRequest(n);
+        connectionBridge.createLobbyRequest(n);
     }
 
     public void lobbyExists(ArrayList<String> lobbies) {
         //TODO: comunicare alla view le lobbies esistenti
         ui.printDebug(lobbies);
         String id = ui.askForLobbyId();
-        this.joinLobbyRequest(id);
+        connectionBridge.joinLobbyRequest(id);
     }
 
-    public void joinLobbyRequest(String lobbyId) {
-        try {
-            serverConnection.joinLobby(username, lobbyId);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void joinLobbySuccess() {
         //TODO: comunicare alla view che è entrato nella lobby
@@ -84,13 +73,6 @@ public class ClientController {
         ui.printDebug(String.format("%s joined lobby", username));
     }
 
-    public void createLobbyRequest(int numPlayers) {
-        try {
-            serverConnection.createLobbyAndJoin(username, numPlayers);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void gameStarted(){
         //TODO: comunicare alla view che il gioco è iniziato
@@ -102,22 +84,6 @@ public class ClientController {
         ui.printDebug("your turn");
     }
 
-    public void initTurnAck(){
-        try {
-            serverConnection.initTurnAck(username);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    public void placeCardRequest(String cardId, Point position, boolean side){
-        try {
-            serverConnection.placeCard(username, cardId, position, side);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void placeCardSuccess(int cardsPoints, int goalPoints){
         //TODO: comunicare alla view che la carta è stata posizionata
@@ -128,44 +94,17 @@ public class ClientController {
         //TODO: comunicare alla view che la carta non può essere posizionata
     }
 
-    public void drawResourceRequest(int index){
-        try {
-            serverConnection.drawResource(username, index);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void drawGoldRequest(int index){
-        try {
-            serverConnection.drawGold(username, index);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void drawSuccess(ArrayList<CardInfo> hand){
         //TODO: comunicare alla view la nuova hand
     }
 
-    public void endTurn(){
-        try {
-            serverConnection.endTurn(username);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void gameState(ArrayList<CardInfo> resaourceDeck,ArrayList<CardInfo> golddeck, ArrayList<CardInfo> board, int points){
         //TODO: comunicare alla view lo stato del gioco
     }
 
-    public void choosePrivateGoalRequest(int index){
-        try {
-            serverConnection.choosePrivateGoal(username, index);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     public void privateGoalChosen(){
         //TODO: comunicare alla view che il goal è stato scelto
@@ -176,7 +115,22 @@ public class ClientController {
 
     }
 
+
+
+
     public void setConnection(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
+    }
+
+    public ServerConnection getServerConnection() {
+        return serverConnection;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public ConnectionBridge getConnectionBridge() {
+        return connectionBridge;
     }
 }

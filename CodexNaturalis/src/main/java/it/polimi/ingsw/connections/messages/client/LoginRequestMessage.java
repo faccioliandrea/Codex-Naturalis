@@ -1,5 +1,5 @@
 package it.polimi.ingsw.connections.messages.client;
-import it.polimi.ingsw.controller.server.ServerController;
+import it.polimi.ingsw.connections.server.ConnectionBridge;
 
 public class LoginRequestMessage extends ClientToServerMessage {
     private String username;
@@ -13,5 +13,5 @@ public class LoginRequestMessage extends ClientToServerMessage {
     }
 
     @Override
-    public void execute(ServerController controller) {}
+    public void execute(ConnectionBridge bridge) {}
 }

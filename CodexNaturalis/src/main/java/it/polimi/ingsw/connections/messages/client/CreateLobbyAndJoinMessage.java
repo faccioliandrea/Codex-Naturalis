@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.messages.client;
-import it.polimi.ingsw.controller.server.ServerController;
+import it.polimi.ingsw.connections.server.ConnectionBridge;
+
 
 public class CreateLobbyAndJoinMessage extends ClientToServerMessage {
     private int numOfPlayers;
@@ -10,7 +11,7 @@ public class CreateLobbyAndJoinMessage extends ClientToServerMessage {
     }
 
     @Override
-    public void execute(ServerController controller) {
-        controller.createLobby(this.username, this.numOfPlayers);
+    public void execute(ConnectionBridge bridge) {
+        bridge.createLobby(this.username, this.numOfPlayers);
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.messages.client;
-import it.polimi.ingsw.controller.server.ServerController;
+import it.polimi.ingsw.connections.server.ConnectionBridge;
+
 
 public class DrawGoldCardMessage extends ClientToServerMessage {
     private int index;
@@ -10,7 +11,7 @@ public class DrawGoldCardMessage extends ClientToServerMessage {
     }
 
     @Override
-    public void execute(ServerController controller) {
-        controller.drawGold(this.username, this.index);
+    public void execute(ConnectionBridge bridge) {
+        bridge.drawGold(this.username, this.index);
     }
 }
