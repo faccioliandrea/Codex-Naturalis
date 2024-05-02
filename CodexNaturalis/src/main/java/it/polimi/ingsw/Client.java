@@ -75,7 +75,7 @@ public class Client {
                     socket = new Socket(address, port);
                     connected = true;
                     SocketServerConnection conn = new SocketServerConnection(matchController, socket);
-                    matchController.setConnection(conn);
+                    matchController.getConnectionBridge().setServerConnection(conn);
                     new Thread(conn).start();
                     matchController.getConnectionBridge().loginRequest();
                 } catch (IOException  e) {

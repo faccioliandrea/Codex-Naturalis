@@ -23,47 +23,19 @@ import java.util.HashMap;
 public class ServerController {
     private GameController gameController;
     private LobbyController lobbyController;
-
-    private HashMap<String, ClientConnection> connections;
-
     private HashMap<String, String> userToLobby;
-
     private HashMap<String, String> userToGame;
-
     private ConnectionBridge connectionBridge;
 
     /**
      * Default constructor
      */
     public ServerController() {
-        connections = new HashMap<String,ClientConnection>();
         userToLobby = new HashMap<String,String>();
         userToGame = new HashMap<String,String>();
         lobbyController = new LobbyController();
         gameController = new GameController();
         connectionBridge = new ConnectionBridge(this);
-
-    }
-
-    /**
-     * Add a connection to the list of connections
-     * @param connection the connection to add
-     * @param username the username of the connection
-     */
-    public void addConnection(ClientConnection connection, String username){
-        if(connections.containsKey(username) && !connections.get(username).getStatus()) {
-            connections.replace(username, connection);
-            System.out.printf("%s Reconnected%n", username);
-        }
-        else if(connections.containsKey(username)) {
-            connectionBridge.invalidUsername(connection);
-        }
-        else{
-            connections.put(username, connection);
-            System.out.printf("%s Connected%n", username);
-            connectionBridge.validUsername(connection);
-
-        }
     }
 
 
@@ -222,22 +194,6 @@ public class ServerController {
         }
     }
 
-    /**
-     * disconnect the player from the server
-     * @param username the username of the player
-     */
-    public void disconnect(String username) {
-        if (checkUserConnected(username)) {
-            try {
-                connections.get(username).close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            connections.remove(username);
-            userToLobby.remove(username);
-        }
-
-    }
 
     /**
      * Create a new lobby with the specified number of players and add the player to it
@@ -245,7 +201,7 @@ public class ServerController {
      * @param username the username of the player
      */
     public String createLobby(String username, int numPlayers){
-        if (checkUserConnected(username)) {
+        if (connectionBridge.checkUserConnected(username)) {
             //TODO: If the number of players is not between 2 and 4 return the error
             String lobbyId = "" + (int) (Math.random() * 1000);
             lobbyController.createNewLobby(lobbyId, numPlayers);
@@ -262,7 +218,7 @@ public class ServerController {
      * @param lobbyId the id of the lobby
      */
     public int addPlayerToLobby(String username, String lobbyId) {
-        if (checkUserConnected(username)) {
+        if (connectionBridge.checkUserConnected(username)) {
             if(!lobbyController.getLobbies().containsKey(lobbyId)) {
                 return 0;
             }
@@ -285,7 +241,7 @@ public class ServerController {
      * send the lobbies to the client
      */
     public ArrayList<String> getLobbies(String username) {
-        if (checkUserConnected(username)){
+        if (connectionBridge.checkUserConnected(username)){
             if (lobbyController.getLobbies().isEmpty()) {
                 return new ArrayList<>();
             }
@@ -306,20 +262,10 @@ public class ServerController {
         return username.equals(gameController.getCurrentPlayer(userToGame.get(username)));
     }
 
-    /**
-     * @param username the username of the player
-     * @return true if the player is registered in the server, false otherwise
-     */
-    private boolean checkUserConnected(String username){
-        return connections.containsKey(username);
-    }
+
 
     public HashMap<String, String> getUserToLobby() {
         return userToLobby;
-    }
-
-    public HashMap<String, ClientConnection> getConnections() {
-        return connections;
     }
 
     public HashMap<String, String> getUserToGame() {
@@ -330,8 +276,9 @@ public class ServerController {
         return connectionBridge;
     }
 
-    //TODO
-  public void onClientDisconnect(ClientConnection c){
-        System.out.println(String.format("Client %s disconnected", c.getRemoteAddr()));
-  }
+    public void removeUser(String username){
+        userToLobby.remove(username);
+    }
+
+
 }

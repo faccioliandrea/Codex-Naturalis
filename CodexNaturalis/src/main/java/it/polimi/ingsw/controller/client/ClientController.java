@@ -15,8 +15,6 @@ import java.util.HashMap;
 
 public class ClientController {
 
-    private ServerConnection serverConnection;
-
     private UserInterface ui;
 
     private String username;
@@ -113,17 +111,6 @@ public class ClientController {
     public void gameEnd(HashMap<String, Integer> leaderboard){
         //TODO: comunicare alla view che il gioco è finito e passagli la leaderboard
 
-    }
-
-
-
-
-    public void setConnection(ServerConnection serverConnection) {
-        this.serverConnection = serverConnection;
-    }
-
-    public ServerConnection getServerConnection() {
-        return serverConnection;
     }
 
     public String getUsername() {

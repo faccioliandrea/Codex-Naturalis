@@ -19,9 +19,59 @@ import java.util.HashMap;
 public class ConnectionBridge {
 
     private final ServerController controller;
+    private HashMap<String, ClientConnection> connections;
 
     public ConnectionBridge(ServerController controller) {
+
         this.controller = controller;
+        connections = new HashMap<String, ClientConnection>();
+    }
+
+
+    /**
+     * Add a connection to the list of connections
+     * @param connection the connection to add
+     * @param username the username of the connection
+     */
+
+    public void addConnection(ClientConnection connection, String username){
+        if(connections.containsKey(username) && !connections.get(username).getStatus()) {
+            connections.replace(username, connection);
+            System.out.printf("%s Reconnected%n", username);
+        }
+        else if(connections.containsKey(username)) {
+            invalidUsername(connection);
+        }
+        else{
+            connections.put(username, connection);
+            System.out.printf("%s Connected%n", username);
+            validUsername(connection);
+
+        }
+    }
+
+    /**
+     * disconnect the player from the server
+     * @param username the username of the player
+     */
+    public void disconnect(String username) {
+        if (checkUserConnected(username)) {
+            try {
+                connections.get(username).close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            connections.remove(username);
+            controller.removeUser(username);
+        }
+    }
+
+    /**
+     * @param username the username of the player
+     * @return true if the player is registered in the server, false otherwise
+     */
+    public boolean checkUserConnected(String username){
+        return connections.containsKey(username);
     }
 
     // Client -> Server methods
@@ -29,18 +79,18 @@ public class ConnectionBridge {
     public Object getLobbies(String username) {
         ArrayList<String> idList = controller.getLobbies(username);
 
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+        if (connections.get(username) instanceof SocketClientConnection) {
 
             if (!idList.isEmpty()) {
                 try {
-                    ((SocketClientConnection) controller.getConnections().get(username)).lobbyExists(idList);
+                    ((SocketClientConnection) connections.get(username)).lobbyExists(idList);
 
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             } else {
                 try {
-                    ((SocketClientConnection) controller.getConnections().get(username)).lobbyDoesNotExist();
+                    ((SocketClientConnection) connections.get(username)).lobbyDoesNotExist();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -54,11 +104,11 @@ public class ConnectionBridge {
 
     public Object addPlayerToLobby(String username, String lobbyId) {
         int result = controller.addPlayerToLobby(username, lobbyId);
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+        if (connections.get(username) instanceof SocketClientConnection) {
             switch (result) {
                 case 0:
                     try {
-                        ((SocketClientConnection) controller.getConnections().get(username)).lobbyDoesNotExist();
+                        ((SocketClientConnection) connections.get(username)).lobbyDoesNotExist();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -67,13 +117,13 @@ public class ConnectionBridge {
                     for (String u : controller.getUserToLobby().keySet()) {
                         if (controller.getUserToLobby().get(u).equals(lobbyId) && u.equals(username)) {
                             try {
-                                ((SocketClientConnection) controller.getConnections().get(u)).joinLobbySuccess();
+                                ((SocketClientConnection) connections.get(u)).joinLobbySuccess();
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
                         } else if (controller.getUserToLobby().get(u).equals(lobbyId) && !u.equals(username)) {
                             try {
-                                ((SocketClientConnection) controller.getConnections().get(u)).playerJoined(username);
+                                ((SocketClientConnection) connections.get(u)).playerJoined(username);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -82,7 +132,7 @@ public class ConnectionBridge {
                     break;
                 case 2:
                     try {
-                        ((SocketClientConnection) controller.getConnections().get(username)).lobbyFull();
+                        ((SocketClientConnection) connections.get(username)).lobbyFull();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -97,10 +147,10 @@ public class ConnectionBridge {
 
     public int choosePrivateGoal(String username, int index) {
         int result = controller.choosePrivateGoal(username, index);
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+        if (connections.get(username) instanceof SocketClientConnection) {
             if (result == 1) {
                 try {
-                    ((SocketClientConnection) controller.getConnections().get(username)).privateGoalChosen();
+                    ((SocketClientConnection) connections.get(username)).privateGoalChosen();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -114,10 +164,10 @@ public class ConnectionBridge {
 
     public ArrayList<Object> initTurn(String username) {
         ArrayList<Object> result = controller.initTurn(username);
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+        if (connections.get(username) instanceof SocketClientConnection) {
             if (result != null) {
                 try {
-                    ((SocketClientConnection) controller.getConnections().get(username)).initTurn((ArrayList<CardInfo>) result.get(0), (ArrayList<CardInfo>) result.get(1), (ArrayList<CardInfo>) result.get(2), (ArrayList<Point>) result.get(3), (Integer) result.get(4), (Boolean) result.get(5), (ArrayList<CardInfo>) result.get(5));
+                    ((SocketClientConnection) connections.get(username)).initTurn((ArrayList<CardInfo>) result.get(0), (ArrayList<CardInfo>) result.get(1), (ArrayList<CardInfo>) result.get(2), (ArrayList<Point>) result.get(3), (Integer) result.get(4), (Boolean) result.get(5), (ArrayList<CardInfo>) result.get(5));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -132,10 +182,10 @@ public class ConnectionBridge {
     public ArrayList<Integer> placeCard(String username, String cardId, Point position, boolean flipped) {
         try {
             ArrayList<Integer> result = controller.placeCard(username, cardId, position, flipped);
-            if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+            if (connections.get(username) instanceof SocketClientConnection) {
                 if (!result.isEmpty()) {
                     try {
-                        ((SocketClientConnection) controller.getConnections().get(username)).placeCardSuccess(result.get(0), result.get(1));
+                        ((SocketClientConnection) connections.get(username)).placeCardSuccess(result.get(0), result.get(1));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -146,9 +196,9 @@ public class ConnectionBridge {
             }
 
         } catch (RequirementsNotSatisfied | InvalidPositionException e) {
-            if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+            if (connections.get(username) instanceof SocketClientConnection) {
                 try {
-                    ((SocketClientConnection) controller.getConnections().get(username)).placeCardFailure();
+                    ((SocketClientConnection) connections.get(username)).placeCardFailure();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -162,10 +212,10 @@ public class ConnectionBridge {
 
     public ArrayList<CardInfo> drawResource(String username, int index) {
         ArrayList<CardInfo> result = controller.drawResource(username, index);
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+        if (connections.get(username) instanceof SocketClientConnection) {
             if (result != null) {
                 try {
-                    ((SocketClientConnection) controller.getConnections().get(username)).drawSuccess(result);
+                    ((SocketClientConnection) connections.get(username)).drawSuccess(result);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -179,10 +229,10 @@ public class ConnectionBridge {
 
     public ArrayList<CardInfo> drawGold(String username, int index) {
         ArrayList<CardInfo> result = controller.drawGold(username, index);
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+        if (connections.get(username) instanceof SocketClientConnection) {
             if (result != null) {
                 try {
-                    ((SocketClientConnection) controller.getConnections().get(username)).drawSuccess(result);
+                    ((SocketClientConnection) connections.get(username)).drawSuccess(result);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -196,11 +246,11 @@ public class ConnectionBridge {
 
     public ArrayList<Object> endTurn(String username) {
         ArrayList<Object> result = controller.endTurn(username);
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
-            for (String user : controller.getConnections().keySet()) {
+        if (connections.get(username) instanceof SocketClientConnection) {
+            for (String user : connections.keySet()) {
                 if (controller.getUserToGame().get(user).equals(controller.getUserToGame().get(username))) {
                     try {
-                        ((SocketClientConnection) controller.getConnections().get(user)).sendStatus((ArrayList<CardInfo>) result.get(0), (ArrayList<CardInfo>) result.get(1), (ArrayList<CardInfo>) result.get(2), (Integer) result.get(3));
+                        ((SocketClientConnection) connections.get(user)).sendStatus((ArrayList<CardInfo>) result.get(0), (ArrayList<CardInfo>) result.get(1), (ArrayList<CardInfo>) result.get(2), (Integer) result.get(3));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -215,7 +265,7 @@ public class ConnectionBridge {
 
     public String createLobby(String username, int numPlayers) {
         String lobbyId = controller.createLobby(username, numPlayers);
-        if (controller.getConnections().get(username) instanceof SocketClientConnection){
+        if (connections.get(username) instanceof SocketClientConnection){
             if (lobbyId!=null) {
                 addPlayerToLobby(username, lobbyId);
             }
@@ -233,9 +283,9 @@ public class ConnectionBridge {
     // Server -> Client communications
 
     public void endGame(String username, HashMap<String, Integer> leaderboard) {
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+        if (connections.get(username) instanceof SocketClientConnection) {
             try {
-                ((SocketClientConnection) controller.getConnections().get(username)).gameEnded(leaderboard);
+                ((SocketClientConnection) connections.get(username)).gameEnded(leaderboard);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -245,9 +295,9 @@ public class ConnectionBridge {
     }
 
     public void createGame(String username) {
-        if (controller.getConnections().get(username) instanceof SocketClientConnection) {
+        if (connections.get(username) instanceof SocketClientConnection) {
             try {
-                ((SocketClientConnection) controller.getConnections().get(username)).gameStarted();
+                ((SocketClientConnection) connections.get(username)).gameStarted();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -278,6 +328,13 @@ public class ConnectionBridge {
         } else {
             // TODO handle RMI
         }
+    }
+
+
+    // TODO
+
+    public void onClientDisconnect(ClientConnection c){
+        System.out.println(String.format("Client %s disconnected", c.getRemoteAddr()));
     }
 
 }

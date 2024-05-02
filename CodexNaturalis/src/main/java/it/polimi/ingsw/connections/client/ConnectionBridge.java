@@ -12,6 +12,8 @@ import java.util.HashMap;
 public class ConnectionBridge {
     private final ClientController controller;
 
+    private ServerConnection serverConnection;
+
     public ConnectionBridge(ClientController controller) {
         this.controller = controller;
     }
@@ -19,10 +21,10 @@ public class ConnectionBridge {
     public String loginRequest() {
         String username = controller.loginRequest();
 
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
 
             try {
-                ((SocketServerConnection) controller.getServerConnection()).loginRequest(username);
+                ((SocketServerConnection) serverConnection).loginRequest(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -44,9 +46,9 @@ public class ConnectionBridge {
 
     public void lobbyRequest() {
 
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).getLobby(controller.getUsername());
+                ((SocketServerConnection) serverConnection).getLobby(controller.getUsername());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -56,9 +58,9 @@ public class ConnectionBridge {
     }
 
     public void joinLobbyRequest(String lobbyId) {
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).joinLobby(controller.getUsername(), lobbyId);
+                ((SocketServerConnection) serverConnection).joinLobby(controller.getUsername(), lobbyId);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -88,9 +90,9 @@ public class ConnectionBridge {
     }
 
     public void createLobbyRequest(int numPlayers) {
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).createLobbyAndJoin(controller.getUsername(), numPlayers);
+                ((SocketServerConnection) serverConnection).createLobbyAndJoin(controller.getUsername(), numPlayers);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -108,9 +110,9 @@ public class ConnectionBridge {
     }
 
     public void initTurnAck() {
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).initTurnAck(controller.getUsername());
+                ((SocketServerConnection) serverConnection).initTurnAck(controller.getUsername());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -120,9 +122,9 @@ public class ConnectionBridge {
     }
 
     public void placeCardRequest(String cardId, Point position, boolean side) {
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).placeCard(controller.getUsername(), cardId, position, side);
+                ((SocketServerConnection) serverConnection).placeCard(controller.getUsername(), cardId, position, side);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -140,9 +142,9 @@ public class ConnectionBridge {
     }
 
     public void drawResourceRequest(int index) {
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).drawResource(controller.getUsername(), index);
+                ((SocketServerConnection) serverConnection).drawResource(controller.getUsername(), index);
                 ;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -153,9 +155,9 @@ public class ConnectionBridge {
     }
 
     public void drawGoldRequest(int index) {
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).drawGold(controller.getUsername(), index);
+                ((SocketServerConnection) serverConnection).drawGold(controller.getUsername(), index);
                 ;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -170,9 +172,9 @@ public class ConnectionBridge {
     }
 
     public void endTurn() {
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).endTurn(controller.getUsername());
+                ((SocketServerConnection) serverConnection).endTurn(controller.getUsername());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -186,9 +188,9 @@ public class ConnectionBridge {
     }
 
     public void choosePrivateGoalRequest(int index){
-        if (controller.getServerConnection() instanceof SocketServerConnection) {
+        if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) controller.getServerConnection()).choosePrivateGoal(controller.getUsername(), index);
+                ((SocketServerConnection) serverConnection).choosePrivateGoal(controller.getUsername(), index);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -203,5 +205,9 @@ public class ConnectionBridge {
 
     public void gameEnd(HashMap<String, Integer> leaderboard){
         controller.gameEnd(leaderboard);
+    }
+
+    public void setServerConnection(ServerConnection serverConnection) {
+        this.serverConnection = serverConnection;
     }
 }

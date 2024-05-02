@@ -8,7 +8,6 @@ import it.polimi.ingsw.connections.messages.client.LoginRequestMessage;
 import it.polimi.ingsw.connections.messages.server.*;
 import it.polimi.ingsw.controller.CardInfo;
 import it.polimi.ingsw.controller.server.ServerController;
-import it.polimi.ingsw.model.goals.Goal;
 
 import java.awt.*;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class SocketClientConnection implements ClientConnection, Runnable {
-    private final ServerController controller;
+    private final ConnectionBridge connectionBridge;
     private SocketAddress remoteAddr;
 
     private Socket clientSocket;
@@ -34,9 +33,9 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
     private boolean isAlive;
 
-    public SocketClientConnection(ServerSocket serverSocket, Socket clientSocket, ServerController controller) {
+    public SocketClientConnection(ServerSocket serverSocket, Socket clientSocket, ConnectionBridge connectionBridge) {
         synchronized (this) {
-            this.controller = controller;
+            this.connectionBridge = connectionBridge;
             this.serverSocket = serverSocket;
             this.clientSocket = clientSocket;
 
@@ -87,9 +86,9 @@ public class SocketClientConnection implements ClientConnection, Runnable {
             while (this.isAlive) {
                 ClientToServerMessage msg = (ClientToServerMessage) queue.take();
                 if (msg instanceof LoginRequestMessage) {
-                    controller.addConnection(this, ((LoginRequestMessage) msg).getUsername());
+                    connectionBridge.addConnection(this, ((LoginRequestMessage) msg).getUsername());
                 } else {
-                    msg.execute(controller.getConnectionBridge());
+                    msg.execute(connectionBridge);
                 }
             }
 
@@ -112,7 +111,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
     public void threadExceptionCallback(Exception e) {
         this.isAlive = false;
-        this.controller.onClientDisconnect(this);
+        this.connectionBridge.onClientDisconnect(this);
     }
 
     // messages

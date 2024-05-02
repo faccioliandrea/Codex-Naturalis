@@ -23,7 +23,7 @@ public class Server
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Received connection from " + clientSocket.getRemoteSocketAddress());
 
-                SocketClientConnection clientConnection = new SocketClientConnection(serverSocket, clientSocket, serverController);
+                SocketClientConnection clientConnection = new SocketClientConnection(serverSocket, clientSocket, serverController.getConnectionBridge());
                 new Thread(clientConnection).start();
             }
 
