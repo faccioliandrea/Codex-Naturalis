@@ -2,12 +2,20 @@ package it.polimi.ingsw.connections.data.utils;
 
 import it.polimi.ingsw.model.goals.*;
 
+/**
+ * Class to generate description for goals
+ */
 final public class GoalInfoGenerator {
     // TODO: Use template in the future
     public static final GoalInfoGenerator generator = new GoalInfoGenerator();
 
     private GoalInfoGenerator() {}
 
+    /**
+     * Creates description of goal
+     * @param goal Goal to get info
+     * @return Description of goal
+     */
     public String getGoalDescription(Goal goal) {
         StringBuilder description = new StringBuilder();
         description.append(String.format("Goal %s", goal.getId()));
