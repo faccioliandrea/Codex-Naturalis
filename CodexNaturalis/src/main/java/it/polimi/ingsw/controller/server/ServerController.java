@@ -1,19 +1,16 @@
 package it.polimi.ingsw.controller.server;
 
-import it.polimi.ingsw.connections.server.ClientConnection;
+import it.polimi.ingsw.connections.data.GoalInfo;
+import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
-import it.polimi.ingsw.controller.CardInfo;
+import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.model.cards.Card;
-import it.polimi.ingsw.model.cards.PlayableCard;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.exceptions.InvalidNumberOfPlayersException;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
 import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
-import it.polimi.ingsw.model.goals.Goal;
 
 import java.awt.*;
-import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,17 +42,24 @@ public class ServerController {
      */
     private void createGame(ArrayList<String> users) {
         String gameId = "" + (int) (Math.random() * 1000);
+        String lobbyId = userToLobby.get(users.get(0));
         try {
             gameController.createGame(gameId,users);
             for (String username : users) {
                 userToGame.put(username, gameId);
                 userToLobby.remove(username);
-                connectionBridge.createGame(username);
             }
+            lobbyController.removeLobby(lobbyId);
             gameController.startGame(gameId);
 
+            for (String username : users) {
+                ArrayList<CardInfo> hand = gameController.getHand(gameId, username);
+                ArrayList<GoalInfo> privateGoals = gameController.getPrivateGoals(gameId, username);
+                ArrayList<GoalInfo> sharedGoals = gameController.getSharedGoals(gameId);
+                CardInfo starterCard = gameController.getStarterCard(gameId, username);
+                connectionBridge.createGame(username, new StarterData(hand, privateGoals, sharedGoals, starterCard));
+            }
 
-            //TODO:aggiunger il ritorno della hand iniziale e la starter card e il privateGoal
 
         } catch (DeckInitializationException e) {
             //for(String username : users)
@@ -72,7 +76,7 @@ public class ServerController {
      */
     public ArrayList<Object> initTurn(String user){
         if(checkUserCurrentPlayer(user)) {
-            ArrayList<CardInfo> hand = gameController.getHand(userToGame.get(user));
+            ArrayList<CardInfo> hand = gameController.getHand(userToGame.get(user), userToGame.get(user));
             ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
             ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user));
@@ -99,15 +103,25 @@ public class ServerController {
 
     /**
      * let the player choose its private goal
-     * @param user the username of the player
+     * @param username the username of the player
      * @param index the index of the private goal to choose
      */
-    public int choosePrivateGoal(String user,int index){
-        if(checkUserCurrentPlayer(user)) {
-            gameController.choosePrivateGoal(userToGame.get(user), index);
+    public int choosePrivateGoal(String username,int index){
+        gameController.choosePrivateGoal(userToGame.get(username), username,  index);
+        return 1;
+
+    }
+
+
+    public int chooseStarterCardSide(String username, boolean flipped) {
+        gameController.chooseStarterCardSide(userToGame.get(username), username, flipped);
+        if(gameController.getGames().get(userToGame.get(username)).getPlayers().stream().anyMatch(x->x.getBoard().getPlayedCards().isEmpty())){
+            return 0;
+        } else if (gameController.getGames().get(userToGame.get(username)).getPlayers().stream().allMatch(x->x.getBoard().getPlayedCards().size()==1)){
             return 1;
         }
-        return 0;
+        return -1;
+
     }
 
     /**
@@ -138,7 +152,7 @@ public class ServerController {
     public ArrayList<CardInfo> drawResource(String user, int index){
         if(checkUserCurrentPlayer(user)) {
             gameController.drawResource(userToGame.get(user), index);
-            return gameController.getHand(userToGame.get(user));
+            return gameController.getHand(userToGame.get(user), user);
         }
         return null;
     }
@@ -151,7 +165,7 @@ public class ServerController {
     public ArrayList<CardInfo> drawGold(String user, int index){
         if(checkUserCurrentPlayer(user)) {
             gameController.drawGold(userToGame.get(user), index);
-            return gameController.getHand(userToGame.get(user));
+            return gameController.getHand(userToGame.get(user), user);
         }
         return null;
     }
@@ -262,8 +276,6 @@ public class ServerController {
         return username.equals(gameController.getCurrentPlayer(userToGame.get(username)));
     }
 
-
-
     public HashMap<String, String> getUserToLobby() {
         return userToLobby;
     }
@@ -279,6 +291,7 @@ public class ServerController {
     public void removeUser(String username){
         userToLobby.remove(username);
     }
+
 
 
 }

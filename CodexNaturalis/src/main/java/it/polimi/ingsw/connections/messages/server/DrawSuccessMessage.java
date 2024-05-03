@@ -1,9 +1,8 @@
 package it.polimi.ingsw.connections.messages.server;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
-import it.polimi.ingsw.controller.CardInfo;
+import it.polimi.ingsw.connections.data.CardInfo;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class DrawSuccessMessage extends ServerToClientMessage {
     private ArrayList<CardInfo> updatedHand;

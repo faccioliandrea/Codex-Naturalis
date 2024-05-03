@@ -3,7 +3,7 @@ package it.polimi.ingsw.connections.messages.server;
 import java.awt.*;
 import java.util.ArrayList;
 
-import it.polimi.ingsw.controller.CardInfo;
+import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class InitTurnMessage extends ServerToClientMessage {

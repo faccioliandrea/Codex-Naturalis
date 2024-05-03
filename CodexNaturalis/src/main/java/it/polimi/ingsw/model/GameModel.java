@@ -212,7 +212,7 @@ public class GameModel {
         this.players.forEach(x -> x.getBoard().setSharedGoals(new ArrayList<Goal>(goalsDeck.subList(0,2))));
         // sets private goals for each player
         for (int i=0, j=0; i<this.players.size() && j<goalsDeck.size(); i++, j += 2) {
-            this.players.get(i).setPrivateGoals(new ArrayList<Goal>(goalsDeck.subList(j,j+2)));
+            this.players.get(i).setPrivateGoals(new ArrayList<Goal>(goalsDeck.subList(j+2,j+4)));
         }
 
         // sets hand

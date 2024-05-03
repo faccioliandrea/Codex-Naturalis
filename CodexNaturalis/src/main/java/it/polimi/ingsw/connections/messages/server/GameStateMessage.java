@@ -1,8 +1,7 @@
 package it.polimi.ingsw.connections.messages.server;
-import it.polimi.ingsw.controller.CardInfo;
+import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 
-import java.util.ArrayList;
 import java.util.ArrayList;
 
 public class GameStateMessage extends ServerToClientMessage {

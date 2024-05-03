@@ -1,14 +1,17 @@
 package it.polimi.ingsw.controller.server;
 
-import it.polimi.ingsw.controller.CardInfo;
+import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayableCard;
 import it.polimi.ingsw.model.cards.ResourceCard;
+import it.polimi.ingsw.model.cards.StarterCard;
 import it.polimi.ingsw.model.cards.gold.GoldCard;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.exceptions.InvalidNumberOfPlayersException;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
 import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
+import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 
 import java.awt.*;
@@ -52,11 +55,28 @@ public class GameController {
      * @param gameID the id of the game
      * @param index the index of the card to choose
      */
-    protected void choosePrivateGoal(String gameID,int index){
+    protected void choosePrivateGoal(String gameID,String username, int index){
         //TODO: devo passagli anche il riferimento al client?
-        games.get(gameID).getGameModel().getCurrentPlayer().choosePrivateGoal(index);
+        games.get(gameID).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().choosePrivateGoal(index);
 
     }
+
+    protected void chooseStarterCardSide(String gameID, String username, boolean flipped) {
+
+        Player player = games.get(gameID).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get();
+        StarterCard starterCard= player.getStarterCard();
+        starterCard.setFlipped(flipped);
+        try {
+            player.placeCard(player.getStarterCard(), new Point(0,0));
+        } catch (InvalidPositionException e) {
+            throw new RuntimeException(e);
+        } catch (RequirementsNotSatisfied e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
 
     protected void placeCard(String gameId,Card card, Point position) throws RequirementsNotSatisfied, InvalidPositionException {
         games.get(gameId).getGameModel().getCurrentPlayer().placeCard(card, position);
@@ -81,13 +101,42 @@ public class GameController {
 
     /**
      * @param gameId the id of the game
-     * @return the hand of the current player
+     * @param username the username of the player
+     * @return the hand of the player
      */
-    protected ArrayList<CardInfo> getHand(String gameId) {
+    protected ArrayList<CardInfo> getHand(String gameId, String username) {
         ArrayList<CardInfo> hand = new ArrayList<>();
         for (Card card : games.get(gameId).getGameModel().getCurrentPlayer().getHand())
             hand.add(new CardInfo(card));
         return hand;
+    }
+
+    /**
+     * @param gameId the id of the game
+     * @param username the username of the player
+     * @return the private goals of the player
+     */
+    protected ArrayList<GoalInfo> getPrivateGoals(String gameId, String username) {
+        ArrayList<GoalInfo> privateGoals = new ArrayList<>();
+        for (Goal card : games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getPrivateGoals())
+            privateGoals.add(new GoalInfo(card));
+        return privateGoals;
+    }
+
+    /**
+     * @param gameId the id of the game
+     * @return the shared goals of the game
+     */
+    protected ArrayList<GoalInfo> getSharedGoals(String gameId) {
+        ArrayList<GoalInfo> sharedGoals = new ArrayList<>();
+        for (Goal card : games.get(gameId).getGameModel().getPlayers().getFirst().getBoard().getSharedGoals())
+            sharedGoals.add(new GoalInfo(card));
+        return sharedGoals;
+    }
+
+    protected CardInfo getStarterCard(String gameId, String username) {
+        return new CardInfo(games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getStarterCard());
+
     }
 
     /**
@@ -228,4 +277,6 @@ public class GameController {
     public Card getCard(String gameId, String cardId){
         return games.get(gameId).getGameModel().getCurrentPlayer().getHand().stream().filter(x -> x.getId().equals(cardId)).findFirst().orElse(null);
     }
+
+
 }

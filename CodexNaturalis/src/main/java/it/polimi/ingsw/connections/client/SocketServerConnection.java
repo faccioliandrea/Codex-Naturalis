@@ -15,7 +15,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class SocketServerConnection implements ServerConnection, Runnable {
-    private final ClientController controller;
+    private final ConnectionBridge connectionBridge;
     private InputStreamRunnable inputStream;
     private OutputStreamRunnable outputStream;
     private Socket socket;
@@ -23,9 +23,9 @@ public class SocketServerConnection implements ServerConnection, Runnable {
     // TODO: change isAlive to status Enum (NOT_STARTED, ONLINE, OFFLINE)
     private boolean isAlive;
 
-    public SocketServerConnection(ClientController controller, Socket socket) {
+    public SocketServerConnection(ConnectionBridge connectionBridge, Socket socket) {
         synchronized (this) {
-            this.controller = controller;
+            this.connectionBridge = connectionBridge;
             this.socket = socket;
 
             this.isAlive = false;
@@ -46,7 +46,7 @@ public class SocketServerConnection implements ServerConnection, Runnable {
 
             while (this.isAlive) {
                 ServerToClientMessage msg = (ServerToClientMessage) queue.take();
-                msg.execute(controller.getConnectionBridge());
+                msg.execute(connectionBridge);
             }
         } catch (IOException | InterruptedException e ) {
             this.isAlive = false;
@@ -92,6 +92,10 @@ public class SocketServerConnection implements ServerConnection, Runnable {
 
     public void choosePrivateGoal(String username, int index) throws IOException {
         this.outputStream.sendMessage(new ChoosePrivateGoalMessage(username, index));
+    }
+
+    public void chooseStarterCardSide(String username, boolean flipped) throws IOException {
+        this.outputStream.sendMessage(new ChooseStarterCardSideMessage(username, flipped));
     }
 
     public void initTurnAck(String username) throws IOException {

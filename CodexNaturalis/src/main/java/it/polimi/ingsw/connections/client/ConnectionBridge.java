@@ -1,8 +1,8 @@
 package it.polimi.ingsw.connections.client;
 
-import it.polimi.ingsw.controller.CardInfo;
+import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.controller.client.ClientController;
-import it.polimi.ingsw.model.goals.Goal;
 
 import java.awt.*;
 import java.io.IOException;
@@ -101,8 +101,8 @@ public class ConnectionBridge {
         }
     }
 
-    public void gameStarted() {
-        controller.gameStarted();
+    public void gameStarted(StarterData starterData) {
+        controller.gameStarted(starterData);
     }
 
     public void initTurn(ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePosition, int currTurn, boolean isLastTurn, ArrayList<CardInfo> board) {
@@ -199,6 +199,23 @@ public class ConnectionBridge {
         }
     }
 
+    public void chooseStarterCardSideRequest(boolean flipped){
+        if (serverConnection instanceof SocketServerConnection) {
+            try {
+                ((SocketServerConnection) serverConnection).chooseStarterCardSide(controller.getUsername(), flipped);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // TODO: handle RMI
+        }
+    }
+
+    public void WaitingOthersStartingChoiceMessage() {
+        controller.waitingOthersStartingChoice();
+
+    }
+
     public void privateGoalChosen(){
         controller.privateGoalChosen();
     }
@@ -210,4 +227,6 @@ public class ConnectionBridge {
     public void setServerConnection(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
     }
+
+
 }

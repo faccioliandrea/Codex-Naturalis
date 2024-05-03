@@ -14,6 +14,8 @@ import it.polimi.ingsw.model.goals.*;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Parser {
 
@@ -75,9 +77,8 @@ public class Parser {
             CardSymbolKingdom centerSymbol = CardSymbolKingdom.valueOf(jsonCard.get("centerSymbol").getAsString());
             int points = jsonCard.get("points").getAsInt();
             Corner[] corners = this.getCorners(jsonCard, "corners");
-            GoldCardRequirement[] requirements = new GoldCardRequirement[2];
+            ArrayList<GoldCardRequirement> requirements = new ArrayList<GoldCardRequirement>();
             JsonArray requirementsJson = jsonCard.getAsJsonArray("placementRequirements");
-            int j = 0;
             for(JsonElement requirementJsonElem: requirementsJson) {
                 JsonObject requirementJson = requirementJsonElem.getAsJsonObject();
                 GoldCardRequirement requirement;
@@ -85,23 +86,21 @@ public class Parser {
                     CardSymbolKingdom requiredSymbol = CardSymbolKingdom.valueOf(requirementJson.get("requiredSymbol").getAsString());
                     int quantity = requirementJson.get("quantity").getAsInt();
                     requirement = new GoldCardRequirement(requiredSymbol, quantity);
-                } else {
-                    requirement = null;
+                    requirements.add(requirement);
                 }
-                requirements[j] = requirement;
-                j++;
+
             }
             GoldCard goldCard;
             switch (jsonCard.get("type").getAsString()) {
                 case "FixedPoints":
-                    goldCard = new FixedPointsGoldCard(id, centerSymbol, corners, points, requirements);
+                    goldCard = new FixedPointsGoldCard(id, centerSymbol, corners, points, requirements.toArray(new GoldCardRequirement[0]));
                     break;
                 case "CornerPoints":
-                    goldCard = new CornerPointsGoldCard(id, centerSymbol, corners, points, requirements);
+                    goldCard = new CornerPointsGoldCard(id, centerSymbol, corners, points, requirements.toArray(new GoldCardRequirement[0]));
                     break;
                 case "SymbolPoints":
                     CardSymbolObject pointsSymbol = CardSymbolObject.valueOf(jsonCard.get("pointsSymbol").getAsString());
-                    goldCard = new SymbolPointsGoldCard(id, centerSymbol, corners, points, requirements, pointsSymbol);
+                    goldCard = new SymbolPointsGoldCard(id, centerSymbol, corners, points, requirements.toArray(new GoldCardRequirement[0]), pointsSymbol);
                     break;
                 default:
                     goldCard = null;
@@ -176,9 +175,8 @@ public class Parser {
             JsonObject jsonCard = jsonCardArray.get(index).getAsJsonObject();
             String id = jsonCard.get("id").getAsString();
             int points = jsonCard.get("points").getAsInt();
-            GoalRequirement[] requirements = new GoalRequirement[3];
+            ArrayList<GoalRequirement> requirements = new ArrayList<GoalRequirement>();
             JsonArray requirementsJson = jsonCard.getAsJsonArray("goalRequirements");
-            int j = 0;
             for(JsonElement requirementJsonElem: requirementsJson) {
                 JsonObject requirementJson = requirementJsonElem.getAsJsonObject();
                 GoalRequirement requirement;
@@ -192,13 +190,11 @@ public class Parser {
                     }
                     int quantity = requirementJson.get("quantity").getAsInt();
                     requirement = new GoalRequirement(cardSymbol, quantity);
-                } else {
-                    requirement = null;
+                    requirements.add(requirement);
                 }
-                requirements[j] = requirement;
-                j++;
+
             }
-            symbolGoals[index] = new SymbolGoal(id, points, requirements);
+            symbolGoals[index] = new SymbolGoal(id, points, requirements.toArray(new GoalRequirement[0]));
         }
         return symbolGoals;
     }

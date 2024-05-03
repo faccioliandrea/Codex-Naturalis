@@ -1,16 +1,11 @@
 package it.polimi.ingsw.connections.server;
 
-import it.polimi.ingsw.connections.messages.server.LobbyDoesNotExistMessage;
-import it.polimi.ingsw.connections.messages.server.LobbyExistsMessage;
-import it.polimi.ingsw.connections.messages.server.ValidUsernameMessage;
-import it.polimi.ingsw.controller.CardInfo;
+import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.controller.server.ServerController;
-import it.polimi.ingsw.model.cards.StarterCard;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
 import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
-import it.polimi.ingsw.model.goals.Goal;
 
-import javax.print.attribute.IntegerSyntax;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +22,6 @@ public class ConnectionBridge {
         connections = new HashMap<String, ClientConnection>();
     }
 
-
     /**
      * Add a connection to the list of connections
      * @param connection the connection to add
@@ -38,6 +32,7 @@ public class ConnectionBridge {
         if(connections.containsKey(username) && !connections.get(username).getStatus()) {
             connections.replace(username, connection);
             System.out.printf("%s Reconnected%n", username);
+            // TODO: handle reconnection
         }
         else if(connections.containsKey(username)) {
             invalidUsername(connection);
@@ -154,6 +149,26 @@ public class ConnectionBridge {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+            }
+            return result;
+        } else {
+            return result;
+            // TODO: handle RMI
+        }
+    }
+
+    public int chooseStarterCardSide(String username, boolean flipped) {
+        int result = controller.chooseStarterCardSide(username, flipped);
+        if (connections.get(username) instanceof SocketClientConnection) {
+            if (result == 0) {
+                try {
+                    // TODO ack, init turn
+                    ((SocketClientConnection) connections.get(username)).waitingOthersStartingChoice();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (result==1){
+                // TODO: notify first player init turn and others players
             }
             return result;
         } else {
@@ -294,10 +309,10 @@ public class ConnectionBridge {
         }
     }
 
-    public void createGame(String username) {
-        if (connections.get(username) instanceof SocketClientConnection) {
+    public void createGame(String username, StarterData starterData) {
+        if ((connections.get(username) instanceof SocketClientConnection) ) {
             try {
-                ((SocketClientConnection) connections.get(username)).gameStarted();
+                ((SocketClientConnection) connections.get(username)).gameStarted(starterData);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

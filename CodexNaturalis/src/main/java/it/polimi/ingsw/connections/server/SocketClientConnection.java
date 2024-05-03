@@ -2,12 +2,12 @@ package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
+import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.messages.Message;
 import it.polimi.ingsw.connections.messages.client.ClientToServerMessage;
 import it.polimi.ingsw.connections.messages.client.LoginRequestMessage;
 import it.polimi.ingsw.connections.messages.server.*;
-import it.polimi.ingsw.controller.CardInfo;
-import it.polimi.ingsw.controller.server.ServerController;
+import it.polimi.ingsw.connections.data.CardInfo;
 
 import java.awt.*;
 import java.io.IOException;
@@ -22,10 +22,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class SocketClientConnection implements ClientConnection, Runnable {
     private final ConnectionBridge connectionBridge;
     private SocketAddress remoteAddr;
-
     private Socket clientSocket;
     private ServerSocket serverSocket;
-
     private InputStreamRunnable inputStream;
     private OutputStreamRunnable outputStream;
 
@@ -147,12 +145,16 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new PlayerJoinedMessage(username));
     }
 
-    public void gameStarted() throws IOException {
-        this.outputStream.sendMessage(new GameStartedMessage());
+    public void gameStarted(StarterData starterData) throws IOException {
+        this.outputStream.sendMessage(new GameStartedMessage(starterData));
     }
 
     public void privateGoalChosen() throws IOException {
         this.outputStream.sendMessage(new PrivateGoalChosenMessage());
+    }
+
+    public void waitingOthersStartingChoice() throws IOException {
+        this.outputStream.sendMessage(new WaitingOthersStartingChoiceMessage());
     }
 
     public void initTurn(ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePositions, int currTurn, boolean isLastTurn, ArrayList<CardInfo> board) throws IOException {
@@ -178,4 +180,6 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     public void gameEnded(HashMap<String, Integer> leaderboard) throws IOException {
         this.outputStream.sendMessage(new GameEndMessage(leaderboard));
     }
+
+
 }

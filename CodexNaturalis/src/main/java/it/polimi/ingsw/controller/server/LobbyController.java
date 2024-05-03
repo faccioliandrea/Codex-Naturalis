@@ -47,4 +47,6 @@ public class LobbyController {
 
         lobbies.put(lobbyId, new Lobby(numPlayers));
     }
+
+    public void removeLobby(String lobbyId){lobbies.remove(lobbyId);}
 }

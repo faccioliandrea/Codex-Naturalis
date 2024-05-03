@@ -26,6 +26,7 @@ public class SymbolGoal extends Goal{
      */
     @Override
     public int checkGoal(Board board) {
+
         int scoredPoints;
         if(getSymbolGoalRequirements().length == 1)
             scoredPoints = (board.getSymbols().get(getSymbolGoalRequirements()[0].getRequiredSymbol()) / getSymbolGoalRequirements()[0].getQuantity()) * getPoints();

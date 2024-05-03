@@ -1,16 +1,20 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.connections.data;
 
 import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.PlayableCard;
+import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class CardInfo {
+public class CardInfo implements Serializable {
     private String id;
     private Point coord;
     private boolean flipped;
     private String description;
+    private CardSymbolKingdom cardSymbolKingdom;
 
-    public CardInfo(String id, Point coord, boolean flipped, String description) {
+    public CardInfo(String id, Point coord, boolean flipped, String description, CardSymbolKingdom cardSymbolKingdom) {
         this.id = id;
         this.coord = coord;
         this.flipped = flipped;
@@ -22,6 +26,9 @@ public class CardInfo {
         this.coord = card.getCoord();
         this.flipped = card.getFlipped();
         this.description = "";
+        if(card instanceof PlayableCard)
+            this.cardSymbolKingdom = ((PlayableCard) card).getCardKingdom();
+
     }
 
     public String getId() {
@@ -39,4 +46,6 @@ public class CardInfo {
     public String getDescription() {
         return description;
     }
+
+    public CardSymbolKingdom getCardSymbolKingdom() {return cardSymbolKingdom;}
 }

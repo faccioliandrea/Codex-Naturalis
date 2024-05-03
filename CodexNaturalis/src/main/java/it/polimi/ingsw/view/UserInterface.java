@@ -47,6 +47,18 @@ public class UserInterface { /* MARK: just for testing */
         return sc.nextLine();
     }
 
+    public int askForPrivateGoal() {
+        this.printDebug("Choose your private Goal: [1] [2]");
+        Scanner sc = new Scanner(System.in);
+        return sc.nextInt()-1;
+    }
+
+    public boolean askForStarterCardSide() {
+        this.printDebug("Choose your Starter card side: [1] Front [2] Back");
+        Scanner sc = new Scanner(System.in);
+        return sc.nextInt() == 2;
+    }
+
 //    public void setController(ClientController controller) {
 //        this.controller = controller;
 //    }

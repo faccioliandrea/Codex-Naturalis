@@ -2,14 +2,11 @@ package it.polimi.ingsw.controller.client;
 
 
 import it.polimi.ingsw.connections.client.ConnectionBridge;
-import it.polimi.ingsw.connections.client.ServerConnection;
-import it.polimi.ingsw.connections.client.SocketServerConnection;
-import it.polimi.ingsw.controller.CardInfo;
-import it.polimi.ingsw.model.goals.Goal;
+import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.view.UserInterface;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -72,9 +69,23 @@ public class ClientController {
     }
 
 
-    public void gameStarted(){
+    public void gameStarted(StarterData starterData){
         //TODO: comunicare alla view che il gioco è iniziato
         ui.printDebug("game started");
+        ui.printDebug(starterData);
+        int chosenGoal = ui.askForPrivateGoal();
+        connectionBridge.choosePrivateGoalRequest(chosenGoal);
+    }
+
+    public void privateGoalChosen(){
+        boolean flipped = ui.askForStarterCardSide();
+        connectionBridge.chooseStarterCardSideRequest(flipped);
+
+        //TODO: comunicare alla view che il goal è stato scelto
+    }
+
+    public void waitingOthersStartingChoice() {
+        ui.printDebug("Awesome! Now wait for the other players to choose their private goals and starter cards");
     }
 
     public void initTurn(ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePosition, int currTurn, boolean isLastTurn, ArrayList<CardInfo> board){
@@ -104,9 +115,7 @@ public class ClientController {
 
 
 
-    public void privateGoalChosen(){
-        //TODO: comunicare alla view che il goal è stato scelto
-    }
+
 
     public void gameEnd(HashMap<String, Integer> leaderboard){
         //TODO: comunicare alla view che il gioco è finito e passagli la leaderboard
@@ -120,4 +129,6 @@ public class ClientController {
     public ConnectionBridge getConnectionBridge() {
         return connectionBridge;
     }
+
+
 }
