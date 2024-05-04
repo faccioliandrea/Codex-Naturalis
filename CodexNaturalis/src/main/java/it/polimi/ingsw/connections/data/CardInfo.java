@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.data;
 
+import it.polimi.ingsw.connections.data.utils.CardInfoGenerator;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.PlayableCard;
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
@@ -25,7 +26,7 @@ public class CardInfo implements Serializable {
         this.id = card.getId();
         this.coord = card.getCoord();
         this.flipped = card.getFlipped();
-        this.description = "";
+        this.description = CardInfoGenerator.generator.getCardDescription(card);
         if(card instanceof PlayableCard)
             this.cardSymbolKingdom = ((PlayableCard) card).getCardKingdom();
 

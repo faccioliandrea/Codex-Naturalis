@@ -3,6 +3,7 @@ package it.polimi.ingsw.connections.server;
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
 import it.polimi.ingsw.connections.data.StarterData;
+import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.connections.messages.Message;
 import it.polimi.ingsw.connections.messages.client.ClientToServerMessage;
 import it.polimi.ingsw.connections.messages.client.LoginRequestMessage;
@@ -157,8 +158,12 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new WaitingOthersStartingChoiceMessage());
     }
 
-    public void initTurn(ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePositions, int currTurn, boolean isLastTurn, ArrayList<CardInfo> board) throws IOException {
-        this.outputStream.sendMessage(new InitTurnMessage(hand, resourceDeck, goldDeck, availablePositions, currTurn, isLastTurn, board));
+    public void otherPlayerTurnMessage(String currentPlayer) throws IOException {
+        this.outputStream.sendMessage(new OtherPlayerTurnMessage(currentPlayer));
+    }
+
+    public void initTurn(TurnInfo turnInfo) throws IOException {
+        this.outputStream.sendMessage(new InitTurnMessage(turnInfo));
     }
 
     public void placeCardSuccess(int cardsPoints, int goalsPoints) throws IOException {

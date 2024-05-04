@@ -70,7 +70,7 @@ public abstract class Card {
      * @return corners
      */
     public Corner[] getFrontCorners() {
-        return backCorners;
+        return frontCorners;
     }
 
     /**

@@ -2,6 +2,7 @@ package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.StarterData;
+import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.controller.server.ServerController;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
 import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
@@ -162,13 +163,13 @@ public class ConnectionBridge {
         if (connections.get(username) instanceof SocketClientConnection) {
             if (result == 0) {
                 try {
-                    // TODO ack, init turn
                     ((SocketClientConnection) connections.get(username)).waitingOthersStartingChoice();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             } else if (result==1){
-                // TODO: notify first player init turn and others players
+                String currentPlayer = controller.getGameController().getCurrentPlayer(controller.getUserToGame().get(username));
+                controller.initTurn(currentPlayer);
             }
             return result;
         } else {
@@ -177,22 +178,6 @@ public class ConnectionBridge {
         }
     }
 
-    public ArrayList<Object> initTurn(String username) {
-        ArrayList<Object> result = controller.initTurn(username);
-        if (connections.get(username) instanceof SocketClientConnection) {
-            if (result != null) {
-                try {
-                    ((SocketClientConnection) connections.get(username)).initTurn((ArrayList<CardInfo>) result.get(0), (ArrayList<CardInfo>) result.get(1), (ArrayList<CardInfo>) result.get(2), (ArrayList<Point>) result.get(3), (Integer) result.get(4), (Boolean) result.get(5), (ArrayList<CardInfo>) result.get(5));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            return result;
-        } else {
-            return result;
-            // TODO: handle RMI
-        }
-    }
 
     public ArrayList<Integer> placeCard(String username, String cardId, Point position, boolean flipped) {
         try {
@@ -296,6 +281,31 @@ public class ConnectionBridge {
     }
 
     // Server -> Client communications
+
+
+    public void initTurn(String username, TurnInfo turnInfo){
+        if (connections.get(username) instanceof SocketClientConnection) {
+                try {
+                    ((SocketClientConnection) connections.get(username)).initTurn(turnInfo);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+        } else {
+            // TODO: handle RMI
+        }
+    }
+
+    public void otherPlayerTurn(String username, String currentPlayer){
+        if (connections.get(username) instanceof SocketClientConnection) {
+            try {
+                ((SocketClientConnection) connections.get(username)).otherPlayerTurnMessage(currentPlayer);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // TODO: handle RMI
+        }
+    }
 
     public void endGame(String username, HashMap<String, Integer> leaderboard) {
         if (connections.get(username) instanceof SocketClientConnection) {

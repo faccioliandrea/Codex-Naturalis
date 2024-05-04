@@ -15,6 +15,7 @@ public class UserInterface { /* MARK: just for testing */
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_MAGENTA = "\u001B[35m";
 
 //    public ClientController controller;
 
@@ -30,31 +31,31 @@ public class UserInterface { /* MARK: just for testing */
     }
 
     public String askForUsername() {
-        this.printDebug("Username: ");
+        this.printColorDebug(ANSI_MAGENTA, "Username: " );
         Scanner sc = new Scanner(System.in);
         return sc.nextLine().trim();
     }
 
     public int askForPlayerNum() {
-        this.printDebug("Lobby player number: ");
+        this.printColorDebug(ANSI_MAGENTA, "Lobby player number: ");
         Scanner sc = new Scanner(System.in);
         return sc.nextInt();
     }
 
     public String askForLobbyId() {
-        this.printDebug("Lobby Id: ");
+        this.printColorDebug(ANSI_MAGENTA, "Lobby Id: ");
         Scanner sc = new Scanner(System.in);
         return sc.nextLine();
     }
 
     public int askForPrivateGoal() {
-        this.printDebug("Choose your private Goal: [1] [2]");
+        this.printColorDebug(ANSI_MAGENTA, "Choose your private Goal: [1] [2]");
         Scanner sc = new Scanner(System.in);
         return sc.nextInt()-1;
     }
 
     public boolean askForStarterCardSide() {
-        this.printDebug("Choose your Starter card side: [1] Front [2] Back");
+        this.printColorDebug(ANSI_MAGENTA, "Choose your Starter card side: [1] Front [2] Back");
         Scanner sc = new Scanner(System.in);
         return sc.nextInt() == 2;
     }
@@ -65,6 +66,10 @@ public class UserInterface { /* MARK: just for testing */
 
     public void printDebug(Object o) {
         System.out.println(o.toString());
+    }
+
+    public void printColorDebug(String color, Object o) {
+        System.out.println(color + o.toString() + ANSI_RESET);
     }
 
 

@@ -106,7 +106,7 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getHand(String gameId, String username) {
         ArrayList<CardInfo> hand = new ArrayList<>();
-        for (Card card : games.get(gameId).getGameModel().getCurrentPlayer().getHand())
+        for (Card card : games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getHand())
             hand.add(new CardInfo(card));
         return hand;
     }

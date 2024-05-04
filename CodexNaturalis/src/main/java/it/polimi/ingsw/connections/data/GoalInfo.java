@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.data;
 
+import it.polimi.ingsw.connections.data.utils.GoalInfoGenerator;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.goals.Goal;
 
@@ -13,7 +14,7 @@ public class GoalInfo implements Serializable {
 
     public GoalInfo(Goal goal) {
         this.id = goal.getId();
-        this.description = "";
+        this.description = GoalInfoGenerator.generator.getGoalDescription(goal);
     }
 
     public String getId() {

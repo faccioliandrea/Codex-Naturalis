@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.server;
 
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.connections.data.StarterData;
+import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.model.cards.Card;
@@ -9,6 +10,7 @@ import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.exceptions.InvalidNumberOfPlayersException;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
 import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
+import it.polimi.ingsw.model.player.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.HashMap;
  * Class that manages the server
  */
 public class ServerController {
+
     private GameController gameController;
     private LobbyController lobbyController;
     private HashMap<String, String> userToLobby;
@@ -72,33 +75,33 @@ public class ServerController {
 
     /**
      * Initialize the turn of the player and send the status to the client
+     *
      * @param user the username of the player
      */
-    public ArrayList<Object> initTurn(String user){
+    public void initTurn(String user){
         if(checkUserCurrentPlayer(user)) {
-            ArrayList<CardInfo> hand = gameController.getHand(userToGame.get(user), userToGame.get(user));
+            ArrayList<CardInfo> hand = gameController.getHand(userToGame.get(user), user);
             ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
             ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user));
             int currTurn = gameController.getCurrentTurn(userToGame.get(user));
             boolean isLastTurn = gameController.isLast(userToGame.get(user));
             ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
-            ArrayList<Object> result = new ArrayList<>();
-            result.add(hand);
-            result.add(rd);
-            result.add(gd);
-            result.add(availablePositions);
-            result.add(currTurn);
-            result.add(isLastTurn);
-            result.add(board);
-            return result;
+            TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, isLastTurn, board);
+            connectionBridge.initTurn(user, turnInfo);
+            for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
+                if (!username.getUsername().equals(user)) {
+                    connectionBridge.otherPlayerTurn(username.getUsername(), user);
+                }
+            }
+
         }
-        return null;
+
 
     }
 
     public void initTurnAck(String user){
-        //TODO: add the timer to reset when this ack is received, bat there is the ping (to manage)
+        //TODO: add the timer to reset when this ack is received, but there is the ping (to manage)
     }
 
     /**
@@ -290,6 +293,10 @@ public class ServerController {
 
     public void removeUser(String username){
         userToLobby.remove(username);
+    }
+
+    public GameController getGameController() {
+        return gameController;
     }
 
 

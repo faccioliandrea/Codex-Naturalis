@@ -2,6 +2,7 @@ package it.polimi.ingsw.connections.client;
 
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.StarterData;
+import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.controller.client.ClientController;
 
 import java.awt.*;
@@ -105,8 +106,8 @@ public class ConnectionBridge {
         controller.gameStarted(starterData);
     }
 
-    public void initTurn(ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePosition, int currTurn, boolean isLastTurn, ArrayList<CardInfo> board) {
-        controller.initTurn(hand, resourceDeck, goldDeck, availablePosition, currTurn, isLastTurn, board);
+    public void initTurn(TurnInfo turnInfo) {
+        controller.initTurn(turnInfo);
     }
 
     public void initTurnAck() {
@@ -213,6 +214,11 @@ public class ConnectionBridge {
 
     public void WaitingOthersStartingChoiceMessage() {
         controller.waitingOthersStartingChoice();
+
+    }
+
+    public void OtherPlayerTurnMessage(String currentPlayer) {
+        controller.otherPlayerTurnMessage(currentPlayer);
 
     }
 
