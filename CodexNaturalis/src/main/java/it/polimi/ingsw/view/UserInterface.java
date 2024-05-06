@@ -1,42 +1,87 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.controller.client.ClientController;
 
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class UserInterface {
+    private ClientController controller;
+    private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<String> commandQueue = new LinkedBlockingQueue<>();
 
-    public UserInterface() { }
+    public UserInterface() {
+        new Thread(new InputHandler(commandQueue, inputQueue)).start();
+        new Thread(new CommandHandler(commandQueue, this)).start();
+    }
+
+    public void setController(ClientController controller) {
+        this.controller = controller;
+    }
 
     public String askForUsername() {
         this.printColorDebug(TUIColors.PURPLE, "Username: " );
-        Scanner sc = new Scanner(System.in);
-        return sc.nextLine().trim();
+        try {
+            return inputQueue.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int askForPlayerNum() {
         this.printColorDebug(TUIColors.PURPLE, "Lobby player number: ");
-        Scanner sc = new Scanner(System.in);
-        return sc.nextInt();
+        try {
+            return Integer.parseInt(inputQueue.take());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String askForLobbyId() {
         this.printColorDebug(TUIColors.PURPLE, "Lobby Id: ");
-        Scanner sc = new Scanner(System.in);
-        return sc.nextLine();
+        try {
+            return inputQueue.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int askForPrivateGoal() {
         this.printColorDebug(TUIColors.PURPLE, "Choose your private Goal: [1] [2]");
-        Scanner sc = new Scanner(System.in);
-        return sc.nextInt()-1;
+        try {
+            return Integer.parseInt(inputQueue.take()) - 1;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean askForStarterCardSide() {
         this.printColorDebug(TUIColors.PURPLE, "Choose your Starter card side: [1] Front [2] Back");
-        Scanner sc = new Scanner(System.in);
-        return sc.nextInt() == 2;
+        try {
+            return inputQueue.take().equals("2");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void displayBoard(String username) {
+        if (controller != null) {
+            if (username==null && controller.getCurrentTurnInfo() != null) {
+                this.displayBoard(controller.getCurrentTurnInfo().getBoard(), controller.getCurrentTurnInfo().getAvailablePositions());
+            } else if (username != null) {
+                // TODO: add checks on user existance
+                // TODO: get selected user's board (print with no available positions)
+                // MARK: temporary
+                this.printColorDebug(TUIColors.RED, String.format("%s's board not available", username));
+            } else {
+                this.printColorDebug(TUIColors.RED, "Board not available");
+            }
+        } else {
+            this.printColorDebug(TUIColors.RED, "Board not available");
+        }
     }
 
     public void displayBoard(ArrayList<CardInfo> board,ArrayList<Point> availablePos) {
