@@ -1,14 +1,16 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.connections.ConnectionStatus;
+
 import java.io.IOException;
 
 public class RMIConnection implements ClientConnection{
 
-    private boolean isAlive;
+    private ConnectionStatus connectionStatus;
 
         @Override
-        public boolean getStatus() {
-            return isAlive;
+        public ConnectionStatus getStatus() {
+            return connectionStatus;
         }
 
         @Override

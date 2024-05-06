@@ -9,17 +9,18 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class CardInfo implements Serializable {
-    private String id;
-    private Point coord;
-    private boolean flipped;
-    private String description;
-    private CardSymbolKingdom cardSymbolKingdom;
+    private final String id;
+    private final Point coord;
+    private final boolean flipped;
+    private final String description;
+    private final String color;
 
-    public CardInfo(String id, Point coord, boolean flipped, String description, CardSymbolKingdom cardSymbolKingdom) {
+    public CardInfo(String id, Point coord, boolean flipped, String description, CardSymbolKingdom kingdom) {
         this.id = id;
         this.coord = coord;
         this.flipped = flipped;
         this.description = description;
+        this.color = kingdom!=null ? kingdom.toString() : "STARTER";
     }
 
     public CardInfo(Card card) {
@@ -27,8 +28,7 @@ public class CardInfo implements Serializable {
         this.coord = card.getCoord();
         this.flipped = card.getFlipped();
         this.description = CardInfoGenerator.generator.getCardDescription(card);
-        if(card instanceof PlayableCard)
-            this.cardSymbolKingdom = ((PlayableCard) card).getCardKingdom();
+        this.color = card instanceof PlayableCard ? ((PlayableCard) card).getCardKingdom().toString() : "STARTER";
 
     }
 
@@ -48,5 +48,5 @@ public class CardInfo implements Serializable {
         return description;
     }
 
-    public CardSymbolKingdom getCardSymbolKingdom() {return cardSymbolKingdom;}
+    public String getColor() {return color;}
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
 import it.polimi.ingsw.connections.data.StarterData;
@@ -10,7 +11,6 @@ import it.polimi.ingsw.connections.messages.client.LoginRequestMessage;
 import it.polimi.ingsw.connections.messages.server.*;
 import it.polimi.ingsw.connections.data.CardInfo;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -30,35 +30,27 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
     private final BlockingQueue<Message> queue = new LinkedBlockingQueue<>();
 
-    private boolean isAlive;
+    private ConnectionStatus connectionStatus;
 
     public SocketClientConnection(ServerSocket serverSocket, Socket clientSocket, ConnectionBridge connectionBridge) {
         synchronized (this) {
+            this.connectionStatus = ConnectionStatus.INITIALIZING;
+
             this.connectionBridge = connectionBridge;
             this.serverSocket = serverSocket;
             this.clientSocket = clientSocket;
 
             this.remoteAddr = this.clientSocket.getRemoteSocketAddress();
-
-            this.isAlive = false;
         }
     }
 
     @Override
-    public boolean getStatus() {
-        return this.isAlive;
+    public ConnectionStatus getStatus() {
+        return this.connectionStatus;
     }
 
     public String getRemoteAddr() {
         return this.remoteAddr.toString();
-    }
-
-    public synchronized boolean isAlive() {
-        return isAlive;
-    }
-
-    public synchronized void setAlive(boolean alive) {
-        isAlive = alive;
     }
 
     public InputStreamRunnable getInputStream() {
@@ -78,11 +70,11 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
             outputThread.start();
             inputThread.start();
-            this.isAlive = true;
+            this.connectionStatus = ConnectionStatus.ONLINE;
 
 
 
-            while (this.isAlive) {
+            while (this.connectionStatus == ConnectionStatus.ONLINE) {
                 ClientToServerMessage msg = (ClientToServerMessage) queue.take();
                 if (msg instanceof LoginRequestMessage) {
                     connectionBridge.addConnection(this, ((LoginRequestMessage) msg).getUsername());
@@ -93,7 +85,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
             System.err.println("all thread started");
         } catch (IOException | InterruptedException e) {
-            this.isAlive = false;
+            this.connectionStatus = ConnectionStatus.OFFLINE;
         }
     }
 
@@ -103,13 +95,13 @@ public class SocketClientConnection implements ClientConnection, Runnable {
             inputStream.close();
             outputStream.close();
             clientSocket.close();
-            this.isAlive = false;
+            this.connectionStatus = ConnectionStatus.CLOSED;
         }
     }
 
 
     public void threadExceptionCallback(Exception e) {
-        this.isAlive = false;
+        this.connectionStatus = ConnectionStatus.OFFLINE;
         this.connectionBridge.onClientDisconnect(this);
     }
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
@@ -30,7 +31,7 @@ public class ConnectionBridge {
      */
 
     public void addConnection(ClientConnection connection, String username){
-        if(connections.containsKey(username) && !connections.get(username).getStatus()) {
+        if(connections.containsKey(username) && connections.get(username).getStatus() == ConnectionStatus.OFFLINE) {
             connections.replace(username, connection);
             System.out.printf("%s Reconnected%n", username);
             // TODO: handle reconnection

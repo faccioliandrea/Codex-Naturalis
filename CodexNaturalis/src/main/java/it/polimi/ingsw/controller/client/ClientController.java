@@ -5,6 +5,7 @@ import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
+import it.polimi.ingsw.view.TUIColors;
 import it.polimi.ingsw.view.UserInterface;
 
 import java.awt.*;
@@ -73,13 +74,13 @@ public class ClientController {
     public void gameStarted(StarterData starterData){
         //TODO: comunicare alla view che il gioco è iniziato
         ui.printDebug("Game started");
-        ui.printColorDebug(UserInterface.ANSI_CYAN, "Your current hand:");
+        ui.printColorDebug(TUIColors.CYAN, "Your current hand:");
         starterData.getHand().forEach(x->ui.printDebug(x.getDescription()));
-        ui.printColorDebug(UserInterface.ANSI_CYAN, "Game shared goals:");
+        ui.printColorDebug(TUIColors.CYAN, "Game shared goals:");
         starterData.getSharedGoals().forEach(x->ui.printDebug(x.getDescription()));
-        ui.printColorDebug(UserInterface.ANSI_CYAN,"You have to choose one of the following private goals:");
+        ui.printColorDebug(TUIColors.CYAN,"You have to choose one of the following private goals:");
         starterData.getPrivateGoals().forEach(x->ui.printDebug(x.getDescription()));
-        ui.printColorDebug(UserInterface.ANSI_CYAN,"You have to choose your starter card side:");
+        ui.printColorDebug(TUIColors.CYAN,"You have to choose your starter card side:");
         ui.printDebug(starterData.getStarterCard().getDescription());
         int chosenGoal = ui.askForPrivateGoal();
         connectionBridge.choosePrivateGoalRequest(chosenGoal);
@@ -101,8 +102,8 @@ public class ClientController {
     }
 
     public void initTurn(TurnInfo turnInfo){
-        //TODO: comunicare alla view che è il proprio turno
         ui.printDebug("your turn");
+        ui.displayBoard(turnInfo.getBoard(), turnInfo.getAvailablePositions());
     }
 
 

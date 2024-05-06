@@ -45,7 +45,7 @@ public class OutputStreamRunnable implements StreamRunnable {
         try {
             while (!this.isStopped) {
                 synchronized (lock) {
-                    lock.wait(1000);
+                    lock.wait(3000);
                 }
                 ping();
             }

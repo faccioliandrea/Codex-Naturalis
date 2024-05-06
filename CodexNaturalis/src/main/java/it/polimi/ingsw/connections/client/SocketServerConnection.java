@@ -1,11 +1,11 @@
 package it.polimi.ingsw.connections.client;
 
+import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
 import it.polimi.ingsw.connections.messages.*;
 import it.polimi.ingsw.connections.messages.client.*;
 import it.polimi.ingsw.connections.messages.server.*;
-import it.polimi.ingsw.controller.client.ClientController;
 
 import java.awt.*;
 import java.io.IOException;
@@ -20,15 +20,14 @@ public class SocketServerConnection implements ServerConnection, Runnable {
     private OutputStreamRunnable outputStream;
     private Socket socket;
     private final BlockingQueue<Message> queue = new LinkedBlockingQueue<>();
-    // TODO: change isAlive to status Enum (NOT_STARTED, ONLINE, OFFLINE)
-    private boolean isAlive;
+    private ConnectionStatus connectionStatus;
 
     public SocketServerConnection(ConnectionBridge connectionBridge, Socket socket) {
         synchronized (this) {
             this.connectionBridge = connectionBridge;
             this.socket = socket;
 
-            this.isAlive = false;
+            this.connectionStatus = ConnectionStatus.INITIALIZING;
         }
     }
 
@@ -41,15 +40,15 @@ public class SocketServerConnection implements ServerConnection, Runnable {
 
             outputThread.start();
             inputThread.start();
-            this.isAlive = true;
+            this.connectionStatus = ConnectionStatus.ONLINE;
 
 
-            while (this.isAlive) {
+            while (this.connectionStatus == ConnectionStatus.ONLINE) {
                 ServerToClientMessage msg = (ServerToClientMessage) queue.take();
                 msg.execute(connectionBridge);
             }
         } catch (IOException | InterruptedException e ) {
-            this.isAlive = false;
+            this.connectionStatus = ConnectionStatus.OFFLINE;
             return;
         }
     }
@@ -60,13 +59,18 @@ public class SocketServerConnection implements ServerConnection, Runnable {
             inputStream.close();
             outputStream.close();
             socket.close();
-            this.isAlive = false;
+            this.connectionStatus = ConnectionStatus.CLOSED;
         }
     }
 
     @Override
+    public ConnectionStatus getStatus() {
+        return this.connectionStatus;
+    }
+
+    @Override
     public void threadExceptionCallback(Exception e) {
-        this.isAlive = false;
+        this.connectionStatus = ConnectionStatus.OFFLINE;
         try {
             this.close();
         } catch (IOException ex) {

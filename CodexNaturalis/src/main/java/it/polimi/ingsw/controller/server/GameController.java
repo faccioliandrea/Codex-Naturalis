@@ -129,7 +129,7 @@ public class GameController {
      */
     protected ArrayList<GoalInfo> getSharedGoals(String gameId) {
         ArrayList<GoalInfo> sharedGoals = new ArrayList<>();
-        for (Goal card : games.get(gameId).getGameModel().getPlayers().getFirst().getBoard().getSharedGoals())
+        for (Goal card : games.get(gameId).getGameModel().getPlayers().get(0).getBoard().getSharedGoals())
             sharedGoals.add(new GoalInfo(card));
         return sharedGoals;
     }
