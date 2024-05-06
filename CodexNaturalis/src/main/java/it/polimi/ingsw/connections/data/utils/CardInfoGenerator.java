@@ -43,7 +43,11 @@ final public class CardInfoGenerator {
      * @return Description of corner
      */
     private String getCornerInfo(Corner corner, int index) {
-        return String.format("\n\t- %s: " + (corner == null ? "no corner" : (corner.getSymbol() == null ? "available" : "available, with " + corner.getSymbol().toString())), getCornerPosition(index));
+        if (corner == null)
+            return "";
+        if (corner.isCovered())
+            return String.format("\n\t- %s: corner covered", getCornerPosition(index));
+        return String.format("\n\t- %s: " + (corner.getSymbol() == null ? "available" : "available, with " + corner.getSymbol().toString()), getCornerPosition(index));
     }
 
     /**
@@ -91,7 +95,11 @@ final public class CardInfoGenerator {
             GoldCard goldCard = (GoldCard) card;
             return String.format("\nThis card gives %d point(s)%s when placed", goldCard.getPoints(), pointsWhenPlacedGold(goldCard));
         } else if (card instanceof ResourceCard) {
-            return String.format("\nThis card gives %d point(s) when placed", ((ResourceCard) card).getPoints());
+            ResourceCard resourceCard = (ResourceCard) card;
+            if (resourceCard.getPoints() == 0) {
+                return "";
+            }
+            return String.format("\nThis card gives %d point(s) when placed", resourceCard.getPoints());
         } else if (card instanceof StarterCard) {
             return "";
         }
