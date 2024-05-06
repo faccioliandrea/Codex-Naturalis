@@ -10,8 +10,9 @@ import java.io.Serializable;
 
 public class CardInfo implements Serializable {
     private final String id;
-    private final Point coord;
-    private final boolean flipped;
+    private Point coord;
+
+    private boolean flipped;
     private final String description;
     private final String color;
 
@@ -49,4 +50,12 @@ public class CardInfo implements Serializable {
     }
 
     public String getColor() {return color;}
+
+    public void setCoord(Point coord) {
+        this.coord = coord;
+    }
+
+    public void setFlipped(boolean flipped) {
+        this.flipped = flipped;
+    }
 }

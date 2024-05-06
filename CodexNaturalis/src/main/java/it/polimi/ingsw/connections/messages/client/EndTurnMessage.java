@@ -7,6 +7,6 @@ public class EndTurnMessage extends ClientToServerMessage {
     }
     @Override
     public void execute(ConnectionBridge bridge) {
-        bridge.endTurn(this.username);
+       bridge.endTurn(this.username);
     }
 }

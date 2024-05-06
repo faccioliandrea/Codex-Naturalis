@@ -55,4 +55,10 @@ public class TurnInfo implements Serializable {
     public ArrayList<CardInfo> getBoard() {
         return board;
     }
+
+    public void addCardToBoard(CardInfo card){
+        board.add(card);
+    }
+
+
 }

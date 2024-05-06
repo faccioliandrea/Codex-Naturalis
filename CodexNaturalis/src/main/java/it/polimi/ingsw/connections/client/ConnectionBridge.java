@@ -1,6 +1,7 @@
 package it.polimi.ingsw.connections.client;
 
 import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.controller.client.ClientController;
@@ -122,10 +123,10 @@ public class ConnectionBridge {
         }
     }
 
-    public void placeCardRequest(String cardId, Point position, boolean side) {
+    public void placeCardRequest(CardInfo card) {
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).placeCard(controller.getUsername(), cardId, position, side);
+                ((SocketServerConnection) serverConnection).placeCard(controller.getUsername(), card.getId(), card.getCoord(), card.isFlipped());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -134,8 +135,8 @@ public class ConnectionBridge {
         }
     }
 
-    public void placeCardSuccess(int cardsPoints, int goalPoints) {
-        controller.placeCardSuccess(cardsPoints, goalPoints);
+    public void placeCardSuccess(int cardsPoints, int goalPoints, CardInfo placedCard) {
+        controller.placeCardSuccess(cardsPoints, goalPoints, placedCard);
     }
 
     public void placeCardFailure() {
@@ -184,8 +185,8 @@ public class ConnectionBridge {
         }
     }
 
-    public void gameState(ArrayList<CardInfo> resaourceDeck, ArrayList<CardInfo> golddeck, ArrayList<CardInfo> board, int points) {
-        controller.gameState(resaourceDeck, golddeck, board, points);
+    public void gameState(GameStateInfo gameStateInfo) {
+        controller.gameState(gameStateInfo);
     }
 
     public void choosePrivateGoalRequest(int index){

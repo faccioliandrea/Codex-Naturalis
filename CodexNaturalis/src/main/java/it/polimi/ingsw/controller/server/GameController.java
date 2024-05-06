@@ -153,7 +153,7 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getResourceDeck(String gameId) {
         ArrayList<CardInfo> resourceDeck = new ArrayList<>();
-        for (ResourceCard card : games.get(gameId).getGameModel().getResourceCardDeck().subList(0,2))
+        for (ResourceCard card : games.get(gameId).getGameModel().getResourceCardDeck().subList(0,3))
             resourceDeck.add(new CardInfo(card));
         return resourceDeck;
     }
@@ -164,7 +164,7 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getGoldDeck(String gameId) {
         ArrayList<CardInfo> goldDeck = new ArrayList<>();
-        for (GoldCard card : games.get(gameId).getGameModel().getGoldCardDeck().subList(0,2))
+        for (GoldCard card : games.get(gameId).getGameModel().getGoldCardDeck().subList(0,3))
             goldDeck.add(new CardInfo(card));
         return goldDeck;
     }
@@ -274,8 +274,12 @@ public class GameController {
      * @param cardId the id of the card
      * @return the card with the id cardId
      */
-    public Card getCard(String gameId, String cardId){
+    public Card getCardFromHand(String gameId, String cardId){
         return games.get(gameId).getGameModel().getCurrentPlayer().getHand().stream().filter(x -> x.getId().equals(cardId)).findFirst().orElse(null);
+    }
+
+    public Card getCardFromBoard(String gameId, String cardId){
+        return games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getPlayedCards().stream().filter(x -> x.getId().equals(cardId)).findFirst().orElse(null);
     }
 
 

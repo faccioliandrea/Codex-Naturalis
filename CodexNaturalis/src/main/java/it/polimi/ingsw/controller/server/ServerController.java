@@ -1,10 +1,7 @@
 package it.polimi.ingsw.controller.server;
 
-import it.polimi.ingsw.connections.data.GoalInfo;
-import it.polimi.ingsw.connections.data.StarterData;
-import it.polimi.ingsw.connections.data.TurnInfo;
+import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
-import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.exceptions.InvalidNumberOfPlayersException;
@@ -133,18 +130,17 @@ public class ServerController {
      * @param cardId the id of the card to place
      * @param position the position to place the card
      */
-    public ArrayList<Integer> placeCard(String user, String cardId, Point position, boolean flipped) throws RequirementsNotSatisfied, InvalidPositionException{
-        ArrayList<Integer> result = new ArrayList<>();
+    public PlaceCardSuccessInfo placeCard(String user, String cardId, Point position, boolean flipped) throws RequirementsNotSatisfied, InvalidPositionException{
+
         if(checkUserCurrentPlayer(user)) {
-            Card card = gameController.getCard(userToGame.get(user), cardId);
+            Card card = gameController.getCardFromHand(userToGame.get(user), cardId);
             card.setFlipped(flipped);
             gameController.placeCard(userToGame.get(user), card, position);
             int cardsPoints = gameController.getUserCardsPoints(userToGame.get(user));
             int GoalsPoints = gameController.getUserGoalsPoints(userToGame.get(user));
-            result.add(cardsPoints);
-            result.add(GoalsPoints);
+            return new PlaceCardSuccessInfo(cardsPoints, GoalsPoints, new CardInfo(card));
         }
-        return result;
+        return null;
     }
 
     /**
@@ -177,24 +173,28 @@ public class ServerController {
      * End the turn of the player and send the new status to all the players in the lobby
      * @param user the username of the player
      */
-    public ArrayList<Object> endTurn(String user){
+    public void endTurn(String user){
         if(checkUserCurrentPlayer(user)) {
             ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
             ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
             int points = gameController.getUserCardsPoints(userToGame.get(user));
             gameController.endTurn(userToGame.get(user));
-            ArrayList<Object> result = new ArrayList<>();
-            result.add(rd);
-            result.add(gd);
-            result.add(board);
-            result.add(points);
+            GameStateInfo gameState = new GameStateInfo(user, rd, gd, board, points);
+            for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
+                if (!username.getUsername().equals(user)) {
+                    connectionBridge.gameState(username.getUsername(), gameState);
+                }
+            }
+            initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
+
 
             if (gameController.isGameFinished(userToGame.get(user)))
                 endGame(userToGame.get(user));
-            return result;
+
+
         }
-        return null;
+
     }
 
 

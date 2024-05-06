@@ -2,6 +2,8 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.controller.client.ClientController;
+import it.polimi.ingsw.connections.data.TurnInfo;
+import it.polimi.ingsw.model.cards.PlayableCard;
 
 import java.awt.*;
 import java.util.*;
@@ -82,6 +84,53 @@ public class UserInterface {
         } else {
             this.printColorDebug(TUIColors.RED, "Board not available");
         }
+    }
+
+
+    public CardInfo askForPlayCard(ArrayList<CardInfo> hand, ArrayList<Point> availablePositions) {
+        int choice = 0;
+        this.printColorDebug(TUIColors.PURPLE, "Choose which card do you want to play: [1] " + hand.get(0).getId() + " [2] " + hand.get(1).getId() + " [3] " + hand.get(2).getId());
+        try {
+            choice = Integer.parseInt(inputQueue.take())-1;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.printColorDebug(TUIColors.PURPLE, "Choose the card side: [1] Front [2] Back");
+        try {
+            hand.get(choice).setFlipped(Integer.parseInt(inputQueue.take())==2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.printColorDebug(TUIColors.PURPLE, "Choose the position:");
+        String availablePos = "";
+        for (Point p: availablePositions) {
+            availablePos = availablePos.concat("[" + availablePositions.indexOf(p) + "] ");
+        }
+        printColorDebug(TUIColors.PURPLE, availablePos);
+        try {
+            hand.get(choice).setCoord(availablePositions.get(Integer.parseInt(inputQueue.take())));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return hand.get(choice);
+    }
+
+    public int askForDrawCard(TurnInfo turnInfo){
+        this.printColorDebug(TUIColors.PURPLE, "Choose which deck do you want to draw from: [1] Resource [2] Gold");
+        int deck = 0;
+        try {
+            deck = Integer.parseInt(inputQueue.take()) == 1 ? 10 : 20;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.printColorDebug(TUIColors.PURPLE, String.format("Choose which card do you want to draw: [1] %s [2] %s [3] Covered", deck == 10 ? turnInfo.getResourceDeck().get(0).getId() : turnInfo.getGoldDeck().get(0).getId(), deck == 10 ? turnInfo.getResourceDeck().get(1).getId() : turnInfo.getGoldDeck().get(1).getId() ));
+        try {
+            deck = deck + Integer.parseInt(inputQueue.take()) - 1;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return deck;
     }
 
     public void displayBoard(ArrayList<CardInfo> board,ArrayList<Point> availablePos) {

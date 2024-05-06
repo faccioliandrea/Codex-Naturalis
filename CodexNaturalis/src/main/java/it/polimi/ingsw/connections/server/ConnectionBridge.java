@@ -1,9 +1,7 @@
 package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
-import it.polimi.ingsw.connections.data.CardInfo;
-import it.polimi.ingsw.connections.data.StarterData;
-import it.polimi.ingsw.connections.data.TurnInfo;
+import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.controller.server.ServerController;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
 import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
@@ -180,13 +178,14 @@ public class ConnectionBridge {
     }
 
 
-    public ArrayList<Integer> placeCard(String username, String cardId, Point position, boolean flipped) {
+    public PlaceCardSuccessInfo placeCard(String username, String cardId, Point position, boolean flipped) {
         try {
-            ArrayList<Integer> result = controller.placeCard(username, cardId, position, flipped);
+            PlaceCardSuccessInfo result = controller.placeCard(username, cardId, position, flipped);
+
             if (connections.get(username) instanceof SocketClientConnection) {
-                if (!result.isEmpty()) {
+                if (result != null) {
                     try {
-                        ((SocketClientConnection) connections.get(username)).placeCardSuccess(result.get(0), result.get(1));
+                        ((SocketClientConnection) connections.get(username)).placeCardSuccess(result.getCardsPoint(), result.getGoalsPoints(), result.getPlayedCard());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -245,24 +244,7 @@ public class ConnectionBridge {
         return null;
     }
 
-    public ArrayList<Object> endTurn(String username) {
-        ArrayList<Object> result = controller.endTurn(username);
-        if (connections.get(username) instanceof SocketClientConnection) {
-            for (String user : connections.keySet()) {
-                if (controller.getUserToGame().get(user).equals(controller.getUserToGame().get(username))) {
-                    try {
-                        ((SocketClientConnection) connections.get(user)).sendStatus((ArrayList<CardInfo>) result.get(0), (ArrayList<CardInfo>) result.get(1), (ArrayList<CardInfo>) result.get(2), (Integer) result.get(3));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        } else {
-            return result;
-            // TODO: handle RMI
-        }
-        return result;
-    }
+
 
     public String createLobby(String username, int numPlayers) {
         String lobbyId = controller.createLobby(username, numPlayers);
@@ -276,6 +258,12 @@ public class ConnectionBridge {
             return lobbyId;
         }
         return lobbyId;
+    }
+
+
+    public void endTurn(String username) {
+        controller.endTurn(username);
+
     }
 
     public void initTurnAck(String username) {
@@ -353,6 +341,21 @@ public class ConnectionBridge {
             }
         } else {
             // TODO handle RMI
+        }
+    }
+
+
+
+    public void gameState(String username, GameStateInfo gameStateInfo) {
+        if (connections.get(username) instanceof SocketClientConnection) {
+            try {
+                ((SocketClientConnection) connections.get(username)).sendStatus(gameStateInfo);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+
+        //TODO handle RMI
         }
     }
 

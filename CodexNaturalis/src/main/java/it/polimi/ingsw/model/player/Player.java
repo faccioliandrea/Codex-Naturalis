@@ -181,7 +181,7 @@ public class Player {
      */
     public void placeCard(Card card, Point coord) throws InvalidPositionException, RequirementsNotSatisfied {
         if(!board.availablePositions().contains(coord)) throw new InvalidPositionException();
-        if(card instanceof GoldCard){
+        if(card instanceof GoldCard && !card.getFlipped()){
            if(!Arrays.stream(((GoldCard) card).getConditionalRequirements()).allMatch(x->x.getQuantity()<=board.getSymbols().get(x.getRequiredSymbol()))){
                throw new RequirementsNotSatisfied();
            }

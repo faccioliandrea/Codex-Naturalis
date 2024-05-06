@@ -3,6 +3,7 @@ package it.polimi.ingsw.connections.server;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
+import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.connections.messages.Message;
@@ -158,8 +159,8 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new InitTurnMessage(turnInfo));
     }
 
-    public void placeCardSuccess(int cardsPoints, int goalsPoints) throws IOException {
-        this.outputStream.sendMessage(new PlaceCardSuccessMessage(cardsPoints, goalsPoints));
+    public void placeCardSuccess(int cardsPoints, int goalsPoints, CardInfo placedCard) throws IOException {
+        this.outputStream.sendMessage(new PlaceCardSuccessMessage(cardsPoints, goalsPoints, placedCard));
     }
 
     public void placeCardFailure() throws IOException {
@@ -170,8 +171,8 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new DrawSuccessMessage(hand));
     }
 
-    public void sendStatus(ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<CardInfo> board, int cardsPoints) throws IOException {
-        this.outputStream.sendMessage(new GameStateMessage(resourceDeck, goldDeck, board, cardsPoints));
+    public void sendStatus(GameStateInfo gameState) throws IOException {
+        this.outputStream.sendMessage(new GameStateMessage(gameState));
     }
 
     public void gameEnded(HashMap<String, Integer> leaderboard) throws IOException {
