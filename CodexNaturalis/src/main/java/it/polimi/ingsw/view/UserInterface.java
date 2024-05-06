@@ -69,7 +69,7 @@ public class UserInterface { /* MARK: just for testing */
 
 //            System.err.println(CardColors.valueOf(card.getColor()) + card.getColor() + ": " + CardColors.valueOf(card.getColor()).toString().replace("\u001B", "") + TUIColors.reset());
             try {
-                grid[i][j] = String.format("%s %2d  %s", CardColors.valueOf(card.getColor()), board.indexOf(card), TUIColors.reset());
+                grid[i][j] = String.format("%s %s %s", CardColors.valueOf(card.getColor()), card.getId(), TUIColors.reset());
             } catch (IndexOutOfBoundsException e) {
                 System.err.printf("i: %d, j: %d%n", i , j);
                 e.printStackTrace();
