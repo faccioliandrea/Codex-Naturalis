@@ -5,11 +5,9 @@ import it.polimi.ingsw.connections.data.CardInfo;
 import java.awt.*;
 import java.util.*;
 
-public class UserInterface { /* MARK: just for testing */
+public class UserInterface {
 
-//    public ClientController controller;
-
-    public UserInterface(/* ClientController controller*/) { }
+    public UserInterface() { }
 
     public String askForUsername() {
         this.printColorDebug(TUIColors.PURPLE, "Username: " );
@@ -59,19 +57,14 @@ public class UserInterface { /* MARK: just for testing */
         int cols = width  + (availablePos != null ? 3 : 1); // +1 for matrix indexes going from 0 to n-1, +2 for table padding (available positions)
 
         String[][] grid = new String[rows][cols];
-//        System.out.printf("%d x %d%n", height, width);
         for (CardInfo card: board) {
 
             int i = (y_max.getAsInt() + 1)  - card.getCoord().y;
             int j = card.getCoord().x - (x_min.getAsInt() - 1);
 
-//            System.out.printf("xy:(%d, %d) -> ij:(%d,%d)%n", card.getCoord().x, card.getCoord().y, i, j);
-
-//            System.err.println(CardColors.valueOf(card.getColor()) + card.getColor() + ": " + CardColors.valueOf(card.getColor()).toString().replace("\u001B", "") + TUIColors.reset());
             try {
                 grid[i][j] = String.format("%s %s %s", CardColors.valueOf(card.getColor()), card.getId(), TUIColors.reset());
             } catch (IndexOutOfBoundsException e) {
-                System.err.printf("i: %d, j: %d%n", i , j);
                 e.printStackTrace();
             }
         }
@@ -109,6 +102,7 @@ public class UserInterface { /* MARK: just for testing */
             descr = descr.replace(cc.name(), cc.toString() + cc.name() + TUIColors.reset());
         }
         printDebug(descr);
+        printDebug("-------------------------------------------------------------");
     }
 
 }
