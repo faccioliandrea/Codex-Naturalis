@@ -26,48 +26,98 @@ public class UserInterface {
     }
 
     public String askForUsername() {
-        this.printColorDebug(TUIColors.PURPLE, "Username: " );
-        try {
-            return inputQueue.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        String username;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Username: " );
+            try {
+                username =  inputQueue.take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (username.isEmpty()) {
+                System.out.println("Please, type a valid username");
+            }
+        } while(username.isEmpty());
+        return username;
     }
 
     public int askForPlayerNum() {
-        this.printColorDebug(TUIColors.PURPLE, "Lobby player number: ");
-        try {
-            return Integer.parseInt(inputQueue.take());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+        int playerNum=0;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Insert number of players: 2, 3 or 4");
+            try {
+                playerNum =  Integer.parseInt(inputQueue.take());
+                if (playerNum != 2 && playerNum != 3 && playerNum != 4) {
+                    System.out.println("Please, type 2, 3 or 4");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                System.out.println("Oops, you inserted a string!");
+            }
+
+        } while(playerNum != 2 && playerNum != 3 && playerNum != 4);
+        return playerNum;
     }
 
-    public String askForLobbyId() {
-        this.printColorDebug(TUIColors.PURPLE, "Lobby Id: ");
-        try {
-            return inputQueue.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    public String askForLobbyId(ArrayList<String> lobbies) {
+        this.printColorDebug(TUIColors.CYAN, "Available lobbies:");
+        printDebug(lobbies.toString());
+        String lobbyId;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Type the lobby id you want to join: ");
+            try {
+                lobbyId =  inputQueue.take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (!lobbies.contains(lobbyId)) {
+                System.out.println("Please, type a valid lobby id");
+            }
+        } while(!lobbies.contains(lobbyId));
+        return lobbyId;
     }
 
     public int askForPrivateGoal() {
-        this.printColorDebug(TUIColors.PURPLE, "Choose your private Goal: [1] [2]");
-        try {
-            return Integer.parseInt(inputQueue.take()) - 1;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+
+        int choice = -1;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Choose your private Goal: [1] [2]");
+            try {
+                choice =  Integer.parseInt(inputQueue.take()) - 1;
+                if (choice != 1 && choice != 0) {
+                    System.out.println("Please, type 1 or 2");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                System.out.println("Oops, you inserted a string!");
+            }
+
+        } while(choice != 1 && choice != 0);
+        return choice;
     }
 
     public boolean askForStarterCardSide() {
-        this.printColorDebug(TUIColors.PURPLE, "Choose your Starter card side: [1] Front [2] Back");
-        try {
-            return inputQueue.take().equals("2");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        int choice = -1;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Choose your Starter card side: [1] Front [2] Back");
+            try {
+                choice =  Integer.parseInt(inputQueue.take());
+                if (choice != 1 && choice != 2) {
+                    System.out.println("Please, type 1 or 2");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                System.out.println("Oops, you inserted a string!");
+            }
+
+        } while(choice != 1 && choice != 2);
+        return choice == 2;
+
     }
 
     public void displayBoard(String username) {
@@ -92,48 +142,98 @@ public class UserInterface {
 
 
     public CardInfo askForPlayCard(ArrayList<CardInfo> hand, ArrayList<Point> availablePositions) {
-        int choice = 0;
-        this.printColorDebug(TUIColors.PURPLE, "Choose which card do you want to play: [1] " + hand.get(0).getId() + " [2] " + hand.get(1).getId() + " [3] " + hand.get(2).getId());
-        try {
-            choice = Integer.parseInt(inputQueue.take())-1;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.printColorDebug(TUIColors.PURPLE, "Choose the card side: [1] Front [2] Back");
-        try {
-            hand.get(choice).setFlipped(Integer.parseInt(inputQueue.take())==2);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.printColorDebug(TUIColors.PURPLE, "Choose the position:");
-        String availablePos = "";
-        for (Point p: availablePositions) {
-            availablePos = availablePos.concat("[" + availablePositions.indexOf(p) + "] ");
-        }
-        printColorDebug(TUIColors.PURPLE, availablePos);
-        try {
-            hand.get(choice).setCoord(availablePositions.get(Integer.parseInt(inputQueue.take())));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        int choice = -1;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Choose which card do you want to play:");
+            hand.forEach(x->printColorDebug(TUIColors.PURPLE, String.format("[%s] %s", hand.indexOf(x)+1, x.getId())));
+            try {
+                choice =  Integer.parseInt(inputQueue.take()) - 1;
+                if (choice != 1 && choice != 0) {
+                    System.out.println("Please, choose a valid card");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                System.out.println("Oops, you inserted a string!");
+            }
+
+        } while(choice != 1 && choice != 0);
+
+        int choiceSide=-1;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Choose the card side: [1] Front [2] Back");
+            try {
+                choiceSide =  Integer.parseInt(inputQueue.take());
+                if (choiceSide != 1 && choiceSide != 2) {
+                    System.out.println("Please, type 1 or 2");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                System.out.println("Oops, you inserted a string!");
+            }
+        } while(choiceSide != 1 && choiceSide != 2);
+        hand.get(choice).setFlipped(choiceSide==2);
+
+        int choicePos = -1;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Choose the position:");
+            String availablePos = "";
+            for (Point p: availablePositions) {
+                availablePos = availablePos.concat("[" + availablePositions.indexOf(p) + "] ");
+            }
+            printColorDebug(TUIColors.PURPLE, availablePos);
+            try {
+                choicePos =  Integer.parseInt(inputQueue.take());
+                if (availablePositions.size()-1<choicePos || choicePos < 0) {
+                    System.out.println("Please, type a valid position");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                System.out.println("Oops, you inserted a string!");
+            }
+        } while(availablePositions.size()-1<choicePos || choicePos < 0);
+        hand.get(choice).setCoord(availablePositions.get(choicePos));
 
         return hand.get(choice);
     }
 
     public int askForDrawCard(TurnInfo turnInfo){
-        this.printColorDebug(TUIColors.PURPLE, "Choose which deck do you want to draw from: [1] Resource [2] Gold");
-        int deck = 0;
-        try {
-            deck = Integer.parseInt(inputQueue.take()) == 1 ? 10 : 20;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        int choice = -1;
+        int deck;
+        do {
+            this.printColorDebug(TUIColors.PURPLE, "Choose which deck do you want to draw from: [1] Resource [2] Gold");
+            try {
+                choice =  Integer.parseInt(inputQueue.take());
+                if (choice != 1 && choice != 2) {
+                    System.out.println("Please, type 1 or 2");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                System.out.println("Oops, you inserted a string!");
+            }
+        } while(choice != 1 && choice != 2);
+        deck = choice == 1 ? 10 : 20;
+
         this.printColorDebug(TUIColors.PURPLE, String.format("Choose which card do you want to draw: [1] %s [2] %s [3] Covered", deck == 10 ? turnInfo.getResourceDeck().get(0).getId() : turnInfo.getGoldDeck().get(0).getId(), deck == 10 ? turnInfo.getResourceDeck().get(1).getId() : turnInfo.getGoldDeck().get(1).getId() ));
-        try {
-            deck = deck + Integer.parseInt(inputQueue.take()) - 1;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+        int choiceCard = -1;
+        do {
+            try {
+                choiceCard =  Integer.parseInt(inputQueue.take());
+                if (choiceCard != 1 && choiceCard != 2 && choiceCard != 3) {
+                    System.out.println("Please, type 1, 2 or 3");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                System.out.println("Oops, you inserted a string!");
+            }
+        } while(choiceCard != 1 && choiceCard != 2 && choiceCard != 3);
+
+        deck = deck + choiceCard;
         return deck;
     }
 

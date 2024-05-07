@@ -44,29 +44,28 @@ public class ClientController {
     }
 
     public void validUsername() {
-        ui.printDebug("username ok");
+        ui.printDebug("Welcome " + username + "!");
         connectionBridge.lobbyRequest();
     }
 
 
     public void lobbyDoesNotExist() {
         //TODO: comunicare alla view che non esistono lobby
-        ui.printDebug("no lobbies");
+        ui.printDebug("There are no lobbies available. Let's create one!");
         int n = ui.askForPlayerNum();
         connectionBridge.createLobbyRequest(n);
     }
 
     public void lobbyExists(ArrayList<String> lobbies) {
         //TODO: comunicare alla view le lobbies esistenti
-        ui.printDebug(lobbies);
-        String id = ui.askForLobbyId();
+        String id = ui.askForLobbyId(lobbies);
         connectionBridge.joinLobbyRequest(id);
     }
 
 
     public void joinLobbySuccess() {
         //TODO: comunicare alla view che è entrato nella lobby
-        ui.printDebug("joined lobby");
+        ui.printDebug("You joined the lobby. Waiting for other players to join...");
     }
     public void lobbyFull(){
         //TODO: comunicare alla view che la lobby è piena
@@ -132,14 +131,10 @@ public class ClientController {
         ui.printDebug("You currently have " + cardsPoints + " points and you will score " + goalPoints + " points from the goals!");
         ui.printColorDebug(TUIColors.CYAN,"This is your board:");
         ui.displayBoard(currentTurnInfo.getBoard(), null);
-        ui.printColorDebug(TUIColors.CYAN,"These are the first two cards of the resource deck:");
-        ui.printCardInfo(currentTurnInfo.getResourceDeck().get(0));
-        ui.printCardInfo(currentTurnInfo.getResourceDeck().get(1));
-        ui.printDebug("The kingdom of the first covered card of the resource deck is " + currentTurnInfo.getResourceDeck().get(2).getColor());
-        ui.printColorDebug(TUIColors.CYAN,"These are the first two cards of the gold deck:");
-        ui.printCardInfo(currentTurnInfo.getGoldDeck().get(0));
-        ui.printCardInfo(currentTurnInfo.getGoldDeck().get(1));
-        ui.printDebug("The kingdom of the first covered card of the gold deck is " + currentTurnInfo.getGoldDeck().get(2).getColor());
+        ui.printColorDebug(TUIColors.CYAN,"Resource deck:");
+        currentTurnInfo.getResourceDeck().forEach(x-> ui.printCardInfo(x));
+        ui.printColorDebug(TUIColors.CYAN,"Gold deck:");
+        currentTurnInfo.getResourceDeck().forEach(x-> ui.printCardInfo(x));
         this.currentTurnInfo.setAvailablePositions(newAvailable);
         int choice = ui.askForDrawCard(currentTurnInfo);
         if(choice / 10 == 1){
