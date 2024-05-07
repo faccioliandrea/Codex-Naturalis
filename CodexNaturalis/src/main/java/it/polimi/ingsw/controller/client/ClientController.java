@@ -196,7 +196,7 @@ public class ClientController {
 
 
     public void gameEnd(HashMap<String, Integer> leaderboard){
-        //TODO: comunicare alla view che il gioco è finito e passagli la leaderboard
+        ui.printDebug("Game ended!");
         ui.printLeaderboard(leaderboard);
     }
 

@@ -196,7 +196,7 @@ public class GameModel {
         Collections.shuffle(goalsDeck);
 
         // MARK: total cards - hand for each player + 1 turn for each player (last turn if deck ends) + additional turns to come back to first player
-        this.totalTurns = (this.goldCardDeck.size() + this.resourceCardDeck.size()) - (2 * this.players.size()) + (this.players.size() % 2);
+        this.totalTurns = (this.goldCardDeck.size() + this.resourceCardDeck.size()) - (2 * this.players.size()) + (this.players.size() % 2) - 1;
     }
 
 
@@ -246,7 +246,7 @@ public class GameModel {
      */
     public void startEndGame() {
         // current + final turn + additional turns to come back to first player
-        totalTurns = currentTurn + this.players.size() + (this.players.size() - currentTurn % players.size());
+        totalTurns = currentTurn + this.players.size() + (this.players.size() - currentTurn % players.size()) - 1;
     }
 
     /**

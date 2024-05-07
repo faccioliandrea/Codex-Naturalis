@@ -181,18 +181,18 @@ public class ServerController {
             ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
             int points = gameController.getUserCardsPoints(userToGame.get(user));
             HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
-            gameController.endTurn(userToGame.get(user));
             GameStateInfo gameState = new GameStateInfo(user, rd, gd, board, points, leaderboard);
             for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
                 if (!username.getUsername().equals(user)) {
                     connectionBridge.gameState(username.getUsername(), gameState);
                 }
             }
-            initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
-
-
             if (gameController.isGameFinished(userToGame.get(user)))
                 endGame(userToGame.get(user));
+            else {
+                gameController.endTurn(userToGame.get(user));
+                initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
+            }
 
 
         }
@@ -205,9 +205,9 @@ public class ServerController {
      * @param gameId the id of the game
      */
     private void endGame(String gameId){
-        HashMap<String, Integer> leaderboard = gameController.getLeaderboard(gameId);
+        HashMap<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
         for(String username : userToGame.keySet()){
-            if(userToLobby.get(username).equals(userToLobby.get(username))) {
+            if(userToGame.get(username).equals(userToGame.get(username))) {
                 connectionBridge.endGame(username, leaderboard);
             }
         }

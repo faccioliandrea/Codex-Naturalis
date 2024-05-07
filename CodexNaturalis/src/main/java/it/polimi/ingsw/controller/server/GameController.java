@@ -79,8 +79,9 @@ public class GameController {
 
 
     protected void placeCard(String gameId,Card card, Point position) throws RequirementsNotSatisfied, InvalidPositionException {
+        int initialPoints = games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints();
         games.get(gameId).getGameModel().getCurrentPlayer().placeCard(card, position);
-        if (games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints() >= 20)
+        if (games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints() >= 20 && initialPoints < 20)
             games.get(gameId).getGameModel().startEndGame();
     }
 
@@ -210,6 +211,12 @@ public class GameController {
     protected HashMap<String, Integer> getLeaderboard(String gameId){
         HashMap<String, Integer> leaderboard = new HashMap<>();
         for( int i = 0; i < games.get(gameId).getPlayers().size(); i++)
+            leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints());
+        return leaderboard;
+    }
+    protected HashMap<String, Integer> getFullLeaderboard(String gameId){
+        HashMap<String, Integer> leaderboard = new HashMap<>();
+        for( int i = 0; i < games.get(gameId).getPlayers().size(); i++)
             leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints() + games.get(gameId).getPlayers().get(i).getGoalPoints());
         return leaderboard;
     }
@@ -258,7 +265,7 @@ public class GameController {
      * @return if is the last turn of the game for the current player
      */
     public boolean isLast(String gameId) {
-        return games.get(gameId).getGameModel().getTotalTurns() - games.get(gameId).getGameModel().getCurrentTurn() / games.get(gameId).getPlayers().size() == 0;
+        return ((games.get(gameId).getGameModel().getTotalTurns() - games.get(gameId).getGameModel().getCurrentTurn()) / games.get(gameId).getPlayers().size()) < 1;
     }
 
     /**
