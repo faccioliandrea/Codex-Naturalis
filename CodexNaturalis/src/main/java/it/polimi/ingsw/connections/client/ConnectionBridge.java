@@ -135,8 +135,8 @@ public class ConnectionBridge {
         }
     }
 
-    public void placeCardSuccess(int cardsPoints, int goalPoints, CardInfo placedCard) {
-        controller.placeCardSuccess(cardsPoints, goalPoints, placedCard);
+    public void placeCardSuccess(int cardsPoints, int goalPoints, CardInfo placedCard, ArrayList<Point> newAvailable) {
+        controller.placeCardSuccess(cardsPoints, goalPoints, placedCard, newAvailable);
     }
 
     public void placeCardFailure() {
@@ -147,7 +147,6 @@ public class ConnectionBridge {
         if (serverConnection instanceof SocketServerConnection) {
             try {
                 ((SocketServerConnection) serverConnection).drawResource(controller.getUsername(), index);
-                ;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -160,7 +159,6 @@ public class ConnectionBridge {
         if (serverConnection instanceof SocketServerConnection) {
             try {
                 ((SocketServerConnection) serverConnection).drawGold(controller.getUsername(), index);
-                ;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

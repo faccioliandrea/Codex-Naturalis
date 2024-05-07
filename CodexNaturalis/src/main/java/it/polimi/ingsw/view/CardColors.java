@@ -4,8 +4,8 @@ public enum CardColors {
     MUSHROOM(TUIColors.RED, TUIColors.BLACK),
     LEAF(TUIColors.GREEN, TUIColors.BLACK),
     WOLF(TUIColors.BLUE, TUIColors.BLACK),
-    BUTTERFLY(TUIColors.PURPLE, TUIColors.WHITE),
-    STARTER(TUIColors.YELLOW, TUIColors.WHITE),
+    BUTTERFLY(TUIColors.PURPLE, TUIColors.BLACK),
+    STARTER(TUIColors.YELLOW, TUIColors.BLACK),
     AVAILABLE(TUIColors.WHITE, TUIColors.BLACK);
 
     private final String colorcode;

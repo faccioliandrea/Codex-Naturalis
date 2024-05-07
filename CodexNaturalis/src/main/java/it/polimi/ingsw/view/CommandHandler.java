@@ -23,13 +23,19 @@ public class CommandHandler implements Runnable {
 
     private void initCommands() {
         this.commands.put("help", this::showHelp);
-        this.manPages.put("help", this.buildManPage("help", "Shows this page", "command", "shows manual page specific to the specified command"));
+        this.manPages.put("help", this.buildManPage("help", "Shows this page", "command", "displays manual page specific to the specified command"));
 
         this.commands.put("board", this::showBoard);
-        this.manPages.put("board", this.buildManPage("board", "Shows the current state of the board", "player", "shows the specified player's board"));
+        this.manPages.put("board", this.buildManPage("board", "Displays the current state of the board", "player", "displays the specified player's board"));
 
         this.commands.put("chat", this::showChat);
         this.manPages.put("chat", this.buildManPage("chat", "Opens chat", null, null));
+
+        this.commands.put("lead", this::showLeaderboard);
+        this.manPages.put("lead", this.buildManPage("lead", "Displays the leaderboard", null, null));
+
+        this.commands.put("card", this::showCardInfo);
+        this.manPages.put("card", this.buildManPage("card", "Displays the specified card info", "card id", "(not null)"));
 
     }
 
@@ -91,5 +97,13 @@ public class CommandHandler implements Runnable {
 
     private void commandNotFound(String command) {
         ui.printColorDebug(TUIColors.RED, String.format("Command \"%s\" not found", command));
+    }
+
+    private void showLeaderboard(String arg) {
+        ui.printLeaderboard();
+    }
+
+    private void showCardInfo(String arg) {
+        ui.printCardInfo(arg);
     }
 }

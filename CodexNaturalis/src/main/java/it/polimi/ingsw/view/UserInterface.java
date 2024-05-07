@@ -9,6 +9,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 public class UserInterface {
     private ClientController controller;
@@ -70,19 +71,22 @@ public class UserInterface {
     }
 
     public void displayBoard(String username) {
-        if (controller != null) {
-            if (username==null && controller.getCurrentTurnInfo() != null) {
+        if (controller == null) {
+            this.printColorDebug(TUIColors.RED, "Board not available");
+        } else {
+            if (username == null && controller.getCurrentTurnInfo() != null) {
                 this.displayBoard(controller.getCurrentTurnInfo().getBoard(), controller.getCurrentTurnInfo().getAvailablePositions());
-            } else if (username != null) {
-                // TODO: add checks on user existance
-                // TODO: get selected user's board (print with no available positions)
-                // MARK: temporary
-                this.printColorDebug(TUIColors.RED, String.format("%s's board not available", username));
+            } else if (username != null && controller.getBoards()!=null) {
+                if(controller.getBoards().get(username)==null) {
+                    this.printColorDebug(TUIColors.RED, String.format("User %s not found", username));
+                } else if (controller.getBoards().get(username).isEmpty()) {
+                    this.printColorDebug(TUIColors.RED, String.format("%s's board not available", username));
+                } else {
+                    this.displayBoard(controller.getBoards().get(username), null);
+                }
             } else {
                 this.printColorDebug(TUIColors.RED, "Board not available");
             }
-        } else {
-            this.printColorDebug(TUIColors.RED, "Board not available");
         }
     }
 
@@ -133,7 +137,8 @@ public class UserInterface {
         return deck;
     }
 
-    public void displayBoard(ArrayList<CardInfo> board,ArrayList<Point> availablePos) {
+    // TODO: print symbols hashmap
+    public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos) {
         OptionalInt x_max = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.x).max();
         OptionalInt x_min = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.x).min();
         if (!x_min.isPresent() || !x_max.isPresent()){
@@ -147,6 +152,7 @@ public class UserInterface {
         }
         int height = y_max.getAsInt() - y_min.getAsInt() + 1;
 
+        // TODO: fix table padding
         int rows = height + (availablePos != null ? 3 : 1); // +1 for matrix indexes going from 0 to n-1, +2 for table padding (available positions)
         int cols = width  + (availablePos != null ? 3 : 1); // +1 for matrix indexes going from 0 to n-1, +2 for table padding (available positions)
 
@@ -190,6 +196,24 @@ public class UserInterface {
         System.out.println(color.toString() + o.toString() + TUIColors.reset());
     }
 
+    public void printCardInfo(String cardId) {
+        controller.getCurrentTurnInfo().getHand().stream()
+                .filter(x -> x.getId().equals(cardId))
+                .findFirst()
+                .ifPresent(this::printCardInfo);
+        controller.getCurrentTurnInfo().getResourceDeck().stream()
+                .limit(2)
+                .filter(x -> x.getId().equals(cardId))
+                .findFirst()
+                .ifPresent(this::printCardInfo);
+        controller.getCurrentTurnInfo().getGoldDeck().stream()
+                .limit(2)
+                .filter(x -> x.getId().equals(cardId))
+                .findFirst()
+                .ifPresent(this::printCardInfo);
+    }
+
+
     public void printCardInfo(CardInfo card) {
         String descr = card.getDescription();
         for (CardTextColors cc: CardTextColors.values()) {
@@ -197,6 +221,32 @@ public class UserInterface {
         }
         printDebug(descr);
         printDebug("-------------------------------------------------------------");
+    }
+
+    public void printLeaderboard() {
+        HashMap<String, Integer> leaderboard = controller.getLeaderboard();
+        if (leaderboard == null) {
+            this.printColorDebug(TUIColors.RED, "Leaderboard not available");
+        } else {
+            printLeaderboard(leaderboard);
+        }
+    }
+
+    public void printLeaderboard(HashMap<String, Integer> leaderboard) {
+        printColorDebug(TUIColors.BLUE, "Leaderboard:");
+        int pos = 1;
+        for (Map.Entry<String, Integer> e:
+                leaderboard
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new)) // LinkedHashMap needet to keep the order
+                .entrySet()
+        ) {
+            int points = e.getValue();
+            this.printDebug(String.format("\t%d^  %s - %d %s", pos, e.getKey(), points, points == 1 ? "point" : "points"));
+            pos++;
+        }
     }
 
 }

@@ -185,7 +185,7 @@ public class ConnectionBridge {
             if (connections.get(username) instanceof SocketClientConnection) {
                 if (result != null) {
                     try {
-                        ((SocketClientConnection) connections.get(username)).placeCardSuccess(result.getCardsPoint(), result.getGoalsPoints(), result.getPlayedCard());
+                        ((SocketClientConnection) connections.get(username)).placeCardSuccess(result.getCardsPoint(), result.getGoalsPoints(), result.getPlayedCard(), result.getAvailable());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

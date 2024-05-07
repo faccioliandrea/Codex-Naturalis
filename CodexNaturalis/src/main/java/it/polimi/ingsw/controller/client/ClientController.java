@@ -12,6 +12,7 @@ import it.polimi.ingsw.view.UserInterface;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class ClientController {
 
@@ -23,10 +24,13 @@ public class ClientController {
 
 
     private TurnInfo currentTurnInfo;
+    private HashMap<String, Integer> leaderboard = new HashMap<>();
+    private HashMap<String, ArrayList<CardInfo>> boards = new HashMap<>();
 
     public ClientController(UserInterface ui) {
         this.ui = ui;
         connectionBridge = new ConnectionBridge(this);
+        ui.setController(this);
     }
 
     public String loginRequest() {
@@ -76,7 +80,6 @@ public class ClientController {
 
 
     public void gameStarted(StarterData starterData){
-        //TODO: comunicare alla view che il gioco è iniziato
         ui.printDebug("Game started");
         ui.printColorDebug(TUIColors.CYAN, "Your current hand:");
         starterData.getHand().forEach(x->ui.printCardInfo(x));
@@ -88,6 +91,8 @@ public class ClientController {
         ui.printCardInfo(starterData.getStarterCard());
         int chosenGoal = ui.askForPrivateGoal();
         connectionBridge.choosePrivateGoalRequest(chosenGoal);
+        this.leaderboard = starterData.getUsers().stream().collect(Collectors.toMap(s -> s, s -> 0, (x, y) -> x, HashMap::new));
+        this.boards = starterData.getUsers().stream().collect(Collectors.toMap(s -> s, x -> new ArrayList<>(), (x, y) -> x, HashMap::new));
     }
 
     public void privateGoalChosen(){
@@ -120,7 +125,7 @@ public class ClientController {
     }
 
 
-    public void placeCardSuccess(int cardsPoints, int goalPoints, CardInfo placedCard){
+    public void placeCardSuccess(int cardsPoints, int goalPoints, CardInfo placedCard, ArrayList<Point> newAvailable){
         currentTurnInfo.addCardToBoard(placedCard);
         //TODO: comunicare alla view che la carta è stata posizionata
         ui.printDebug("Card placed!");
@@ -135,16 +140,13 @@ public class ClientController {
         ui.printCardInfo(currentTurnInfo.getGoldDeck().get(0));
         ui.printCardInfo(currentTurnInfo.getGoldDeck().get(1));
         ui.printDebug("The kingdom of the first covered card of the gold deck is " + currentTurnInfo.getGoldDeck().get(2).getColor());
+        this.currentTurnInfo.setAvailablePositions(newAvailable);
         int choice = ui.askForDrawCard(currentTurnInfo);
         if(choice / 10 == 1){
             connectionBridge.drawResourceRequest(choice%10);
         } else {
             connectionBridge.drawGoldRequest(choice%10);
         }
-
-
-
-
     }
 
     public void placeCardFailure(){
@@ -178,8 +180,13 @@ public class ClientController {
         ui.printCardInfo(gameStateInfo.getGoldDeck().get(0));
         ui.printCardInfo(gameStateInfo.getGoldDeck().get(1));
         ui.printDebug("The kingdom of the first covered card of the gold deck is " + gameStateInfo.getGoldDeck().get(2).getColor());
+        ui.printLeaderboard(gameStateInfo.getLeaderboard());
 
-
+        this.leaderboard = gameStateInfo.getLeaderboard();
+        ArrayList<CardInfo> prev = this.boards.replace(gameStateInfo.getUsername(), gameStateInfo.getBoard());
+        if (prev == null) {
+            this.boards.put(gameStateInfo.getUsername(), gameStateInfo.getBoard());
+        }
 
         //TODO: comunicare alla view lo stato del gioco
     }
@@ -190,7 +197,7 @@ public class ClientController {
 
     public void gameEnd(HashMap<String, Integer> leaderboard){
         //TODO: comunicare alla view che il gioco è finito e passagli la leaderboard
-
+        ui.printLeaderboard(leaderboard);
     }
 
     public String getUsername() {
@@ -206,5 +213,11 @@ public class ClientController {
         return currentTurnInfo;
     }
 
+    public HashMap<String, Integer> getLeaderboard() {
+        return leaderboard;
+    }
 
+    public HashMap<String, ArrayList<CardInfo>> getBoards() {
+        return boards;
+    }
 }

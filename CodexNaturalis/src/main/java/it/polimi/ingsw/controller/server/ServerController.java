@@ -57,7 +57,7 @@ public class ServerController {
                 ArrayList<GoalInfo> privateGoals = gameController.getPrivateGoals(gameId, username);
                 ArrayList<GoalInfo> sharedGoals = gameController.getSharedGoals(gameId);
                 CardInfo starterCard = gameController.getStarterCard(gameId, username);
-                connectionBridge.createGame(username, new StarterData(hand, privateGoals, sharedGoals, starterCard));
+                connectionBridge.createGame(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, users));
             }
 
 
@@ -138,7 +138,8 @@ public class ServerController {
             gameController.placeCard(userToGame.get(user), card, position);
             int cardsPoints = gameController.getUserCardsPoints(userToGame.get(user));
             int GoalsPoints = gameController.getUserGoalsPoints(userToGame.get(user));
-            return new PlaceCardSuccessInfo(cardsPoints, GoalsPoints, new CardInfo(card));
+            ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user));
+            return new PlaceCardSuccessInfo(cardsPoints, GoalsPoints, new CardInfo(card), availablePositions);
         }
         return null;
     }
@@ -179,8 +180,9 @@ public class ServerController {
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
             ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
             int points = gameController.getUserCardsPoints(userToGame.get(user));
+            HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
             gameController.endTurn(userToGame.get(user));
-            GameStateInfo gameState = new GameStateInfo(user, rd, gd, board, points);
+            GameStateInfo gameState = new GameStateInfo(user, rd, gd, board, points, leaderboard);
             for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
                 if (!username.getUsername().equals(user)) {
                     connectionBridge.gameState(username.getUsername(), gameState);
@@ -203,7 +205,7 @@ public class ServerController {
      * @param gameId the id of the game
      */
     private void endGame(String gameId){
-        HashMap<String, Integer> leaderboard = gameController.endGame(gameId);
+        HashMap<String, Integer> leaderboard = gameController.getLeaderboard(gameId);
         for(String username : userToGame.keySet()){
             if(userToLobby.get(username).equals(userToLobby.get(username))) {
                 connectionBridge.endGame(username, leaderboard);

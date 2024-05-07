@@ -207,7 +207,7 @@ public class GameController {
     /**
      * called when the game is finished, return all the point to the players to generete the leaderboard
      */
-    protected HashMap<String, Integer> endGame(String gameId){
+    protected HashMap<String, Integer> getLeaderboard(String gameId){
         HashMap<String, Integer> leaderboard = new HashMap<>();
         for( int i = 0; i < games.get(gameId).getPlayers().size(); i++)
             leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints() + games.get(gameId).getPlayers().get(i).getGoalPoints());

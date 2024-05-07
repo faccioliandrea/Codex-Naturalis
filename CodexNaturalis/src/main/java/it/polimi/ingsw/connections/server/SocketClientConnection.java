@@ -12,6 +12,7 @@ import it.polimi.ingsw.connections.messages.client.LoginRequestMessage;
 import it.polimi.ingsw.connections.messages.server.*;
 import it.polimi.ingsw.connections.data.CardInfo;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -159,8 +160,8 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new InitTurnMessage(turnInfo));
     }
 
-    public void placeCardSuccess(int cardsPoints, int goalsPoints, CardInfo placedCard) throws IOException {
-        this.outputStream.sendMessage(new PlaceCardSuccessMessage(cardsPoints, goalsPoints, placedCard));
+    public void placeCardSuccess(int cardsPoints, int goalsPoints, CardInfo placedCard, ArrayList<Point> newAvailable) throws IOException {
+        this.outputStream.sendMessage(new PlaceCardSuccessMessage(cardsPoints, goalsPoints, placedCard, newAvailable));
     }
 
     public void placeCardFailure() throws IOException {

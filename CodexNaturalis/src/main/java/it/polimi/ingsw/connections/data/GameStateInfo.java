@@ -2,6 +2,7 @@ package it.polimi.ingsw.connections.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameStateInfo implements Serializable {
 
@@ -10,13 +11,15 @@ public class GameStateInfo implements Serializable {
     private ArrayList<CardInfo> goldDeck;
     private ArrayList<CardInfo> board;
     private int cardsPoints;
+    private HashMap<String, Integer> leaderboard;
 
-    public GameStateInfo(String username, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<CardInfo> board, int cardsPoints) {
+    public GameStateInfo(String username, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<CardInfo> board, int cardsPoints, HashMap<String, Integer> leaderboard) {
         this.resourceDeck = resourceDeck;
         this.goldDeck = goldDeck;
         this.board = board;
         this.cardsPoints = cardsPoints;
         this.username = username;
+        this.leaderboard = leaderboard;
     }
 
 
@@ -38,5 +41,9 @@ public class GameStateInfo implements Serializable {
 
     public String getUsername() {
         return username;
+    }
+
+    public HashMap<String, Integer> getLeaderboard() {
+        return leaderboard;
     }
 }

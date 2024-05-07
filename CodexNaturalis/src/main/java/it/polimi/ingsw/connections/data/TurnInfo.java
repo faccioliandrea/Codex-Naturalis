@@ -1,7 +1,5 @@
 package it.polimi.ingsw.connections.data;
 
-import it.polimi.ingsw.model.goals.Goal;
-
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,5 +58,7 @@ public class TurnInfo implements Serializable {
         board.add(card);
     }
 
-
+    public void setAvailablePositions(ArrayList<Point> availablePositions) {
+        this.availablePositions = availablePositions;
+    }
 }
