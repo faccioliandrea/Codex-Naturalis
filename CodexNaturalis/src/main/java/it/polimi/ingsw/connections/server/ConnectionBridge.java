@@ -97,7 +97,7 @@ public class ConnectionBridge {
         }
     }
 
-    public Object addPlayerToLobby(String username, String lobbyId) {
+    public int addPlayerToLobby(String username, String lobbyId) {
         int result = controller.addPlayerToLobby(username, lobbyId);
         if (connections.get(username) instanceof SocketClientConnection) {
             switch (result) {
@@ -112,7 +112,7 @@ public class ConnectionBridge {
                     for (String u : controller.getUserToLobby().keySet()) {
                         if (controller.getUserToLobby().get(u).equals(lobbyId) && u.equals(username)) {
                             try {
-                                ((SocketClientConnection) connections.get(u)).joinLobbySuccess();
+                                ((SocketClientConnection) connections.get(u)).joinLobbySuccess(controller.getLobbyController().getLobbies().get(lobbyId).isFull());
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -133,10 +133,10 @@ public class ConnectionBridge {
                     }
                     break;
             }
-            return null;
+            return result;
         } else {
             // TODO: handle RMI
-            return null;
+            return result;
         }
     }
 
@@ -266,6 +266,10 @@ public class ConnectionBridge {
 
     }
 
+    public void createGame(String username) {
+        controller.createGame(controller.getLobbyController().getLobbies().get(controller.getUserToLobby().get(username)).getUsers());
+    }
+
     public void initTurnAck(String username) {
     }
 
@@ -308,7 +312,8 @@ public class ConnectionBridge {
         }
     }
 
-    public void createGame(String username, StarterData starterData) {
+    public void gameCreated(String username, StarterData starterData) {
+
         if ((connections.get(username) instanceof SocketClientConnection) ) {
             try {
                 ((SocketClientConnection) connections.get(username)).gameStarted(starterData);

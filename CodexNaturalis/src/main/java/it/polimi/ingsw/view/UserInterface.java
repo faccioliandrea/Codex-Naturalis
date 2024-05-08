@@ -28,6 +28,7 @@ public class UserInterface {
     public String askForUsername() {
         String username;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Username: " );
             try {
                 username =  inputQueue.take();
@@ -42,9 +43,9 @@ public class UserInterface {
     }
 
     public int askForPlayerNum() {
-
         int playerNum=0;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Insert number of players: 2, 3 or 4");
             try {
                 playerNum =  Integer.parseInt(inputQueue.take());
@@ -66,6 +67,7 @@ public class UserInterface {
         printDebug(lobbies.toString());
         String lobbyId;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Type the lobby id you want to join: ");
             try {
                 lobbyId =  inputQueue.take();
@@ -79,11 +81,11 @@ public class UserInterface {
         return lobbyId;
     }
 
+
     public int askForPrivateGoal() {
-
-
         int choice = -1;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose your private Goal: [1] [2]");
             try {
                 choice =  Integer.parseInt(inputQueue.take()) - 1;
@@ -95,7 +97,6 @@ public class UserInterface {
             } catch (NumberFormatException e) {
                 System.out.println("Oops, you inserted a string!");
             }
-
         } while(choice != 1 && choice != 0);
         return choice;
     }
@@ -103,6 +104,7 @@ public class UserInterface {
     public boolean askForStarterCardSide() {
         int choice = -1;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose your Starter card side: [1] Front [2] Back");
             try {
                 choice =  Integer.parseInt(inputQueue.take());
@@ -144,6 +146,7 @@ public class UserInterface {
     public CardInfo askForPlayCard(ArrayList<CardInfo> hand, ArrayList<Point> availablePositions) {
         int choice = -1;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose which card do you want to play:");
             hand.forEach(x->printColorDebug(TUIColors.PURPLE, String.format("[%s] %s", hand.indexOf(x)+1, x.getId())));
             try {
@@ -161,6 +164,7 @@ public class UserInterface {
 
         int choiceSide=-1;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose the card side: [1] Front [2] Back");
             try {
                 choiceSide =  Integer.parseInt(inputQueue.take());
@@ -177,6 +181,7 @@ public class UserInterface {
 
         int choicePos = -1;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose the position:");
             String availablePos = "";
             for (Point p: availablePositions) {
@@ -195,7 +200,6 @@ public class UserInterface {
             }
         } while(availablePositions.size()-1<choicePos || choicePos < 0);
         hand.get(choice).setCoord(availablePositions.get(choicePos));
-
         return hand.get(choice);
     }
 
@@ -203,6 +207,7 @@ public class UserInterface {
         int choice = -1;
         int deck;
         do {
+            inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose which deck do you want to draw from: [1] Resource [2] Gold");
             try {
                 choice =  Integer.parseInt(inputQueue.take());
@@ -221,6 +226,7 @@ public class UserInterface {
 
         int choiceCard = -1;
         do {
+            inputQueue.clear();
             try {
                 choiceCard =  Integer.parseInt(inputQueue.take());
                 if (choiceCard != 1 && choiceCard != 2 && choiceCard != 3) {
@@ -348,5 +354,6 @@ public class UserInterface {
             pos++;
         }
     }
+
 
 }

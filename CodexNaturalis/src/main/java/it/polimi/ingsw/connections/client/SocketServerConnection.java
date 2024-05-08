@@ -94,6 +94,10 @@ public class SocketServerConnection implements ServerConnection, Runnable {
         this.outputStream.sendMessage(new CreateLobbyAndJoinMessage(username, playerNum));
     }
 
+    public void createGame(String username) throws IOException {
+        this.outputStream.sendMessage(new CreateGameMessage(username));
+    }
+
     public void choosePrivateGoal(String username, int index) throws IOException {
         this.outputStream.sendMessage(new ChoosePrivateGoalMessage(username, index));
     }

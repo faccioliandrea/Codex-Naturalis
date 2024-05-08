@@ -122,8 +122,8 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new LobbyExistsMessage(idList));
     }
 
-    public void joinLobbySuccess() throws IOException {
-        this.outputStream.sendMessage(new JoinLobbySuccessMessage());
+    public void joinLobbySuccess(boolean isLastPlayer) throws IOException {
+        this.outputStream.sendMessage(new JoinLobbySuccessMessage(isLastPlayer));
     }
 
 

@@ -40,7 +40,7 @@ public class ServerController {
      * Create a new game with the specified users
      * @param users the list of users
      */
-    private void createGame(ArrayList<String> users) {
+    public void createGame(ArrayList<String> users) {
         String gameId = "" + (int) (Math.random() * 1000);
         String lobbyId = userToLobby.get(users.get(0));
         try {
@@ -57,7 +57,7 @@ public class ServerController {
                 ArrayList<GoalInfo> privateGoals = gameController.getPrivateGoals(gameId, username);
                 ArrayList<GoalInfo> sharedGoals = gameController.getSharedGoals(gameId);
                 CardInfo starterCard = gameController.getStarterCard(gameId, username);
-                connectionBridge.createGame(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, users));
+                connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, users));
             }
 
 
@@ -247,9 +247,6 @@ public class ServerController {
             else {
                 lobbyController.addPlayer(username, lobbyId);
                 userToLobby.put(username, lobbyId);
-
-                if (lobbyController.getLobbies().get(lobbyId).isFull())
-                    createGame(lobbyController.getLobbies().get(lobbyId).getUsers());
                 return 1;
             }
         }
@@ -301,6 +298,9 @@ public class ServerController {
         return gameController;
     }
 
+    public LobbyController getLobbyController() {
+        return lobbyController;
+    }
 
 
 }

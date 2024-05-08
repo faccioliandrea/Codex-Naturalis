@@ -63,9 +63,16 @@ public class ClientController {
     }
 
 
-    public void joinLobbySuccess() {
+    public void joinLobbySuccess(boolean isLastPlayer) {
         //TODO: comunicare alla view che è entrato nella lobby
-        ui.printDebug("You joined the lobby. Waiting for other players to join...");
+
+        if (isLastPlayer) {
+            ui.printDebug("You joined the lobby. The game will start soon!");
+            connectionBridge.createGame();
+
+        } else {
+            ui.printDebug("You joined the lobby. Waiting for other players to join...");
+        }
     }
     public void lobbyFull(){
         //TODO: comunicare alla view che la lobby è piena
@@ -77,6 +84,9 @@ public class ClientController {
         ui.printDebug(String.format("%s joined lobby", username));
     }
 
+    public void lobbyIsReady() {
+
+    }
 
     public void gameStarted(StarterData starterData){
         ui.printDebug("Game started");
@@ -215,4 +225,6 @@ public class ClientController {
     public HashMap<String, ArrayList<CardInfo>> getBoards() {
         return boards;
     }
+
+
 }

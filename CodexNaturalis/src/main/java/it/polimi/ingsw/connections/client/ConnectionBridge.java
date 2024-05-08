@@ -79,8 +79,8 @@ public class ConnectionBridge {
         controller.lobbyExists(lobbies);
     }
 
-    public void joinLobbySuccess() {
-        controller.joinLobbySuccess();
+    public void joinLobbySuccess(boolean isLastPlayer) {
+        controller.joinLobbySuccess(isLastPlayer);
     }
 
     public void lobbyFull() {
@@ -121,6 +121,19 @@ public class ConnectionBridge {
         } else {
             // TODO: handle RMI
         }
+    }
+
+    public void createGame() {
+        if (serverConnection instanceof SocketServerConnection) {
+            try {
+                ((SocketServerConnection) serverConnection).createGame(controller.getUsername());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // TODO: handle RMI
+        }
+
     }
 
     public void placeCardRequest(CardInfo card) {
@@ -234,4 +247,7 @@ public class ConnectionBridge {
     }
 
 
+    public void lobbyIsReady() {
+        controller.lobbyIsReady();
+    }
 }
