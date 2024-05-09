@@ -14,9 +14,10 @@ import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GameController {
     private ArrayList<String> users;
@@ -154,8 +155,11 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getResourceDeck(String gameId) {
         ArrayList<CardInfo> resourceDeck = new ArrayList<>();
-        for (ResourceCard card : games.get(gameId).getGameModel().getResourceCardDeck().subList(0,3))
+        List<ResourceCard> subDeck = games.get(gameId).getGameModel().getResourceCardDeck().subList(0,3);
+        for (ResourceCard card : subDeck) {
+            card.setFlipped(subDeck.indexOf(card) == 2);
             resourceDeck.add(new CardInfo(card));
+        }
         return resourceDeck;
     }
 
@@ -165,8 +169,11 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getGoldDeck(String gameId) {
         ArrayList<CardInfo> goldDeck = new ArrayList<>();
-        for (GoldCard card : games.get(gameId).getGameModel().getGoldCardDeck().subList(0,3))
+        List<GoldCard> subDeck = games.get(gameId).getGameModel().getGoldCardDeck().subList(0,3);
+        for (GoldCard card : subDeck) {
+            card.setFlipped(subDeck.indexOf(card) == 2);
             goldDeck.add(new CardInfo(card));
+        }
         return goldDeck;
     }
 

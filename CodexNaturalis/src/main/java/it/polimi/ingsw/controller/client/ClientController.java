@@ -39,7 +39,7 @@ public class ClientController {
     }
 
     public void invalidUsername(){
-        ui.printDebug("username taken");
+        ui.printColorDebug(TUIColors.RED, this.username + " is already taken. Please select a new one");
         connectionBridge.loginRequest();
     }
 

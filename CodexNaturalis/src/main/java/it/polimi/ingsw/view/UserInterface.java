@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UserInterface {
     private ClientController controller;
@@ -18,6 +19,7 @@ public class UserInterface {
 
     public UserInterface() {
         new Thread(new InputHandler(commandQueue, inputQueue)).start();
+        // TODO: print somewhere that commands exist so that user knows which ones to use
         new Thread(new CommandHandler(commandQueue, this)).start();
     }
 
@@ -303,17 +305,13 @@ public class UserInterface {
     }
 
     public void printCardInfo(String cardId) {
-        controller.getCurrentTurnInfo().getHand().stream()
-                .filter(x -> x.getId().equals(cardId))
-                .findFirst()
-                .ifPresent(this::printCardInfo);
-        controller.getCurrentTurnInfo().getResourceDeck().stream()
-                .limit(2)
-                .filter(x -> x.getId().equals(cardId))
-                .findFirst()
-                .ifPresent(this::printCardInfo);
-        controller.getCurrentTurnInfo().getGoldDeck().stream()
-                .limit(2)
+        Stream.of(
+            controller.getCurrentTurnInfo().getHand(),
+            controller.getCurrentTurnInfo().getBoard(),
+            controller.getCurrentTurnInfo().getResourceDeck().subList(0,2),
+            controller.getCurrentTurnInfo().getGoldDeck().subList(0,2)
+        )
+                .flatMap(Collection::stream)
                 .filter(x -> x.getId().equals(cardId))
                 .findFirst()
                 .ifPresent(this::printCardInfo);
@@ -321,7 +319,12 @@ public class UserInterface {
 
 
     public void printCardInfo(CardInfo card) {
-        String descr = card.getDescription();
+        String descr = null;
+        if (card.getCoord() != null) {
+            descr = card.isFlipped() ? card.getFrontDescription() : card.getBackDescription();
+        } else {
+            descr = card.getDescription();
+        }
         for (CardTextColors cc: CardTextColors.values()) {
             descr = descr.replace(cc.name(), cc.toString() + cc.name() + TUIColors.reset());
         }
@@ -346,7 +349,7 @@ public class UserInterface {
                 .entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new)) // LinkedHashMap needet to keep the order
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new)) // LinkedHashMap needed to keep the order
                 .entrySet()
         ) {
             int points = e.getValue();

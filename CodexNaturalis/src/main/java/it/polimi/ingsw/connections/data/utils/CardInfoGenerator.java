@@ -145,6 +145,9 @@ final public class CardInfoGenerator {
      * @return Description of the card
      */
     public String getCardDescription(Card card) {
+        if (card.getFlipped()) {
+            return "The covered card center symbol is " + centerSymbols(card);
+        }
         StringBuilder description = new StringBuilder();
         description.append(String.format("Card %s", card.getId()));
         description.append(String.format("\nType: %s", cardType(card)));
@@ -159,6 +162,46 @@ final public class CardInfoGenerator {
         description.append(String.format("\nOn the back has center symbol(s): %s", centerSymbols(card)));
         description.append(pointsWhenPlaced(card));
         description.append(cardRequirements(card));
+        return description.toString();
+    }
+
+    /**
+     * Creates the description of the card for when it's played on the board
+     * @param card Card to get info
+     * @return Description of the card
+     */
+    public String getCardFrontDescription(Card card) {
+        if (card.getFlipped()) {
+            return null;
+        }
+        StringBuilder description = new StringBuilder();
+        description.append(String.format("Card %s", card.getId()));
+        description.append(String.format("\nType: %s", cardType(card)));
+        description.append("\nOn the front has the following corners:");
+        for(int i = 0; i < card.getFrontCorners().length; i++) {
+            description.append(getCornerInfo(card.getFrontCorners()[i], i));
+        }
+
+        return description.toString();
+    }
+
+    /**
+     * Creates the description of the card for when it's played on the board
+     * @param card Card to get info
+     * @return Description of the card
+     */
+    public String getCardBackDescription(Card card) {
+        if (card.getFlipped()) {
+            return null;
+        }
+        StringBuilder description = new StringBuilder();
+        description.append(String.format("Card %s", card.getId()));
+        description.append(String.format("\nType: %s", cardType(card)));
+        for(int i = 0; i < card.getBackCorners().length; i++) {
+            description.append(getCornerInfo(card.getBackCorners()[i], i));
+        }
+        description.append(String.format("\nCenter symbol(s): %s", centerSymbols(card)));
+
         return description.toString();
     }
 }
