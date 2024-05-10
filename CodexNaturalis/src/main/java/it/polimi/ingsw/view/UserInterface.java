@@ -1,14 +1,16 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.controller.client.ClientController;
 import it.polimi.ingsw.connections.data.TurnInfo;
-import it.polimi.ingsw.model.cards.PlayableCard;
 
 import java.awt.*;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,6 +27,31 @@ public class UserInterface {
 
     public void setController(ClientController controller) {
         this.controller = controller;
+    }
+
+    public String askForServerAddr(String defaultAddr) {
+        boolean valid = false;
+        String input = "";
+        Pattern ip_addr_pattern = Pattern.compile(String.format("(^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\.(?!$)|$)){4}$)|(%s)", defaultAddr), Pattern.CASE_INSENSITIVE);
+        Matcher matcher = ip_addr_pattern.matcher(input);
+        this.printColorDebug(TUIColors.PURPLE, String.format("Please enter the server address (leave blank for %s): ", defaultAddr));
+        while(!valid) {
+            try {
+                input = inputQueue.take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            matcher = ip_addr_pattern.matcher(input);
+            valid = matcher.matches() || input.isEmpty();
+            if (!valid) {
+                this.printColorDebug(TUIColors.RED, "Please enter a valid IP address: ");
+            }
+        }
+        if (input.isEmpty()) {
+            return defaultAddr;
+        } else {
+            return matcher.group();
+        }
     }
 
     public String askForUsername() {
@@ -153,7 +180,7 @@ public class UserInterface {
             hand.forEach(x->printColorDebug(TUIColors.PURPLE, String.format("[%s] %s", hand.indexOf(x)+1, x.getId())));
             try {
                 choice =  Integer.parseInt(inputQueue.take()) - 1;
-                if (choice != 1 && choice != 0) {
+                if (choice < 0 || choice > hand.size()-1) {
                     System.out.println("Please, choose a valid card");
                 }
             } catch (InterruptedException e) {
@@ -162,7 +189,7 @@ public class UserInterface {
                 System.out.println("Oops, you inserted a string!");
             }
 
-        } while(choice != 1 && choice != 0);
+        } while(choice < 0 || choice > hand.size()-1);
 
         int choiceSide=-1;
         do {
@@ -305,39 +332,57 @@ public class UserInterface {
     }
 
     public void printCardInfo(String cardId) {
-        Stream.of(
-            controller.getCurrentTurnInfo().getHand(),
-            controller.getCurrentTurnInfo().getBoard(),
-            controller.getCurrentTurnInfo().getResourceDeck().subList(0,2),
-            controller.getCurrentTurnInfo().getGoldDeck().subList(0,2)
-        )
-                .flatMap(Collection::stream)
-                .filter(x -> x.getId().equals(cardId))
-                .findFirst()
-                .ifPresent(this::printCardInfo);
+        try {
+            Stream.of(
+                controller.getCurrentTurnInfo().getHand(),
+                controller.getCurrentTurnInfo().getBoard(),
+                controller.getCurrentTurnInfo().getResourceDeck().subList(0,2),
+                controller.getCurrentTurnInfo().getGoldDeck().subList(0,2)
+            )
+                    .flatMap(Collection::stream)
+                    .filter(x -> x.getId().equals(cardId))
+                    .findFirst()
+                    .ifPresent(this::printCardInfo);
+        } catch (NullPointerException e) {
+            printColorDebug(TUIColors.RED, "Cannot get cards now, wait for the game to start");
+        }
     }
 
 
     public void printCardInfo(CardInfo card) {
-        String descr = null;
+        String descr;
         if (card.getCoord() != null) {
             descr = card.isFlipped() ? card.getFrontDescription() : card.getBackDescription();
         } else {
             descr = card.getDescription();
         }
-        for (CardTextColors cc: CardTextColors.values()) {
-            descr = descr.replace(cc.name(), cc.toString() + cc.name() + TUIColors.reset());
+        printDebug(applyColors(descr));
+        printDebug("-------------------------------------------------------------");
+    }
+
+    public void printGoalsInfo() {
+        try {
+            ArrayList<GoalInfo> goals = controller.getGoals();
+            if (goals.isEmpty()) {
+                printColorDebug(TUIColors.RED, "Goals not available, wait for the game to start");
+            } else {
+                goals.forEach(this::printGoalInfo);
+            }
+        } catch (NullPointerException e) {
+            printColorDebug(TUIColors.RED, "Goals not available, wait for the game to start");
         }
-        printDebug(descr);
+    }
+
+    public void printGoalInfo(GoalInfo goal) {
+        printDebug(applyColors(goal.getDescription()));
         printDebug("-------------------------------------------------------------");
     }
 
     public void printLeaderboard() {
-        HashMap<String, Integer> leaderboard = controller.getLeaderboard();
-        if (leaderboard == null) {
-            this.printColorDebug(TUIColors.RED, "Leaderboard not available");
-        } else {
-            printLeaderboard(leaderboard);
+        try {
+            printLeaderboard(controller.getLeaderboard());
+        } catch (NullPointerException e) {
+            this.printColorDebug(TUIColors.RED, "Leaderboard not available, wait for the game to start");
         }
     }
 
@@ -358,5 +403,18 @@ public class UserInterface {
         }
     }
 
+    public void printHand() {
+        try {
+            controller.getCurrentTurnInfo().getHand().forEach(this::printCardInfo);
+        } catch (NullPointerException e) {
+            printColorDebug(TUIColors.RED, "Hand not available, wait for the game to start");
+        }
+    }
 
+    private String applyColors(String s) {
+        for (CardTextColors cc: CardTextColors.values()) {
+            s = s.replace(cc.name(), cc.toString() + cc.name() + TUIColors.reset());
+        }
+        return s;
+    }
 }

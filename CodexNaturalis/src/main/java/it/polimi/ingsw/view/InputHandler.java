@@ -21,12 +21,10 @@ public class InputHandler implements Runnable {
         while (!interrupted) {
             try {
                 String in = scanner.nextLine().trim();
-                if (!in.isEmpty()) {
-                    if (in.startsWith(commandChar)) {
-                        commandQueue.put(in.substring(1));
-                    } else {
-                        inputQueue.put(in);
-                    }
+                if (in.startsWith(commandChar)) {
+                    commandQueue.put(in.substring(1));
+                } else {
+                    inputQueue.put(in);
                 }
             } catch (InterruptedException e) {
                 interrupted = true;

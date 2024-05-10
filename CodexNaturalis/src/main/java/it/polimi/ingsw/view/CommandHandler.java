@@ -37,6 +37,12 @@ public class CommandHandler implements Runnable {
         this.commands.put("card", this::showCardInfo);
         this.manPages.put("card", this.buildManPage("card", "Displays the specified card info", "card id", "(not null)"));
 
+        this.commands.put("goals", this::showGoalsInfo);
+        this.manPages.put("goals", this.buildManPage("goals", "Displays all 3 goals info", null,  null));
+
+        this.commands.put("hand", this::showHand);
+        this.manPages.put("hand", this.buildManPage("hand", "Displays cards in hand", null,  null));
+
     }
 
     private void showChat(String arg) {
@@ -105,5 +111,13 @@ public class CommandHandler implements Runnable {
 
     private void showCardInfo(String arg) {
         ui.printCardInfo(arg);
+    }
+
+    private void showGoalsInfo(String s) {
+        ui.printGoalsInfo();
+    }
+
+    private void showHand(String s) {
+        ui.printHand();
     }
 }

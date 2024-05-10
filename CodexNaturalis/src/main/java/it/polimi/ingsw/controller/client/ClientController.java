@@ -2,10 +2,7 @@ package it.polimi.ingsw.controller.client;
 
 
 import it.polimi.ingsw.connections.client.ConnectionBridge;
-import it.polimi.ingsw.connections.data.CardInfo;
-import it.polimi.ingsw.connections.data.GameStateInfo;
-import it.polimi.ingsw.connections.data.StarterData;
-import it.polimi.ingsw.connections.data.TurnInfo;
+import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.view.TUIColors;
 import it.polimi.ingsw.view.UserInterface;
 
@@ -26,6 +23,7 @@ public class ClientController {
     private TurnInfo currentTurnInfo;
     private HashMap<String, Integer> leaderboard = new HashMap<>();
     private HashMap<String, ArrayList<CardInfo>> boards = new HashMap<>();
+    private ArrayList<GoalInfo> goals = new ArrayList<>();
 
     public ClientController(UserInterface ui) {
         this.ui = ui;
@@ -93,15 +91,18 @@ public class ClientController {
         ui.printColorDebug(TUIColors.CYAN, "Your current hand:");
         starterData.getHand().forEach(x->ui.printCardInfo(x));
         ui.printColorDebug(TUIColors.CYAN, "Game shared goals:");
-        starterData.getSharedGoals().forEach(x->ui.printDebug(x.getDescription()));
+        starterData.getSharedGoals().forEach(ui::printGoalInfo);
         ui.printColorDebug(TUIColors.CYAN,"You have to choose one of the following private goals:");
-        starterData.getPrivateGoals().forEach(x->ui.printDebug(x.getDescription()));
+        starterData.getPrivateGoals().forEach(ui::printGoalInfo);
         ui.printColorDebug(TUIColors.CYAN,"You have to choose your starter card side:");
         ui.printCardInfo(starterData.getStarterCard());
         int chosenGoal = ui.askForPrivateGoal();
         connectionBridge.choosePrivateGoalRequest(chosenGoal);
         this.leaderboard = starterData.getUsers().stream().collect(Collectors.toMap(s -> s, s -> 0, (x, y) -> x, HashMap::new));
         this.boards = starterData.getUsers().stream().collect(Collectors.toMap(s -> s, x -> new ArrayList<>(), (x, y) -> x, HashMap::new));
+        // TODO: move this in privateGoalChosen?
+        this.goals = starterData.getSharedGoals();
+        this.goals.add(starterData.getPrivateGoals().get(chosenGoal));
     }
 
     public void privateGoalChosen(){
@@ -226,5 +227,7 @@ public class ClientController {
         return boards;
     }
 
-
+    public ArrayList<GoalInfo> getGoals() {
+        return goals;
+    }
 }

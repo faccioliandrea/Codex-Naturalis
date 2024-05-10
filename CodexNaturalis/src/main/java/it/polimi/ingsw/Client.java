@@ -63,11 +63,12 @@ public class Client {
 
         UserInterface ui = new UserInterface();
 
-
         ClientController matchController;
         matchController = new ClientController(ui);
 
         if(chosenConnection.equals("Socket")) {
+            address = ui.askForServerAddr(DEFAULT_ADDRESS);
+
             Socket socket = null;
             boolean connected = false;
             while (!connected) {
