@@ -49,7 +49,7 @@ public class ParserGoldTest {
             }
         }
         assertEquals(goldCard.getCardKingdom(), goldCardJson.getCardKingdom());
-        assertEquals(goldCard.getPoints(), goldCardJson.getPoints());
+        assertEquals(goldCard.getConditionalPoints(), goldCardJson.getConditionalPoints());
         for(int index = 0; index < goldCardJson.getConditionalRequirements().length; index++) {
             GoldCardRequirement requirementJson = goldCardJson.getConditionalRequirements()[index];
             GoldCardRequirement requirement = goldCard.getConditionalRequirements()[index];
@@ -91,7 +91,7 @@ public class ParserGoldTest {
             }
         }
         assertEquals(goldCard.getCardKingdom(), goldCardJson.getCardKingdom());
-        assertEquals(goldCard.getPoints(), goldCardJson.getPoints());
+        assertEquals(goldCard.getConditionalPoints(), goldCardJson.getConditionalPoints());
         for(int index = 0; index < goldCardJson.getConditionalRequirements().length; index++) {
             GoldCardRequirement requirementJson = goldCardJson.getConditionalRequirements()[index];
             GoldCardRequirement requirement = goldCard.getConditionalRequirements()[index];
@@ -134,7 +134,7 @@ public class ParserGoldTest {
             }
         }
         assertEquals(goldCard.getCardKingdom(), goldCardJson.getCardKingdom());
-        assertEquals(goldCard.getPoints(), goldCardJson.getPoints());
+        assertEquals(goldCard.getConditionalPoints(), goldCardJson.getConditionalPoints());
         for(int index = 0; index < goldCardJson.getConditionalRequirements().length; index++) {
             GoldCardRequirement requirementJson = goldCardJson.getConditionalRequirements()[index];
             GoldCardRequirement requirement = goldCard.getConditionalRequirements()[index];

@@ -28,7 +28,7 @@ public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         assertEquals(id, goldCard.getId());
         assertEquals(centerSymbol, goldCard.getCardKingdom());
         assertEquals(corners, goldCard.getCorners());
-        assertEquals(points, goldCard.getPoints());
+        assertEquals(points, goldCard.getConditionalPoints());
         assertEquals(requirements, goldCard.getConditionalRequirements());
     }
 

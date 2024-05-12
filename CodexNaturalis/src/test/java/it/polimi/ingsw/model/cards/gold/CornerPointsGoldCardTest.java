@@ -38,7 +38,7 @@ public class CornerPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         assertEquals(id, goldCard.getId());
         assertEquals(centerSymbol, goldCard.getCardKingdom());
         assertEquals(corners, goldCard.getCorners());
-        assertEquals(points, goldCard.getPoints());
+        assertEquals(points, goldCard.getConditionalPoints());
         assertEquals(requirements, goldCard.getConditionalRequirements());
     }
 
@@ -66,7 +66,7 @@ public class CornerPointsGoldCardTest implements ConstructorTest, GoldCardTest {
             assertFalse(corner.isCovered());
             assertNull(corner.getSymbol());
         }
-        assertEquals(0, goldCard.getPoints());
+        assertEquals(0, goldCard.getConditionalPoints());
         assertNull(goldCard.getConditionalRequirements());
     }
 

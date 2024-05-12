@@ -4,8 +4,6 @@ import it.polimi.ingsw.model.cards.Corner;
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import it.polimi.ingsw.model.player.Board;
 
-import java.awt.*;
-
 /**
  * Class representing gold cards with fixed points when placed
  */
@@ -25,6 +23,6 @@ public class FixedPointsGoldCard extends GoldCard {
 
     @Override
     public int calculatePoints(Board board) {
-        return this.getPoints();
+        return this.getConditionalPoints();
     }
 }

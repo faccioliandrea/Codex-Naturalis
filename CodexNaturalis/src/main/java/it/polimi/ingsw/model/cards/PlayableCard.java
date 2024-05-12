@@ -25,11 +25,19 @@ public abstract class PlayableCard extends Card {
     }
 
     /**
+     * Getter for points attribute based on flipped status
+     * @return points
+     */
+    public int getConditionalPoints() {
+        return this.getFlipped() ? 0 : points;
+    }
+
+    /**
      * Getter for points attribute
      * @return points
      */
     public int getPoints() {
-        return this.getFlipped() ? 0 : points;
+        return points;
     }
 
     /**

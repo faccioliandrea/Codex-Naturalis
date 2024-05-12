@@ -39,6 +39,6 @@ public class SymbolPointsGoldCard extends GoldCard {
         if (this.getFlipped()) {
             return 0;
         }
-        return board.getSymbols().get(this.pointsSymbol) * this.getPoints();
+        return board.getSymbols().get(this.pointsSymbol) * this.getConditionalPoints();
     }
 }

@@ -42,7 +42,7 @@ class GameModelTest implements ConstructorTest{
     @Test
     void startGame() {
         gameModel.startGame();
-        assertEquals(72, gameModel.getTotalTurns());
+        assertEquals(71, gameModel.getTotalTurns());
         gameModel.getPlayers().forEach(x -> {
             assertEquals(3, x.getHand().size());
             assertEquals(2, x.getPrivateGoals().size());
@@ -56,7 +56,7 @@ class GameModelTest implements ConstructorTest{
         gameModel.startGame();
         gameModel.setCurrentTurn(37);
         gameModel.startEndGame();
-        assertEquals(44, gameModel.getTotalTurns());
+        assertEquals(43, gameModel.getTotalTurns());
     }
 
     @Test

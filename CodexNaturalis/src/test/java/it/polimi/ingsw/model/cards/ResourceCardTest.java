@@ -20,7 +20,7 @@ public class ResourceCardTest implements ConstructorTest {
         ResourceCard resourceCard = new ResourceCard(id, centerSymbol, corners, points);
         assertEquals(id, resourceCard.getId());
         assertEquals(corners, resourceCard.getCorners());
-        assertEquals(points, resourceCard.getPoints());
+        assertEquals(points, resourceCard.getConditionalPoints());
         assertEquals(centerSymbol, resourceCard.getCardKingdom());
     }
 
@@ -43,6 +43,6 @@ public class ResourceCardTest implements ConstructorTest {
             assertFalse(corner.isCovered());
             assertNull(corner.getSymbol());
         }
-        assertEquals(0, resourceCard.getPoints());
+        assertEquals(0, resourceCard.getConditionalPoints());
     }
 }

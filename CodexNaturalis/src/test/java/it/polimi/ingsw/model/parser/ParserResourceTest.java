@@ -47,6 +47,6 @@ public class ParserResourceTest {
             }
         }
         assertEquals(resourceCard.getCardKingdom(), resourceCardJson.getCardKingdom());
-        assertEquals(resourceCard.getPoints(), resourceCardJson.getPoints());
+        assertEquals(resourceCard.getConditionalPoints(), resourceCardJson.getConditionalPoints());
     }
 }

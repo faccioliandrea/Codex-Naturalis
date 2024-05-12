@@ -93,13 +93,13 @@ final public class CardInfoGenerator {
     private String pointsWhenPlaced(Card card) {
         if (card instanceof GoldCard) {
             GoldCard goldCard = (GoldCard) card;
-            return String.format("\nThis card gives %d point(s)%s when placed", goldCard.getPoints(), pointsWhenPlacedGold(goldCard));
+            return String.format("\nThis card gives %d point(s)%s when placed front faced", goldCard.getPoints(), pointsWhenPlacedGold(goldCard));
         } else if (card instanceof ResourceCard) {
             ResourceCard resourceCard = (ResourceCard) card;
             if (resourceCard.getPoints() == 0) {
                 return "";
             }
-            return String.format("\nThis card gives %d point(s) when placed", resourceCard.getPoints());
+            return String.format("\nThis card gives %d point(s) when placed front faced", resourceCard.getPoints());
         } else if (card instanceof StarterCard) {
             return "";
         }

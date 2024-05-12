@@ -25,6 +25,6 @@ public class CornerPointsGoldCard extends GoldCard {
         if (this.getFlipped()) {
             return 0;
         }
-        return (int) (board.getPlayedCards().stream().filter(card -> card.getCoord().distanceSq(this.getCoord()) == 2).count() * this.getPoints());
+        return (int) (board.getPlayedCards().stream().filter(card -> card.getCoord().distanceSq(this.getCoord()) == 2).count() * this.getConditionalPoints());
     }
 }
