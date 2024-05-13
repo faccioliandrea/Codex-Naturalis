@@ -62,11 +62,11 @@ public class ServerController {
 
 
         } catch (DeckInitializationException e) {
-            //for(String username : users)
-                //connections.get(username).sendNotification("Deck initialization error!");
+            // for(String username : users)
+                // connections.get(username).sendNotification("Deck initialization error!");
         } catch (InvalidNumberOfPlayersException e) {
-            //for (String username : users)
-                //connections.get(username).sendNotification("Invalid number of players!");
+            // for (String username : users)
+                // connections.get(username).sendNotification("Invalid number of players!");
         }
     }
 

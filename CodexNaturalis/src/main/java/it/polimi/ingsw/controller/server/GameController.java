@@ -155,11 +155,11 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getResourceDeck(String gameId) {
         ArrayList<CardInfo> resourceDeck = new ArrayList<>();
-        List<ResourceCard> subDeck = games.get(gameId).getGameModel().getResourceCardDeck().subList(0,3);
+        List<ResourceCard> subDeck = new ArrayList<>(games.get(gameId).getGameModel().getResourceCardDeck().subList(0,3));
         for (ResourceCard card : subDeck) {
-            CardInfo cardInfo = new CardInfo(card);
-            cardInfo.setFlipped(subDeck.indexOf(card) == 2);
-            resourceDeck.add(cardInfo);
+            card.setFlipped(subDeck.indexOf(card) == 2);
+            resourceDeck.add(new CardInfo(card));
+            card.setFlipped(false);
         }
         return resourceDeck;
     }
@@ -172,9 +172,9 @@ public class GameController {
         ArrayList<CardInfo> goldDeck = new ArrayList<>();
         List<GoldCard> subDeck = games.get(gameId).getGameModel().getGoldCardDeck().subList(0,3);
         for (GoldCard card : subDeck) {
-            CardInfo cardInfo = new CardInfo(card);
-            cardInfo.setFlipped(subDeck.indexOf(card) == 2);
-            goldDeck.add(cardInfo);
+            card.setFlipped(subDeck.indexOf(card) == 2);
+            goldDeck.add(new CardInfo(card));
+            card.setFlipped(false);
         }
         return goldDeck;
     }

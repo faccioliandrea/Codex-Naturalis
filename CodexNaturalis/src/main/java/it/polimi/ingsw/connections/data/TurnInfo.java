@@ -61,4 +61,8 @@ public class TurnInfo implements Serializable {
     public void setAvailablePositions(ArrayList<Point> availablePositions) {
         this.availablePositions = availablePositions;
     }
+
+    public void setHand(ArrayList<CardInfo> hand) {
+        this.hand = hand;
+    }
 }

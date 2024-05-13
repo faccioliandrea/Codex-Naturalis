@@ -21,7 +21,6 @@ public class UserInterface {
 
     public UserInterface() {
         new Thread(new InputHandler(commandQueue, inputQueue)).start();
-
         new Thread(new CommandHandler(commandQueue, this)).start();
     }
 
@@ -268,8 +267,19 @@ public class UserInterface {
             }
         } while(choiceCard != 1 && choiceCard != 2 && choiceCard != 3);
 
-        deck = deck + choiceCard -1;
+        deck = deck + choiceCard - 1;
         return deck;
+    }
+
+    public boolean askForNewGame() {
+        inputQueue.clear();
+        printColorDebug(TUIColors.PURPLE, "Would you like to play again? (y/n)");
+        try {
+            String choice = inputQueue.take();
+            return choice.equals("y");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // TODO: print symbols hashmap
@@ -333,7 +343,7 @@ public class UserInterface {
 
     public void printCardInfo(String cardId) {
         try {
-            Stream.of(
+            Optional<CardInfo> card = Stream.of(
                 controller.getCurrentTurnInfo().getHand(),
                 controller.getCurrentTurnInfo().getBoard(),
                 controller.getCurrentTurnInfo().getResourceDeck().subList(0,2),
@@ -341,8 +351,12 @@ public class UserInterface {
             )
                     .flatMap(Collection::stream)
                     .filter(x -> x.getId().equals(cardId))
-                    .findFirst()
-                    .ifPresent(this::printCardInfo);
+                    .findFirst();
+            if (card.isPresent()) {
+                this.printCardInfo(card.get());
+            } else {
+                this.printColorDebug(TUIColors.RED, "Card not found");
+            }
         } catch (NullPointerException e) {
             printColorDebug(TUIColors.RED, "Cannot get cards now, wait for the game to start");
         }

@@ -25,7 +25,7 @@ public class Board {
         this.privateGoal = null;
         this.sharedGoals = null;
 
-        this.symbols = new HashMap<>(7);
+        this.symbols = new LinkedHashMap<>(7);
         this.symbols.put(CardSymbolKingdom.MUSHROOM,    0);
         this.symbols.put(CardSymbolKingdom.BUTTERFLY,   0);
         this.symbols.put(CardSymbolKingdom.WOLF,        0);
@@ -45,7 +45,7 @@ public class Board {
         this.privateGoal = privateGoal;
         this.sharedGoals = sharedGoals;
 
-        this.symbols = new HashMap<>(7);
+        this.symbols = new LinkedHashMap<>(7);
         this.symbols.put(CardSymbolKingdom.MUSHROOM,    0);
         this.symbols.put(CardSymbolKingdom.BUTTERFLY,   0);
         this.symbols.put(CardSymbolKingdom.WOLF,        0);

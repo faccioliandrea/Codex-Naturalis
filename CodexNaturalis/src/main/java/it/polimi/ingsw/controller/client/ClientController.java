@@ -47,6 +47,10 @@ public class ClientController {
         connectionBridge.lobbyRequest();
     }
 
+    public void lobbyRequest() {
+        connectionBridge.lobbyRequest();
+    }
+
 
     public void lobbyDoesNotExist() {
         //TODO: comunicare alla view che non esistono lobby
@@ -141,6 +145,7 @@ public class ClientController {
         //TODO: comunicare alla view che la carta è stata posizionata
         ui.printDebug("Card placed!");
         ui.printDebug("You currently have " + cardsPoints + " points and you will score " + goalPoints + " points from the goals!");
+        this.leaderboard.replace(this.username, cardsPoints);
         ui.printColorDebug(TUIColors.CYAN,"This is your board:");
         ui.displayBoard(currentTurnInfo.getBoard(), null);
         ui.printColorDebug(TUIColors.CYAN,"Resource deck:");
@@ -168,9 +173,10 @@ public class ClientController {
     public void drawSuccess(ArrayList<CardInfo> hand){
         ui.printDebug("Card drawn!");
         ui.printColorDebug(TUIColors.CYAN, "This is your updated hand:");
+        hand.forEach(x -> x.setFlipped(false));
+        this.currentTurnInfo.setHand(hand);
         hand.forEach(x->ui.printCardInfo(x));
         connectionBridge.endTurn();
-        //TODO: comunicare alla view la nuova hand
     }
 
 
@@ -205,6 +211,13 @@ public class ClientController {
     public void gameEnd(HashMap<String, Integer> leaderboard){
         ui.printDebug("Game ended!");
         ui.printLeaderboard(leaderboard);
+        boolean newGame = ui.askForNewGame();
+        if(newGame) {
+            this.lobbyRequest();
+        } else {
+            ui.printColorDebug(TUIColors.BLUE, "See you next time!");
+            // TODO: quit
+        }
     }
 
     public String getUsername() {
