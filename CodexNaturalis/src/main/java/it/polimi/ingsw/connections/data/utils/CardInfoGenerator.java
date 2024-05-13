@@ -86,6 +86,18 @@ final public class CardInfoGenerator {
     }
 
     /**
+     * Utility to get info side of center symbols in a card
+     * @param card Card to get info
+     * @return Description of side of center symbols
+     */
+    private String centerSymbolsSide(Card card) {
+        if (card instanceof StarterCard) {
+            return "front";
+        }
+        return "back";
+    }
+
+    /**
      * Utility to get info of points when placing card
      * @param card Card to get info
      * @return Description of points user gets when placing the card based on its type
@@ -159,7 +171,7 @@ final public class CardInfoGenerator {
         for(int i = 0; i < card.getBackCorners().length; i++) {
             description.append(getCornerInfo(card.getBackCorners()[i], i));
         }
-        description.append(String.format("\nOn the back has center symbol(s): %s", centerSymbols(card)));
+        description.append(String.format("\nOn the %s has center symbol(s): %s", centerSymbolsSide(card) ,centerSymbols(card)));
         description.append(pointsWhenPlaced(card));
         description.append(cardRequirements(card));
         return description.toString();
