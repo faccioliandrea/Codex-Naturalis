@@ -344,10 +344,10 @@ public class UserInterface {
     public void printCardInfo(String cardId) {
         try {
             Optional<CardInfo> card = Stream.of(
-                controller.getCurrentTurnInfo().getHand(),
+                (controller.getCurrentTurnInfo().getHand()),
                 controller.getCurrentTurnInfo().getBoard(),
-                controller.getCurrentTurnInfo().getResourceDeck().subList(0,2),
-                controller.getCurrentTurnInfo().getGoldDeck().subList(0,2)
+                controller.getCurrentTurnInfo().getResourceDeck(),
+                controller.getCurrentTurnInfo().getGoldDeck()
             )
                     .flatMap(Collection::stream)
                     .filter(x -> x.getId().equals(cardId))

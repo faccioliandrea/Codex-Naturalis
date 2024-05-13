@@ -20,7 +20,7 @@ public class ClientController {
     private ConnectionBridge connectionBridge;
 
 
-    private TurnInfo currentTurnInfo;
+    private TurnInfo currentTurnInfo = new TurnInfo();
     private HashMap<String, Integer> leaderboard = new HashMap<>();
     private HashMap<String, ArrayList<CardInfo>> boards = new HashMap<>();
     private ArrayList<GoalInfo> goals = new ArrayList<>();
@@ -93,6 +93,7 @@ public class ClientController {
 
     public void gameStarted(StarterData starterData){
         ui.printDebug("Game started");
+        this.currentTurnInfo.setHand(starterData.getHand());
         ui.printColorDebug(TUIColors.CYAN, "Your current hand:");
         starterData.getHand().forEach(x->ui.printCardInfo(x));
         ui.printColorDebug(TUIColors.CYAN, "Game shared goals:");

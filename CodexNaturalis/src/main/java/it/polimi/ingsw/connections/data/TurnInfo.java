@@ -24,6 +24,15 @@ public class TurnInfo implements Serializable {
         this.board = board;
     }
 
+    public TurnInfo() {
+        this.hand = new ArrayList<>();
+        this.resourceDeck = new ArrayList<>();
+        this.goldDeck = new ArrayList<>();
+        this.availablePositions = new ArrayList<>();
+        this.currentTurn = 0;
+        this.isLastTurn = false;
+        this.board = new ArrayList<>();
+    }
 
     public ArrayList<CardInfo> getHand() {
         return hand;
