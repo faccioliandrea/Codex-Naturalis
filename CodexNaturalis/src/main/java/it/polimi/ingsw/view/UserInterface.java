@@ -4,6 +4,7 @@ import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.controller.client.ClientController;
 import it.polimi.ingsw.connections.data.TurnInfo;
+import it.polimi.ingsw.model.enumeration.CardSymbol;
 
 import java.awt.*;
 import java.util.*;
@@ -155,14 +156,14 @@ public class UserInterface {
             this.printColorDebug(TUIColors.RED, "Board not available");
         } else {
             if (username == null && controller.getCurrentTurnInfo() != null) {
-                this.displayBoard(controller.getCurrentTurnInfo().getBoard(), controller.getCurrentTurnInfo().getAvailablePositions());
+                this.displayBoard(controller.getCurrentTurnInfo().getBoard(), controller.getCurrentTurnInfo().getAvailablePositions(), controller.getCurrentTurnInfo().getSymbols());
             } else if (username != null && controller.getBoards()!=null) {
                 if(controller.getBoards().get(username)==null) {
                     this.printColorDebug(TUIColors.RED, String.format("User %s not found", username));
                 } else if (controller.getBoards().get(username).isEmpty()) {
                     this.printColorDebug(TUIColors.RED, String.format("%s's board not available", username));
                 } else {
-                    this.displayBoard(controller.getBoards().get(username), null);
+                    this.displayBoard(controller.getBoards().get(username), null, null);
                 }
             } else {
                 this.printColorDebug(TUIColors.RED, "Board not available");
@@ -283,7 +284,7 @@ public class UserInterface {
     }
 
     // TODO: print symbols hashmap
-    public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos) {
+    public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {
         OptionalInt x_max = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.x).max();
         OptionalInt x_min = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.x).min();
         if (!x_min.isPresent() || !x_max.isPresent()){
@@ -330,6 +331,11 @@ public class UserInterface {
             }
             System.out.println();
         }
+        if(symbols!=null){
+            printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
+            symbols.forEach((k, v) -> printDebug(String.format("%s: %d", applyColors(k.toString()), v)));
+        }
+
     }
 
 
@@ -390,6 +396,10 @@ public class UserInterface {
     public void printGoalInfo(GoalInfo goal) {
         printDebug(applyColors(goal.getDescription()));
         printDebug("-------------------------------------------------------------");
+    }
+
+    public void printSymbols(Map<CardSymbol, Integer> symbols){
+        symbols.forEach((k, v) -> printDebug(String.format("%s: %d", applyColors(k.toString()), v)));
     }
 
     public void printLeaderboard() {

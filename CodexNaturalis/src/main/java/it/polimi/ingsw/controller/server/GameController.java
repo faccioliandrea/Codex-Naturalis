@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.cards.PlayableCard;
 import it.polimi.ingsw.model.cards.ResourceCard;
 import it.polimi.ingsw.model.cards.StarterCard;
 import it.polimi.ingsw.model.cards.gold.GoldCard;
+import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.exceptions.InvalidNumberOfPlayersException;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
@@ -18,6 +19,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameController {
     private ArrayList<String> users;
@@ -196,6 +198,10 @@ public class GameController {
      */
     protected int getUserCardsPoints(String gameId) {
         return games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints();
+    }
+
+    protected Map<CardSymbol, Integer> getUserSymbols(String gameId) {
+        return games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getSymbols();
     }
 
     /**

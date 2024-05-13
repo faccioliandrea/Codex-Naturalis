@@ -1,8 +1,12 @@
 package it.polimi.ingsw.connections.data;
 
+import it.polimi.ingsw.model.enumeration.CardSymbol;
+
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TurnInfo implements Serializable {
 
@@ -11,15 +15,17 @@ public class TurnInfo implements Serializable {
     private ArrayList<CardInfo> goldDeck;
     private ArrayList<Point> availablePositions;
     private int currentTurn;
+    private Map<CardSymbol, Integer> symbols;
     private boolean isLastTurn;
     private ArrayList<CardInfo> board;
 
-    public TurnInfo(ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePositions, int currentTurn, boolean isLastTurn, ArrayList<CardInfo> board) {
+    public TurnInfo(ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePositions, int currentTurn, Map<CardSymbol, Integer> symbols, boolean isLastTurn, ArrayList<CardInfo> board) {
         this.hand = hand;
         this.resourceDeck = resourceDeck;
         this.goldDeck = goldDeck;
         this.availablePositions = availablePositions;
         this.currentTurn = currentTurn;
+        this.symbols = symbols;
         this.isLastTurn = isLastTurn;
         this.board = board;
     }
@@ -37,7 +43,6 @@ public class TurnInfo implements Serializable {
     public ArrayList<CardInfo> getHand() {
         return hand;
     }
-
 
     public ArrayList<CardInfo> getResourceDeck() {
         return resourceDeck;
@@ -73,5 +78,15 @@ public class TurnInfo implements Serializable {
 
     public void setHand(ArrayList<CardInfo> hand) {
         this.hand = hand;
+    }
+
+
+    public void setSymbols(Map<CardSymbol, Integer> symbols) {
+        this.symbols = symbols;
+    }
+
+
+    public Map<CardSymbol, Integer> getSymbols() {
+        return symbols;
     }
 }

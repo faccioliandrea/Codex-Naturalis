@@ -180,18 +180,18 @@ public class ConnectionBridge {
 
     public PlaceCardSuccessInfo placeCard(String username, String cardId, Point position, boolean flipped) {
         try {
-            PlaceCardSuccessInfo result = controller.placeCard(username, cardId, position, flipped);
+            PlaceCardSuccessInfo placeCardSuccessInfo = controller.placeCard(username, cardId, position, flipped);
 
             if (connections.get(username) instanceof SocketClientConnection) {
-                if (result != null) {
+                if (placeCardSuccessInfo != null) {
                     try {
-                        ((SocketClientConnection) connections.get(username)).placeCardSuccess(result.getCardsPoint(), result.getGoalsPoints(), result.getPlayedCard(), result.getAvailable());
+                        ((SocketClientConnection) connections.get(username)).placeCardSuccess(placeCardSuccessInfo);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
             } else {
-                return result;
+                return placeCardSuccessInfo;
                 // TODO: handle RMI
             }
 

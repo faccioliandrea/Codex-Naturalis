@@ -3,23 +3,21 @@ package it.polimi.ingsw.controller.client;
 
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.*;
+import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.view.TUIColors;
 import it.polimi.ingsw.view.UserInterface;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClientController {
 
     private UserInterface ui;
-
     private String username;
-
     private ConnectionBridge connectionBridge;
-
-
     private TurnInfo currentTurnInfo = new TurnInfo();
     private HashMap<String, Integer> leaderboard = new HashMap<>();
     private HashMap<String, ArrayList<CardInfo>> boards = new HashMap<>();
@@ -93,9 +91,10 @@ public class ClientController {
 
     public void gameStarted(StarterData starterData){
         ui.printDebug("Game started");
-        this.currentTurnInfo.setHand(starterData.getHand());
+        currentTurnInfo.setHand(starterData.getHand());
         ui.printColorDebug(TUIColors.CYAN, "Your current hand:");
-        starterData.getHand().forEach(x->ui.printCardInfo(x));
+        starterData.getHand().forEach(x->ui.printDebug(String.format("Card id: %s", x.getId())));
+        ui.printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
         ui.printColorDebug(TUIColors.CYAN, "Game shared goals:");
         starterData.getSharedGoals().forEach(ui::printGoalInfo);
         ui.printColorDebug(TUIColors.CYAN,"You have to choose one of the following private goals:");
@@ -133,27 +132,30 @@ public class ClientController {
             ui.printColorDebug(TUIColors.RED, "This is your last turn.");
         }
         ui.printColorDebug(TUIColors.CYAN,"This is your board:");
-        ui.displayBoard(turnInfo.getBoard(), turnInfo.getAvailablePositions());
+        ui.displayBoard(turnInfo.getBoard(), turnInfo.getAvailablePositions(), turnInfo.getSymbols());
         ui.printColorDebug(TUIColors.CYAN, "Your current hand:");
-        turnInfo.getHand().forEach(x->ui.printCardInfo(x));
+        turnInfo.getHand().forEach(x->ui.printDebug(String.format("Card id: %s", x.getId())));
+        ui.printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
         CardInfo playedCard = ui.askForPlayCard(turnInfo.getHand(), turnInfo.getAvailablePositions());
         connectionBridge.placeCardRequest(playedCard);
     }
 
 
-    public void placeCardSuccess(int cardsPoints, int goalPoints, CardInfo placedCard, ArrayList<Point> newAvailable){
-        currentTurnInfo.addCardToBoard(placedCard);
+    public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo){
+        currentTurnInfo.addCardToBoard(placeCardSuccessInfo.getPlayedCard());
+        currentTurnInfo.setSymbols(placeCardSuccessInfo.getSymbols());
         //TODO: comunicare alla view che la carta è stata posizionata
         ui.printDebug("Card placed!");
-        ui.printDebug("You currently have " + cardsPoints + " points and you will score " + goalPoints + " points from the goals!");
-        this.leaderboard.replace(this.username, cardsPoints);
+        ui.printDebug("You currently have " + placeCardSuccessInfo.getCardsPoint() + " points and you will score " + placeCardSuccessInfo.getGoalsPoints() + " points from the goals!");
+        this.leaderboard.replace(this.username, placeCardSuccessInfo.getCardsPoint());
         ui.printColorDebug(TUIColors.CYAN,"This is your board:");
-        ui.displayBoard(currentTurnInfo.getBoard(), null);
+        ui.displayBoard(currentTurnInfo.getBoard(), null, placeCardSuccessInfo.getSymbols());
         ui.printColorDebug(TUIColors.CYAN,"Resource deck:");
-        currentTurnInfo.getResourceDeck().forEach(x-> ui.printCardInfo(x));
+        currentTurnInfo.getResourceDeck().forEach(x->ui.printDebug(String.format("Card id: %s", x.getId())));
         ui.printColorDebug(TUIColors.CYAN,"Gold deck:");
-        currentTurnInfo.getGoldDeck().forEach(x-> ui.printCardInfo(x));
-        this.currentTurnInfo.setAvailablePositions(newAvailable);
+        currentTurnInfo.getGoldDeck().forEach(x->ui.printDebug(String.format("Card id: %s", x.getId())));
+        ui.printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
+        this.currentTurnInfo.setAvailablePositions(placeCardSuccessInfo.getAvailable());
         int choice = ui.askForDrawCard(currentTurnInfo);
         if(choice / 10 == 1){
             connectionBridge.drawResourceRequest(choice%10);
@@ -176,7 +178,8 @@ public class ClientController {
         ui.printColorDebug(TUIColors.CYAN, "This is your updated hand:");
         hand.forEach(x -> x.setFlipped(false));
         this.currentTurnInfo.setHand(hand);
-        hand.forEach(x->ui.printCardInfo(x));
+        hand.forEach(x->ui.printDebug(String.format("Card id: %s", x.getId())));
+        ui.printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
         connectionBridge.endTurn();
     }
 
@@ -184,17 +187,14 @@ public class ClientController {
     public void gameState(GameStateInfo gameStateInfo){
         ui.printDebug(gameStateInfo.getUsername() + " has ended his turn.");
         ui.printColorDebug(TUIColors.CYAN, "This is his current board:");
-        ui.displayBoard(gameStateInfo.getBoard(), null);
+        ui.displayBoard(gameStateInfo.getBoard(), null, gameStateInfo.getSymbols());
         ui.printDebug("He currently has " + gameStateInfo.getCardsPoints() + " points");
-        ui.printColorDebug(TUIColors.CYAN,"These are the first two cards of the resource deck:");
-        ui.printCardInfo(gameStateInfo.getResourceDeck().get(0));
-        ui.printCardInfo(gameStateInfo.getResourceDeck().get(1));
-        ui.printDebug("The kingdom of the first covered card of the resource deck is " + gameStateInfo.getResourceDeck().get(2).getColor());
-        ui.printColorDebug(TUIColors.CYAN,"These are the first two cards of the gold deck:");
-        ui.printCardInfo(gameStateInfo.getGoldDeck().get(0));
-        ui.printCardInfo(gameStateInfo.getGoldDeck().get(1));
-        ui.printDebug("The kingdom of the first covered card of the gold deck is " + gameStateInfo.getGoldDeck().get(2).getColor());
-        ui.printLeaderboard(gameStateInfo.getLeaderboard());
+        ui.printColorDebug(TUIColors.CYAN,"Resource deck:");
+        gameStateInfo.getResourceDeck().forEach(x->ui.printDebug(String.format("Card id: %s", x.getId())));
+        ui.printColorDebug(TUIColors.CYAN,"Gold deck:");
+        gameStateInfo.getResourceDeck().forEach(x->ui.printDebug(String.format("Card id: %s", x.getId())));
+        ui.printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
+         ui.printLeaderboard(gameStateInfo.getLeaderboard());
 
         this.leaderboard = gameStateInfo.getLeaderboard();
         ArrayList<CardInfo> prev = this.boards.replace(gameStateInfo.getUsername(), gameStateInfo.getBoard());

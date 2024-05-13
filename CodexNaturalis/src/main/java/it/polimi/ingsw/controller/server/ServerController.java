@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller.server;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.exceptions.InvalidNumberOfPlayersException;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.model.player.Player;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that manages the server
@@ -81,10 +83,11 @@ public class ServerController {
             ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
             ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user));
+            Map<CardSymbol, Integer> symbols = gameController.getUserSymbols(userToGame.get(user));
             int currTurn = gameController.getCurrentTurn(userToGame.get(user));
             boolean isLastTurn = gameController.isLast(userToGame.get(user));
             ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
-            TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, isLastTurn, board);
+            TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, (HashMap<CardSymbol, Integer>) symbols, isLastTurn, board);
             connectionBridge.initTurn(user, turnInfo);
             for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
                 if (!username.getUsername().equals(user)) {
@@ -139,7 +142,8 @@ public class ServerController {
             int cardsPoints = gameController.getUserCardsPoints(userToGame.get(user));
             int GoalsPoints = gameController.getUserGoalsPoints(userToGame.get(user));
             ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user));
-            return new PlaceCardSuccessInfo(cardsPoints, GoalsPoints, new CardInfo(card), availablePositions);
+            Map<CardSymbol, Integer> symbols = gameController.getUserSymbols(userToGame.get(user));
+            return new PlaceCardSuccessInfo(cardsPoints, GoalsPoints, new CardInfo(card), availablePositions, symbols);
         }
         return null;
     }
@@ -181,7 +185,8 @@ public class ServerController {
             ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
             int points = gameController.getUserCardsPoints(userToGame.get(user));
             HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
-            GameStateInfo gameState = new GameStateInfo(user, rd, gd, board, points, leaderboard);
+            Map<CardSymbol, Integer> symbols = gameController.getUserSymbols(userToGame.get(user));
+            GameStateInfo gameState = new GameStateInfo(user, rd, gd, board, points, leaderboard, symbols);
             for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
                 if (!username.getUsername().equals(user)) {
                     connectionBridge.gameState(username.getUsername(), gameState);

@@ -1,9 +1,6 @@
 package it.polimi.ingsw.connections.client;
 
-import it.polimi.ingsw.connections.data.CardInfo;
-import it.polimi.ingsw.connections.data.GameStateInfo;
-import it.polimi.ingsw.connections.data.StarterData;
-import it.polimi.ingsw.connections.data.TurnInfo;
+import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.controller.client.ClientController;
 
 import java.awt.*;
@@ -148,8 +145,8 @@ public class ConnectionBridge {
         }
     }
 
-    public void placeCardSuccess(int cardsPoints, int goalPoints, CardInfo placedCard, ArrayList<Point> newAvailable) {
-        controller.placeCardSuccess(cardsPoints, goalPoints, placedCard, newAvailable);
+    public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo) {
+        controller.placeCardSuccess(placeCardSuccessInfo);
     }
 
     public void placeCardFailure() {

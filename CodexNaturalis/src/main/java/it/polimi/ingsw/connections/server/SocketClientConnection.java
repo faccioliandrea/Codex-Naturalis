@@ -3,14 +3,12 @@ package it.polimi.ingsw.connections.server;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
-import it.polimi.ingsw.connections.data.GameStateInfo;
-import it.polimi.ingsw.connections.data.StarterData;
-import it.polimi.ingsw.connections.data.TurnInfo;
+import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.messages.Message;
 import it.polimi.ingsw.connections.messages.client.ClientToServerMessage;
 import it.polimi.ingsw.connections.messages.client.LoginRequestMessage;
 import it.polimi.ingsw.connections.messages.server.*;
-import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.model.enumeration.CardSymbol;
 
 import java.awt.*;
 import java.io.IOException;
@@ -19,6 +17,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -160,8 +159,8 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new InitTurnMessage(turnInfo));
     }
 
-    public void placeCardSuccess(int cardsPoints, int goalsPoints, CardInfo placedCard, ArrayList<Point> newAvailable) throws IOException {
-        this.outputStream.sendMessage(new PlaceCardSuccessMessage(cardsPoints, goalsPoints, placedCard, newAvailable));
+    public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo) throws IOException {
+        this.outputStream.sendMessage(new PlaceCardSuccessMessage(placeCardSuccessInfo));
     }
 
     public void placeCardFailure() throws IOException {
