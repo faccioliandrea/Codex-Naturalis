@@ -21,7 +21,7 @@ public class UserInterface {
 
     public UserInterface() {
         new Thread(new InputHandler(commandQueue, inputQueue)).start();
-        // TODO: print somewhere that commands exist so that user knows which ones to use
+
         new Thread(new CommandHandler(commandQueue, this)).start();
     }
 
@@ -268,7 +268,7 @@ public class UserInterface {
             }
         } while(choiceCard != 1 && choiceCard != 2 && choiceCard != 3);
 
-        deck = deck + choiceCard;
+        deck = deck + choiceCard -1;
         return deck;
     }
 

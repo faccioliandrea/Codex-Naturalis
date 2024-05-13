@@ -9,7 +9,6 @@ public abstract class Card {
     private String id;
     private Point coord;
     private boolean flipped;
-
     private Corner[] frontCorners;
     private Corner[] backCorners;
 

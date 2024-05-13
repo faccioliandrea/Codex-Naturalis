@@ -29,6 +29,7 @@ public class ClientController {
         this.ui = ui;
         connectionBridge = new ConnectionBridge(this);
         ui.setController(this);
+        ui.printColorDebug(TUIColors.YELLOW, "Type :help to see all the available commands.");
     }
 
     public String loginRequest() {
@@ -145,7 +146,7 @@ public class ClientController {
         ui.printColorDebug(TUIColors.CYAN,"Resource deck:");
         currentTurnInfo.getResourceDeck().forEach(x-> ui.printCardInfo(x));
         ui.printColorDebug(TUIColors.CYAN,"Gold deck:");
-        currentTurnInfo.getResourceDeck().forEach(x-> ui.printCardInfo(x));
+        currentTurnInfo.getGoldDeck().forEach(x-> ui.printCardInfo(x));
         this.currentTurnInfo.setAvailablePositions(newAvailable);
         int choice = ui.askForDrawCard(currentTurnInfo);
         if(choice / 10 == 1){
