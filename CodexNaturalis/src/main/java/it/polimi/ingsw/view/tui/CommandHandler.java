@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.tui;
 
 
 import java.util.HashMap;
@@ -10,12 +10,12 @@ public class CommandHandler implements Runnable {
     private boolean interrupted = false;
 
     private final BlockingQueue<String> commandQueue;
-    private final UserInterface ui;
+    private final TUI ui;
 
     private final HashMap<String, Consumer<String>> commands = new HashMap<>();
     private final HashMap<String, String> manPages = new HashMap<>();
 
-    CommandHandler(BlockingQueue<String> commandQueue, UserInterface ui) {
+    CommandHandler(BlockingQueue<String> commandQueue, TUI ui) {
         this.commandQueue = commandQueue;
         this.ui = ui;
         this.initCommands();

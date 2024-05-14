@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.tui;
 
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;

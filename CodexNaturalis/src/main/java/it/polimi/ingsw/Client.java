@@ -1,9 +1,8 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.client.ClientController;
-import it.polimi.ingsw.connections.client.ServerConnection;
 import it.polimi.ingsw.connections.client.SocketServerConnection;
-import it.polimi.ingsw.view.UserInterface;
+import it.polimi.ingsw.view.tui.TUI;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -61,7 +60,7 @@ public class Client {
         } while(!(choice == 1 || choice == 2));
         chosenConnection = (choice == 1) ? "Socket" : "RMI";
 
-        UserInterface ui = new UserInterface();
+        TUI ui = new TUI();
 
         ClientController matchController;
         matchController = new ClientController(ui);

@@ -5,19 +5,19 @@ import it.polimi.ingsw.model.enumeration.CardSymbol;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TurnInfo implements Serializable {
 
-    private ArrayList<CardInfo> hand;
-    private ArrayList<CardInfo> resourceDeck;
-    private ArrayList<CardInfo> goldDeck;
-    private ArrayList<Point> availablePositions;
-    private int currentTurn;
-    private Map<CardSymbol, Integer> symbols;
-    private boolean isLastTurn;
-    private ArrayList<CardInfo> board;
+    private final ArrayList<CardInfo> hand;
+    private final ArrayList<CardInfo> resourceDeck;
+    private final ArrayList<CardInfo> goldDeck;
+    private final ArrayList<Point> availablePositions;
+    private final int currentTurn;
+    private final boolean isLastTurn;
+    private final ArrayList<CardInfo> board;
+    private final Map<CardSymbol, Integer> symbols;
 
     public TurnInfo(ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePositions, int currentTurn, Map<CardSymbol, Integer> symbols, boolean isLastTurn, ArrayList<CardInfo> board) {
         this.hand = hand;
@@ -38,6 +38,7 @@ public class TurnInfo implements Serializable {
         this.currentTurn = 0;
         this.isLastTurn = false;
         this.board = new ArrayList<>();
+        this.symbols = new LinkedHashMap<>();
     }
 
     public ArrayList<CardInfo> getHand() {
@@ -67,24 +68,6 @@ public class TurnInfo implements Serializable {
     public ArrayList<CardInfo> getBoard() {
         return board;
     }
-
-    public void addCardToBoard(CardInfo card){
-        board.add(card);
-    }
-
-    public void setAvailablePositions(ArrayList<Point> availablePositions) {
-        this.availablePositions = availablePositions;
-    }
-
-    public void setHand(ArrayList<CardInfo> hand) {
-        this.hand = hand;
-    }
-
-
-    public void setSymbols(Map<CardSymbol, Integer> symbols) {
-        this.symbols = symbols;
-    }
-
 
     public Map<CardSymbol, Integer> getSymbols() {
         return symbols;
