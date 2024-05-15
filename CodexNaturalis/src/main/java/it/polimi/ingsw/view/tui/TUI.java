@@ -407,32 +407,17 @@ public class TUI extends UIManager {
     }
 
     // TODO: print symbols hashmap
-    private void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {
-        OptionalInt x_max = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.x).max();
-        OptionalInt x_min = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.x).min();
-        if (!x_min.isPresent() || !x_max.isPresent()){
-            return;
-        }
-        int width = x_max.getAsInt() - x_min.getAsInt() + 1;
-        OptionalInt y_max = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.y).max();
-        OptionalInt y_min = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.y).min();
-        if (!y_min.isPresent() || !y_max.isPresent()){
-            return;
-        }
-        int height = y_max.getAsInt() - y_min.getAsInt() + 1;
+    public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {
+        boolean padding = availablePos != null && !availablePos.isEmpty();
 
-        // TODO: fix table padding
-        int rows = height + (availablePos != null ? 3 : 1); // +1 for matrix indexes going from 0 to n-1, +2 for table padding (available positions)
-        int cols = width  + (availablePos != null ? 3 : 1); // +1 for matrix indexes going from 0 to n-1, +2 for table padding (available positions)
-
+        int rows = boardGridRows(board, padding);
+        int cols = boardGridColumns(board, padding);
         String[][] grid = new String[rows][cols];
         for (CardInfo card: board) {
-
-            int i = (y_max.getAsInt() + 1)  - card.getCoord().y;
-            int j = card.getCoord().x - (x_min.getAsInt() - 1);
+            Point matrCoord = toMatrixCoord(card.getCoord(), padding);
 
             try {
-                grid[i][j] = String.format("%s %s %s", CardColors.valueOf(card.getColor()), card.getId(), TUIColors.reset());
+                grid[matrCoord.y][matrCoord.x] = String.format("%s %s %s", CardColors.valueOf(card.getColor()), card.getId(), TUIColors.reset());
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
@@ -440,11 +425,9 @@ public class TUI extends UIManager {
 
         if (availablePos != null) {
             for (Point p: availablePos) {
+                Point matrCoord = toMatrixCoord(p, true);
 
-                int i = (y_max.getAsInt() + 1) - p.y;
-                int j = p.x - (x_min.getAsInt() - 1);
-
-                grid[i][j] = String.format("%s %2d  %s", CardColors.AVAILABLE, availablePos.indexOf(p), TUIColors.reset());
+                grid[matrCoord.y][matrCoord.x] = String.format("%s %2d  %s", CardColors.AVAILABLE, availablePos.indexOf(p), TUIColors.reset());
             }
         }
 
