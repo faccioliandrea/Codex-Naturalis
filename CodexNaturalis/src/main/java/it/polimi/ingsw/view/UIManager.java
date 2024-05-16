@@ -27,13 +27,14 @@ public abstract class UIManager {
     public abstract CardInfo askForPlayCard(ArrayList<CardInfo> hand, ArrayList<Point> availablePositions);
     public abstract int askForDrawCard(TurnInfo turnInfo);
     public abstract boolean askForNewGame();
-
     public abstract void invalidUsername(String username);
     public abstract void welcome(String username);
     public abstract void showCommands();
     public abstract void noLobbies();
     public abstract void joinedLobby();
     public abstract void joinedLobby(String username);
+    public abstract void playerDisconnected(String username, boolean gameStarted);
+    public abstract void playerReconnected(String username) ;
     public abstract void joinedLobbyLast();
     public abstract void lobbyFull();
     public abstract void gameStarted(StarterData starterData);
@@ -46,6 +47,7 @@ public abstract class UIManager {
     public abstract void turnEnded(GameStateInfo gameStateInfo);
     public abstract void gameEnded();
     public abstract void goodbye();
+
 
 
     protected boolean isValidIP(String ipAddr, String defaultAddr) {
@@ -88,4 +90,7 @@ public abstract class UIManager {
     public UIData getData() {
         return this.data;
     }
+
+
+
 }

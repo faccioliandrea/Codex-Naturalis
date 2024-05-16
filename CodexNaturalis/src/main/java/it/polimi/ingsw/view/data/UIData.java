@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.data;
 
 
+import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.controller.client.ClientGameData;
@@ -12,6 +13,8 @@ import java.util.*;
 
 public class UIData implements Observer {
     private String username;
+    private String currentPlayer;
+    private String lastPlayer;
     private ArrayList<CardInfo> hand = new ArrayList<>();
     private ArrayList<CardInfo> resourceDeck = new ArrayList<>();
     private ArrayList<CardInfo> goldDeck = new ArrayList<>();
@@ -22,9 +25,11 @@ public class UIData implements Observer {
     private Map<CardSymbol, Integer> symbols;
     private Map<String, Integer> leaderboard = new HashMap<>();
     private Map<String, ArrayList<CardInfo>> boards = new HashMap<>();
+    private Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
     private ArrayList<GoalInfo> goals = new ArrayList<>();
     private int cardPoints = 0;
     private int goalPoints = 0;
+    private boolean gameAborted = false;
 
 
     public String getUsername() {
@@ -147,8 +152,43 @@ public class UIData implements Observer {
         this.symbols = symbols;
     }
 
+    public Map<String, ConnectionStatus> getConnectionStatus() {
+        return connectionStatus;
+    }
+
+    public void setConnectionStatus(Map<String, ConnectionStatus> connectionStatus) {
+        this.connectionStatus = connectionStatus;
+    }
+
+    public boolean isGameAborted() {
+        return gameAborted;
+    }
+
+    public void setGameAborted(boolean gameAborted) {
+        this.gameAborted = gameAborted;
+    }
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public String getLastPlayer() {
+        return lastPlayer;
+    }
+
+    public void setLastPlayer(String lastPlayer) {
+        this.lastPlayer = lastPlayer;
+    }
+
+
     @Override
     public void update(Observable o, Object arg) {
+        this.currentPlayer = ((ClientGameData)o).getCurrentPlayer();
+        this.lastPlayer = ((ClientGameData)o).getLastPlayer();
         this.hand = ((ClientGameData)o).getHand();
         this.resourceDeck = ((ClientGameData)o).getResourceDeck();
         this.goldDeck = ((ClientGameData)o).getGoldDeck();
@@ -157,10 +197,12 @@ public class UIData implements Observer {
         this.isLastTurn = ((ClientGameData)o).isLastTurn();
         this.board = ((ClientGameData)o).getBoard();
         this.boards = ((ClientGameData)o).getBoards();
+        this.connectionStatus = ((ClientGameData)o).getConnectionStatus();
         this.goals = ((ClientGameData)o).getGoals();
         this.cardPoints = ((ClientGameData)o).getCardPoints();
         this.goalPoints = ((ClientGameData)o).getGoalPoints();
         this.symbols = ((ClientGameData)o).getSymbols();
         this.leaderboard = ((ClientGameData)o).getLeaderboard();
+        this.gameAborted = ((ClientGameData)o).isGameAborted();
     }
 }

@@ -28,10 +28,6 @@ public class PlaceCardSuccessInfo implements Serializable {
         return cardsPoint;
     }
 
-    public int getGoalsPoints() {
-        return goalsPoints;
-    }
-
     public CardInfo getPlayedCard() {
         return playedCard;
     }
@@ -43,4 +39,6 @@ public class PlaceCardSuccessInfo implements Serializable {
     public Map<CardSymbol, Integer> getSymbols() {
         return symbols;
     }
+
+    public int getGoalsPoint() {return goalsPoints;}
 }

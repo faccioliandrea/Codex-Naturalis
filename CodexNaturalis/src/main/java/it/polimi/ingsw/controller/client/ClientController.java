@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.client;
 
 
+import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.view.UIManager;
@@ -75,6 +76,7 @@ public class ClientController {
     }
 
     public void playerJoinedLobby(String username) {
+        gameData.putEntry(gameData.getConnectionStatus(), username, ConnectionStatus.ONLINE);
         ui.joinedLobby(username);
     }
 
@@ -96,8 +98,10 @@ public class ClientController {
     }
 
     public void privateGoalChosen(){
-        boolean flipped = ui.askForStarterCardSide();
-        connectionBridge.chooseStarterCardSideRequest(flipped);
+        if(!this.gameData.isGameAborted()){
+            boolean flipped = ui.askForStarterCardSide();
+            connectionBridge.chooseStarterCardSideRequest(flipped);
+        }
     }
 
     public void waitingOthersStartingChoice() {
@@ -120,12 +124,10 @@ public class ClientController {
     public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo) {
         this.gameData.addToList(this.gameData.getBoard(), placeCardSuccessInfo.getPlayedCard());
         this.gameData.replaceEntry(this.gameData.getLeaderboard(), this.username, placeCardSuccessInfo.getCardsPoint());
+        this.gameData.setCardPoints(placeCardSuccessInfo.getCardsPoint());
+        this.gameData.setGoalPoints(placeCardSuccessInfo.getGoalsPoint());
         this.gameData.setAvailablePositions(placeCardSuccessInfo.getAvailable());
         this.gameData.setSymbols(placeCardSuccessInfo.getSymbols());
-        System.err.println(this.gameData.getSymbols());
-        System.err.println(placeCardSuccessInfo.getSymbols());
-        System.err.println(this.ui.getData().getSymbols());
-
         ui.placeCardSuccess();
 
         int choice = ui.askForDrawCard(currentTurnInfo);
@@ -150,13 +152,15 @@ public class ClientController {
     }
 
     public void gameState(GameStateInfo gameStateInfo){
-        this.gameData.setLeaderboard(gameStateInfo.getLeaderboard());
-        this.gameData.putEntry(this.gameData.getBoards(), gameStateInfo.getUsername(), gameStateInfo.getBoard());
+        this.gameData.fromGameStateInfo(gameStateInfo);
+        //this.gameData.setLeaderboard(gameStateInfo.getLeaderboard());
+        //this.gameData.putEntry(this.gameData.getBoards(), gameStateInfo.getUsername(), gameStateInfo.getBoard());
 
         ui.turnEnded(gameStateInfo);
     }
 
     public void gameEnd(HashMap<String, Integer> leaderboard){
+        this.gameData.setGameAborted(true);
         this.gameData.setLeaderboard(leaderboard);
         ui.gameEnded();
         boolean newGame = ui.askForNewGame();
@@ -168,6 +172,17 @@ public class ClientController {
         }
     }
 
+    public void playerDisconnected(String username, boolean gameStarted) {
+        this.gameData.replaceEntry(this.gameData.getConnectionStatus(), username, ConnectionStatus.OFFLINE);
+        ui.playerDisconnected(username, gameStarted);
+    }
+
+    public void playerReconnected(String username) {
+        this.gameData.replaceEntry(this.gameData.getConnectionStatus(), username, ConnectionStatus.ONLINE);
+        ui.playerReconnected(username);
+
+    }
+
     public String getUsername() {
         return username;
     }
@@ -176,8 +191,8 @@ public class ClientController {
         return connectionBridge;
     }
 
-
     public TurnInfo getCurrentTurnInfo() {
         return currentTurnInfo;
     }
+
 }

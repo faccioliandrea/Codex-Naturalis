@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.server;
 
+import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 import it.polimi.ingsw.model.cards.Card;
@@ -79,21 +80,28 @@ public class ServerController {
      */
     public void initTurn(String user){
         if(checkUserCurrentPlayer(user)) {
-            ArrayList<CardInfo> hand = gameController.getHand(userToGame.get(user), user);
-            ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
-            ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
-            ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user));
-            Map<CardSymbol, Integer> symbols = gameController.getUserSymbols(userToGame.get(user));
-            int currTurn = gameController.getCurrentTurn(userToGame.get(user));
-            boolean isLastTurn = gameController.isLast(userToGame.get(user));
-            ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
-            TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, (HashMap<CardSymbol, Integer>) symbols, isLastTurn, board);
-            connectionBridge.initTurn(user, turnInfo);
-            for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
-                if (!username.getUsername().equals(user)) {
-                    connectionBridge.otherPlayerTurn(username.getUsername(), user);
+            if(connectionBridge.checkUserConnected(user)){
+                ArrayList<CardInfo> hand = gameController.getHand(userToGame.get(user), user);
+                ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
+                ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
+                ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user), user);
+                Map<CardSymbol, Integer> symbols = gameController.getUserSymbols(userToGame.get(user));
+                int currTurn = gameController.getCurrentTurn(userToGame.get(user));
+                boolean isLastTurn = gameController.isLast(userToGame.get(user));
+                ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
+                TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, (HashMap<CardSymbol, Integer>) symbols, isLastTurn, board);
+                connectionBridge.initTurn(user, turnInfo);
+                for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
+                    if (!username.getUsername().equals(user)) {
+                        connectionBridge.otherPlayerTurn(username.getUsername(), user);
+                    }
                 }
+            } else {
+                gameController.endTurn(userToGame.get(user));
+                gameController.getGames().get(userToGame.get(user)).getGameModel().setTotalTurns(gameController.getGames().get(userToGame.get(user)).getGameModel().getTotalTurns()-1);
+                initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
             }
+
 
         }
 
@@ -141,7 +149,7 @@ public class ServerController {
             gameController.placeCard(userToGame.get(user), card, position);
             int cardsPoints = gameController.getUserCardsPoints(userToGame.get(user));
             int GoalsPoints = gameController.getUserGoalsPoints(userToGame.get(user));
-            ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user));
+            ArrayList<Point> availablePositions = gameController.getAvailablePositions(userToGame.get(user), user);
             Map<CardSymbol, Integer> symbols = gameController.getUserSymbols(userToGame.get(user));
             return new PlaceCardSuccessInfo(cardsPoints, GoalsPoints, new CardInfo(card), availablePositions, symbols);
         }
@@ -182,16 +190,41 @@ public class ServerController {
         if(checkUserCurrentPlayer(user)) {
             ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
-            ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
-            int points = gameController.getUserCardsPoints(userToGame.get(user));
             HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
-            Map<CardSymbol, Integer> symbols = gameController.getUserSymbols(userToGame.get(user));
-            GameStateInfo gameState = new GameStateInfo(user, rd, gd, board, points, leaderboard, symbols);
-            for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
+            Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
+            for (Player player : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
+                connectionStatus.put(player.getUsername(), connectionBridge.getConnections().get(player.getUsername()).getStatus());
+
+                GameStateInfo gameState = new GameStateInfo(
+                        player.getUsername(),
+                        gameController.getCurrentPlayer(userToGame.get(user)),
+                        user,
+                        gameController.getHand(userToGame.get(player.getUsername()), user),
+                        rd,
+                        gd,
+                        gameController.getAvailablePositions(userToGame.get(user), user),
+                        gameController.getCurrentTurn(userToGame.get(user)),
+                        gameController.isLast(userToGame.get(user)),
+                        gameController.getUserBoardByUsername(userToGame.get(user), player.getUsername()),
+                        gameController.getUserSymbolsByUsername(userToGame.get(user), player.getUsername()),
+                        leaderboard,
+                        gameController.getBoards(userToGame.get(user)),
+                        connectionStatus,
+                        gameController.getPrivateGoals(userToGame.get(user), player.getUsername()),
+                        gameController.getUserCardsPointsByUsername(userToGame.get(user), player.getUsername()),
+                        gameController.getUserGoalsPointsByUsername(userToGame.get(user), player.getUsername()),
+                        gameController.isGameFinished(userToGame.get(user))
+                );
+                if (!player.getUsername().equals(user)) {
+                    connectionBridge.gameState(player.getUsername(), gameState);
+                }
+            }
+
+            /*for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
                 if (!username.getUsername().equals(user)) {
                     connectionBridge.gameState(username.getUsername(), gameState);
                 }
-            }
+            }*/
             if (gameController.isGameFinished(userToGame.get(user)))
                 endGame(userToGame.get(user));
             else {
@@ -226,13 +259,52 @@ public class ServerController {
      */
     public String createLobby(String username, int numPlayers){
         if (connectionBridge.checkUserConnected(username)) {
-            //TODO: If the number of players is not between 2 and 4 return the error
             String lobbyId = "" + (int) (Math.random() * 1000);
             lobbyController.createNewLobby(lobbyId, numPlayers);
             return lobbyId;
 
         }
         return null;
+    }
+
+    public void playerDisconnected(String username){
+        if(userToGame.containsKey(username)) {
+            for (String u : userToGame.keySet()) {
+                if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
+                    connectionBridge.playerDisconnected(username, u, true);
+                }
+            }
+            if(gameController.getUserBoardByUsername(userToGame.get(username), username).isEmpty() && !gameController.getHand(userToGame.get(username), username).isEmpty()){
+                // TODO: disconnection before private goals and starter card choice -> end game and remove all players!
+                endGame(userToGame.get(username));
+            } else if( gameController.getCurrentPlayer(userToGame.get(username)).equals(username)){
+                if(gameController.getHand(userToGame.get(username), username).size()!=3){
+                    //disconnection during the turn before draw -> draw a resource and end the turn
+                    gameController.drawResource(userToGame.get(username), 0);
+                }
+                endTurn(username);
+            }
+
+        } else if (userToLobby.containsKey(username)) {
+            for (String u : userToLobby.keySet()) {
+                if (userToLobby.get(u).equals(userToLobby.get(username)) && !u.equals(username)) {
+                    connectionBridge.playerDisconnected(username, u, false);
+                }
+            }
+            lobbyController.removePlayer(username, userToLobby.get(username));
+            userToLobby.remove(username);
+        }
+    }
+
+    public void playerReconnected(String username){
+        if(userToGame.containsKey(username)) {
+            for (String u : userToGame.keySet()) {
+                if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
+                    connectionBridge.playerReconnected(username, u);
+                }
+            }
+            connectionBridge.otherPlayerTurn(username, gameController.getCurrentPlayer(userToGame.get(username)));
+        }
     }
 
 

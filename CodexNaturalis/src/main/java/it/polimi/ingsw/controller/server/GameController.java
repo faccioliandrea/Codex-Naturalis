@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.server;
 
+import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.model.cards.Card;
@@ -187,10 +188,33 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getUserBoard(String gameId) {
         ArrayList<CardInfo> board = new ArrayList<>();
-        for (Card card : games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getPlayedCards())
-            board.add(new CardInfo(card));
+        if(games.get(gameId) != null) {
+            for (Card card : games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getPlayedCards())
+                board.add(new CardInfo(card));
+        }
         return board;
     }
+
+    protected ArrayList<CardInfo> getUserBoardByUsername(String gameId, String username) {
+        ArrayList<CardInfo> board = new ArrayList<>();
+        if(games.get(gameId) != null) {
+            for (Card card : games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getPlayedCards())
+                board.add(new CardInfo(card));
+        }
+        return board;
+    }
+
+    protected  Map<String, ArrayList<CardInfo>> getBoards(String gameId){
+        Map<String, ArrayList<CardInfo>> boards = new HashMap<>();
+        for(Player player : games.get(gameId).getGameModel().getPlayers()){
+            ArrayList<CardInfo> board = new ArrayList<>();
+            for (Card card : player.getBoard().getPlayedCards())
+                board.add(new CardInfo(card));
+            boards.put(player.getUsername(), board);
+        }
+        return boards;
+    }
+
 
     /**
      * @param gameId the id of the game
@@ -200,8 +224,16 @@ public class GameController {
         return games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints();
     }
 
+    protected int getUserCardsPointsByUsername(String gameId, String username) {
+        return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getCardsPoints();
+    }
+
     protected Map<CardSymbol, Integer> getUserSymbols(String gameId) {
         return games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getSymbols();
+    }
+
+    protected Map<CardSymbol, Integer> getUserSymbolsByUsername(String gameId, String username) {
+        return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getSymbols();
     }
 
     /**
@@ -210,6 +242,10 @@ public class GameController {
      */
     protected int getUserGoalsPoints(String gameId){
         return games.get(gameId).getGameModel().getCurrentPlayer().getGoalPoints();
+    }
+
+    protected int getUserGoalsPointsByUsername(String gameId, String username){
+        return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getGoalPoints();
     }
 
     /**
@@ -254,9 +290,9 @@ public class GameController {
      * @param gameId the id of the game
      * @return the current player positions where he can place a card
      */
-    protected ArrayList<Point> getAvailablePositions(String gameId) {
+    protected ArrayList<Point> getAvailablePositions(String gameId, String username) {
 
-        return new ArrayList<>(games.get(gameId).getGameModel().getCurrentPlayer().getBoard().availablePositions());
+        return new ArrayList<>(games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().availablePositions());
     }
 
     /**
@@ -303,6 +339,7 @@ public class GameController {
     public Card getCardFromBoard(String gameId, String cardId){
         return games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getPlayedCards().stream().filter(x -> x.getId().equals(cardId)).findFirst().orElse(null);
     }
+
 
 
 }

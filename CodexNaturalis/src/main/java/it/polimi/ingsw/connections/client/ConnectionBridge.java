@@ -243,8 +243,13 @@ public class ConnectionBridge {
         this.serverConnection = serverConnection;
     }
 
-
     public void lobbyIsReady() {
         controller.lobbyIsReady();
     }
+
+    public void playerDisconnected(String username, boolean gameStarted){
+        controller.playerDisconnected(username, gameStarted);
+    }
+
+    public void playerReconnected(String username) {controller.playerReconnected(username);}
 }

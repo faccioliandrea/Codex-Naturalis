@@ -47,4 +47,8 @@ public class Lobby {
     public void addPlayer(String username) {
         users.add(username);
     }
+
+    public void removePlayer(String username) {
+        users.remove(username);
+    }
 }

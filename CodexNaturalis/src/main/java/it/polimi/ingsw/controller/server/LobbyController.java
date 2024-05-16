@@ -49,4 +49,9 @@ public class LobbyController {
     }
 
     public void removeLobby(String lobbyId){lobbies.remove(lobbyId);}
+
+    public void removePlayer(String username, String s) {
+        users.remove(username);
+        lobbies.get(s).removePlayer(username);
+    }
 }

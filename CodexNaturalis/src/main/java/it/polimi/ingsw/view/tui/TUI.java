@@ -303,6 +303,16 @@ public class TUI extends UIManager {
     }
 
     @Override
+    public void playerDisconnected(String username, boolean gameStarted) {
+        printColorDebug(TUIColors.RED, String.format("%s disconnected. %s", username, gameStarted ? "The game will continue skipping his turns." : ""));
+    }
+
+    @Override
+    public void playerReconnected(String username) {
+        printColorDebug(TUIColors.GREEN, String.format("%s reconnected.", username));
+    }
+
+    @Override
     public void joinedLobbyLast() {
         printDebug("You joined the lobby. The game will start soon!");
     }
@@ -379,10 +389,10 @@ public class TUI extends UIManager {
 
     @Override
     public void turnEnded(GameStateInfo gameStateInfo) {
-        printDebug(gameStateInfo.getUsername() + " has ended his turn.");
+        printDebug(gameStateInfo.getLastPlayer() + " has ended his turn.");
         printColorDebug(TUIColors.CYAN, "This is his current board:");
-        displayBoard(gameStateInfo.getBoard(), null, gameStateInfo.getSymbols());
-        printDebug("He currently has " + gameStateInfo.getCardsPoints() + " points");
+        displayBoard(gameStateInfo.getBoards().get(gameStateInfo.getLastPlayer()), null, null);
+        printDebug("He currently has " + gameStateInfo.getLeaderboard().get(gameStateInfo.getLastPlayer()) + " points");
         printColorDebug(TUIColors.CYAN,"These are the first two cards of the resource deck:");
         gameStateInfo.getResourceDeck().stream().filter(x -> !x.isFlipped()).forEach(x->printDebug(String.format("Card id: %s", x.getId())));
         printDebug("Covered: " + gameStateInfo.getResourceDeck().get(2).getColor());
@@ -526,10 +536,10 @@ public class TUI extends UIManager {
         int pos = 1;
         for (Map.Entry<String, Integer> e:
                 leaderboard.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new)) // LinkedHashMap needed to keep the order
-                .entrySet()
+                        .stream()
+                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new)) // LinkedHashMap needed to keep the order
+                        .entrySet()
         ) {
             int points = e.getValue();
             this.printDebug(String.format("\t%d^  %s - %d %s", pos, e.getKey(), points, points == 1 ? "point" : "points"));

@@ -179,5 +179,11 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new GameEndMessage(leaderboard));
     }
 
+    public void playerDisconnected(String username, boolean gameStarted) throws IOException {
+        this.outputStream.sendMessage(new PlayerDisconnectedMessage(username, gameStarted));
+    }
 
+    public void playerReconnected(String username) throws IOException {
+        this.outputStream.sendMessage(new PlayerReconnectedMessage(username));
+    }
 }
