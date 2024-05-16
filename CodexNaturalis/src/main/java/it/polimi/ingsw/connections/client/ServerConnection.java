@@ -6,8 +6,8 @@ import java.awt.*;
 import java.io.IOException;
 
 public interface  ServerConnection {
-    public void threadExceptionCallback(Exception e);
+    public void threadExceptionCallback(String e) throws IOException;
     public void close() throws IOException;
-    public ConnectionStatus getStatus();
+    public ConnectionStatus getStatus() throws IOException;
 
 }

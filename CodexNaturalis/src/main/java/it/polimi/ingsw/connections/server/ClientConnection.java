@@ -5,9 +5,7 @@ import it.polimi.ingsw.connections.ConnectionStatus;
 import java.io.IOException;
 
 public interface ClientConnection {
-    ConnectionStatus getStatus();
     void close() throws IOException;
-    String getRemoteAddr();
+    String getRemoteAddr() throws IOException;
 
-    void setStatus(ConnectionStatus connectionStatus);
 }

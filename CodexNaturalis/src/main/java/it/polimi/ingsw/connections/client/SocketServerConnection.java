@@ -69,7 +69,7 @@ public class SocketServerConnection implements ServerConnection, Runnable {
     }
 
     @Override
-    public void threadExceptionCallback(Exception e) {
+    public void threadExceptionCallback(String e) {
         this.connectionStatus = ConnectionStatus.OFFLINE;
         try {
             this.close();

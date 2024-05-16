@@ -45,19 +45,11 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         }
     }
 
-    @Override
-    public ConnectionStatus getStatus() {
-        return this.connectionStatus;
-    }
 
     public String getRemoteAddr() {
         return this.remoteAddr.toString();
     }
 
-    @Override
-    public void setStatus(ConnectionStatus connectionStatus) {
-
-    }
 
     public InputStreamRunnable getInputStream() {
         return inputStream;
@@ -106,7 +98,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     }
 
 
-    public void threadExceptionCallback(Exception e) {
+    public void threadExceptionCallback(String e) {
         this.connectionStatus = ConnectionStatus.OFFLINE;
         this.connectionBridge.onClientDisconnect(this);
     }

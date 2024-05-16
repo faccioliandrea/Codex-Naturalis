@@ -8,10 +8,6 @@ public class RMIConnection implements ClientConnection{
 
     private ConnectionStatus connectionStatus;
 
-        @Override
-        public ConnectionStatus getStatus() {
-            return connectionStatus;
-        }
 
         @Override
         public void close() throws IOException {

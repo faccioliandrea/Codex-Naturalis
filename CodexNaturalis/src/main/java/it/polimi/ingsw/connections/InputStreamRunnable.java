@@ -14,17 +14,17 @@ public class InputStreamRunnable implements StreamRunnable {
     private boolean isStopped;
 //    private IOException exception;
     private BlockingQueue<Message> msgQueue;
-    private Consumer<Exception> callback;
+    private Consumer<String> callback;
     // TODO: last ping timestamp
 
-    public InputStreamRunnable(ObjectInputStream ois, BlockingQueue<Message> msgQueue, Consumer<Exception> callback) throws IOException {
+    public InputStreamRunnable(ObjectInputStream ois, BlockingQueue<Message> msgQueue, Consumer<String> callback) throws IOException {
         this.inputStream = ois;
         this.isStopped = false;
         this.msgQueue = msgQueue;
         this.callback = callback;
     }
 
-    public InputStreamRunnable(InputStream is, BlockingQueue<Message> msgQueue, Consumer<Exception> callback) throws IOException {
+    public InputStreamRunnable(InputStream is, BlockingQueue<Message> msgQueue, Consumer<String> callback) throws IOException {
         this.inputStream = new ObjectInputStream(is);
         this.isStopped = false;
         this.msgQueue = msgQueue;

@@ -1,17 +1,24 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.connections.client.RMIClientConnection;
+import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
+import it.polimi.ingsw.connections.client.ServerConnection;
+import it.polimi.ingsw.connections.server.RMIServerConnectionInterface;
 import it.polimi.ingsw.controller.client.ClientController;
 import it.polimi.ingsw.connections.client.SocketServerConnection;
 import it.polimi.ingsw.view.tui.TUI;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class Client {
 
     private static final int DEFAULT_PORT = 5555;
     private static final String DEFAULT_ADDRESS = "localhost";
+    private static final String REMOTE_NAME = "Codex";
 
     private static int port = DEFAULT_PORT;
     private static String address = DEFAULT_ADDRESS;
@@ -83,8 +90,18 @@ public class Client {
                 }
             }
         } else {
-            //RMI
-            return;
+            address = ui.askForServerAddr(DEFAULT_ADDRESS);
+            try {
+                Registry registry = LocateRegistry.getRegistry(address);
+                RMIServerConnectionInterface obj = (RMIServerConnectionInterface) registry.lookup(REMOTE_NAME);
+                RMIClientConnectionInterface client = new RMIClientConnection();
+                client.setBridge(matchController.getConnectionBridge());
+                matchController.getConnectionBridge().setRmiClientConnectionInterface(client);
+                matchController.getConnectionBridge().setServerConnection(obj);
+                matchController.getConnectionBridge().loginRequest();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
 

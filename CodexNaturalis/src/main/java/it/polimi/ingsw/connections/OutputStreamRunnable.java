@@ -14,7 +14,7 @@ import it.polimi.ingsw.connections.messages.server.ServerToClientMessage;
 public class OutputStreamRunnable implements StreamRunnable {
     private final ObjectOutputStream outputStream;
     private boolean isStopped;
-    private Consumer<Exception> callback;
+    private Consumer<String> callback;
 //    private IOException exception;
 
     final Object lock = new Object();
@@ -28,13 +28,13 @@ public class OutputStreamRunnable implements StreamRunnable {
 //    Timer timer = new Timer();
 
 
-    public OutputStreamRunnable(ObjectOutputStream oos, Consumer<Exception> callback) throws IOException {
+    public OutputStreamRunnable(ObjectOutputStream oos, Consumer<String> callback) throws IOException {
         this.outputStream = oos;
         this.isStopped = false;
         this.callback = callback;
     }
 
-    public OutputStreamRunnable(OutputStream os, Consumer<Exception> callback) throws IOException {
+    public OutputStreamRunnable(OutputStream os, Consumer<String> callback) throws IOException {
         this.outputStream = new ObjectOutputStream(os);
         this.isStopped = false;
         this.callback = callback;
@@ -50,7 +50,7 @@ public class OutputStreamRunnable implements StreamRunnable {
                 ping();
             }
         } catch (IOException | InterruptedException e) {
-            this.callback.accept(e);
+            this.callback.accept(e.getMessage());
             return;
         }
     }

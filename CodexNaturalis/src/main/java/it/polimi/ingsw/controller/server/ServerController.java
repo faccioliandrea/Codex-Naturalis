@@ -2,6 +2,8 @@ package it.polimi.ingsw.controller.server;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.*;
+import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
+import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
@@ -12,9 +14,12 @@ import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
 import it.polimi.ingsw.model.player.Player;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Class that manages the server
@@ -26,6 +31,7 @@ public class ServerController {
     private HashMap<String, String> userToLobby;
     private HashMap<String, String> userToGame;
     private ConnectionBridge connectionBridge;
+    private ExecutorService executorService;
 
     /**
      * Default constructor
@@ -54,13 +60,13 @@ public class ServerController {
             }
             lobbyController.removeLobby(lobbyId);
             gameController.startGame(gameId);
-
+            executorService = Executors.newFixedThreadPool(users.size());
             for (String username : users) {
                 ArrayList<CardInfo> hand = gameController.getHand(gameId, username);
                 ArrayList<GoalInfo> privateGoals = gameController.getPrivateGoals(gameId, username);
                 ArrayList<GoalInfo> sharedGoals = gameController.getSharedGoals(gameId);
                 CardInfo starterCard = gameController.getStarterCard(gameId, username);
-                connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, users));
+                executorService.submit(() -> connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, users)));
             }
 
 
@@ -90,12 +96,12 @@ public class ServerController {
                 boolean isLastTurn = gameController.isLast(userToGame.get(user));
                 ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
                 TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, (HashMap<CardSymbol, Integer>) symbols, isLastTurn, board);
-                connectionBridge.initTurn(user, turnInfo);
                 for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
                     if (!username.getUsername().equals(user)) {
                         connectionBridge.otherPlayerTurn(username.getUsername(), user);
                     }
                 }
+                connectionBridge.initTurn(user, turnInfo);
             } else {
                 gameController.endTurn(userToGame.get(user));
                 gameController.getGames().get(userToGame.get(user)).getGameModel().setTotalTurns(gameController.getGames().get(userToGame.get(user)).getGameModel().getTotalTurns()-1);
@@ -124,14 +130,14 @@ public class ServerController {
     }
 
 
-    public int chooseStarterCardSide(String username, boolean flipped) {
+    public ChooseStarterCardSideResponse chooseStarterCardSide(String username, boolean flipped) {
         gameController.chooseStarterCardSide(userToGame.get(username), username, flipped);
         if(gameController.getGames().get(userToGame.get(username)).getPlayers().stream().anyMatch(x->x.getBoard().getPlayedCards().isEmpty())){
-            return 0;
+            return ChooseStarterCardSideResponse.WAIT_FOR_OTHER_PLAYER;
         } else if (gameController.getGames().get(userToGame.get(username)).getPlayers().stream().allMatch(x->x.getBoard().getPlayedCards().size()==1)){
-            return 1;
+            return ChooseStarterCardSideResponse.SUCCESS;
         }
-        return -1;
+        return ChooseStarterCardSideResponse.FAILURE;
 
     }
 
@@ -193,7 +199,7 @@ public class ServerController {
             HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
             Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
             for (Player player : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
-                connectionStatus.put(player.getUsername(), connectionBridge.getConnections().get(player.getUsername()).getStatus());
+                connectionStatus.put(player.getUsername(), connectionBridge.getConnectionsStatus().get(connectionBridge.getConnections().get(player.getUsername())));
 
                 GameStateInfo gameState = new GameStateInfo(
                         player.getUsername(),
@@ -246,7 +252,8 @@ public class ServerController {
         HashMap<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
         for(String username : userToGame.keySet()){
             if(userToGame.get(username).equals(userToGame.get(username))) {
-                connectionBridge.endGame(username, leaderboard);
+                executorService.submit(() -> connectionBridge.endGame(username, leaderboard));
+                //connectionBridge.endGame(username, leaderboard);
             }
         }
     }
@@ -313,21 +320,21 @@ public class ServerController {
      * @param username the username of the player
      * @param lobbyId the id of the lobby
      */
-    public int addPlayerToLobby(String username, String lobbyId) {
+    public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) {
         if (connectionBridge.checkUserConnected(username)) {
             if(!lobbyController.getLobbies().containsKey(lobbyId)) {
-                return 0;
+                return AddPlayerToLobbyresponse.LOBBY_NOT_FOUND;
             }
             else if(lobbyController.getLobbies().get(lobbyId).isFull()) {
-                return 2;
+                return AddPlayerToLobbyresponse.LOBBY_FULL;
             }
             else {
                 lobbyController.addPlayer(username, lobbyId);
                 userToLobby.put(username, lobbyId);
-                return 1;
+                return AddPlayerToLobbyresponse.PLAYER_ADDED;
             }
         }
-        return -1;
+        return AddPlayerToLobbyresponse.PLAYER_NOT_CONNECTED;
     }
 
     /**

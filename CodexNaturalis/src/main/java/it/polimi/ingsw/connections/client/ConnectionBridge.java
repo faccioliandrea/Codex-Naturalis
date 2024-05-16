@@ -1,10 +1,15 @@
 package it.polimi.ingsw.connections.client;
 
 import it.polimi.ingsw.connections.data.*;
+import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
+import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
+import it.polimi.ingsw.connections.enums.LogInResponse;
+import it.polimi.ingsw.connections.server.RMIServerConnectionInterface;
 import it.polimi.ingsw.controller.client.ClientController;
 
 import java.awt.*;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,11 +18,13 @@ public class ConnectionBridge {
 
     private ServerConnection serverConnection;
 
+    private RMIClientConnectionInterface clientConnection;
+
     public ConnectionBridge(ClientController controller) {
         this.controller = controller;
     }
 
-    public String loginRequest() {
+    public void loginRequest() {
         String username = controller.loginRequest();
 
         if (serverConnection instanceof SocketServerConnection) {
@@ -27,10 +34,24 @@ public class ConnectionBridge {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return username;
         } else {
-            // TODO: handle RMI
-            return username;
+            rmiLoginRequest(username);
+        }
+    }
+
+    private void rmiLoginRequest(String username) {
+        try {
+            LogInResponse login = ((RMIServerConnectionInterface) serverConnection).loginRequest(username, clientConnection);
+            if(login.equals(LogInResponse.LOGGED_IN)) {
+                validUsername();
+            } else if (login.equals(LogInResponse.INVALID_USERNAME)) {
+                invalidUsername();
+            } else {
+                System.out.println(LogInResponse.RECONNECT);
+                //TODO: handle reconnect
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -52,7 +73,16 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                ArrayList<String> lobbies = ((RMIServerConnectionInterface) serverConnection).getLobby(controller.getUsername());
+                if(lobbies.isEmpty())
+                    lobbyDoesNotExists();
+                else
+                    lobbyExists(lobbies);
+
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -64,7 +94,20 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                AddPlayerToLobbyresponse result = ((RMIServerConnectionInterface) serverConnection).addPlayerToLobby(controller.getUsername(), lobbyId);
+                if(result.equals(AddPlayerToLobbyresponse.LOBBY_NOT_FOUND))
+                    lobbyDoesNotExists();
+                else if(result.equals(AddPlayerToLobbyresponse.PLAYER_ADDED))
+                    joinLobbySuccess(false);
+                else if(result.equals(AddPlayerToLobbyresponse.PlAYER_ADDED_LAST))
+                    joinLobbySuccess(true);
+                else
+                    lobbyFull();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+
         }
     }
 
@@ -96,7 +139,12 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                String lobbyid = ((RMIServerConnectionInterface) serverConnection).createLobbyAndJoin(controller.getUsername(), numPlayers);
+                joinLobbyRequest(lobbyid);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -128,7 +176,11 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                ((RMIServerConnectionInterface) serverConnection).createGame(controller.getUsername());
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
 
     }
@@ -141,7 +193,15 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                PlaceCardSuccessInfo cardSuccessInfo =  ((RMIServerConnectionInterface) serverConnection).placeCard(controller.getUsername(), card.getId(), card.getCoord(), card.isFlipped());
+                if(cardSuccessInfo != null)
+                    placeCardSuccess(cardSuccessInfo);
+                else
+                    placeCardFailure();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -161,7 +221,12 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                ArrayList<CardInfo> cardInfos =  ((RMIServerConnectionInterface) serverConnection).drawResource(controller.getUsername(), index);
+                controller.drawSuccess(cardInfos);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -173,7 +238,12 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                ArrayList<CardInfo> cardInfos =  ((RMIServerConnectionInterface) serverConnection).drawGold(controller.getUsername(), index);
+                controller.drawSuccess(cardInfos);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -189,7 +259,11 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                ((RMIServerConnectionInterface) serverConnection).endTurn(controller.getUsername());
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -205,7 +279,12 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try {
+                if(((RMIServerConnectionInterface) serverConnection).choosePrivateGoal(controller.getUsername(), index) == 1)
+                    privateGoalChosen();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -217,7 +296,13 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try{
+                ChooseStarterCardSideResponse result = ((RMIServerConnectionInterface) serverConnection).chooseStarterCardSide(controller.getUsername(), flipped);
+                if(result.equals(ChooseStarterCardSideResponse.WAIT_FOR_OTHER_PLAYER))
+                    WaitingOthersStartingChoiceMessage();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -243,9 +328,15 @@ public class ConnectionBridge {
         this.serverConnection = serverConnection;
     }
 
+
     public void lobbyIsReady() {
         controller.lobbyIsReady();
     }
+
+    public void setRmiClientConnectionInterface(RMIClientConnectionInterface client) {
+        this.clientConnection = client;
+    }
+
 
     public void playerDisconnected(String username, boolean gameStarted){
         controller.playerDisconnected(username, gameStarted);
