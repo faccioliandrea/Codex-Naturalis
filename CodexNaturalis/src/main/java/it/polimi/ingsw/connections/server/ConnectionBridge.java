@@ -54,7 +54,7 @@ public class ConnectionBridge {
             try {
                 connections.get(username).close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
             }
             connections.remove(username);
             controller.removeUser(username);
@@ -75,20 +75,20 @@ public class ConnectionBridge {
     public Object getLobbies(String username) {
         ArrayList<String> idList = controller.getLobbies(username);
 
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(username) instanceof SocketClientConnection) {
 
             if (!idList.isEmpty()) {
                 try {
                     ((SocketClientConnection) connections.get(username)).lobbyExists(idList);
 
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                 }
             } else {
                 try {
                     ((SocketClientConnection) connections.get(username)).lobbyDoesNotExist();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                 }
             }
             return null;
@@ -103,40 +103,40 @@ public class ConnectionBridge {
         if (connections.get(username) instanceof SocketClientConnection ) {
             switch (result) {
                 case 0:
-                    if(connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
-                        try {
-                            ((SocketClientConnection) connections.get(username)).lobbyDoesNotExist();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        break;
+                    try {
+                        ((SocketClientConnection) connections.get(username)).lobbyDoesNotExist();
+                    } catch (IOException e) {
+                        connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
+
                     }
+                    break;
+
                 case 1:
                     for (String u : controller.getUserToLobby().keySet()) {
-                        if (controller.getUserToLobby().get(u).equals(lobbyId) && u.equals(username) && connections.get(u).getStatus() == ConnectionStatus.ONLINE) {
+                        if (controller.getUserToLobby().get(u).equals(lobbyId) && u.equals(username) ) {
                             try {
                                 ((SocketClientConnection) connections.get(u)).joinLobbySuccess(controller.getLobbyController().getLobbies().get(lobbyId).isFull());
                             } catch (IOException e) {
-                                throw new RuntimeException(e);
+                                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                             }
-                        } else if (controller.getUserToLobby().get(u).equals(lobbyId) && !u.equals(username) && connections.get(u).getStatus() == ConnectionStatus.ONLINE) {
+                        } else if (controller.getUserToLobby().get(u).equals(lobbyId) && !u.equals(username)) {
                             try {
                                 ((SocketClientConnection) connections.get(u)).playerJoined(username);
                             } catch (IOException e) {
-                                throw new RuntimeException(e);
+                                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                             }
                         }
                     }
                     break;
                 case 2:
-                    if( connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
-                        try {
-                            ((SocketClientConnection) connections.get(username)).lobbyFull();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        break;
+
+                    try {
+                        ((SocketClientConnection) connections.get(username)).lobbyFull();
+                    } catch (IOException e) {
+                        connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                     }
+                    break;
+
             }
             return result;
         } else {
@@ -147,12 +147,12 @@ public class ConnectionBridge {
 
     public int choosePrivateGoal(String username, int index) {
         int result = controller.choosePrivateGoal(username, index);
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(username) instanceof SocketClientConnection) {
             if (result == 1) {
                 try {
                     ((SocketClientConnection) connections.get(username)).privateGoalChosen();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                 }
             }
             return result;
@@ -164,12 +164,12 @@ public class ConnectionBridge {
 
     public int chooseStarterCardSide(String username, boolean flipped) {
         int result = controller.chooseStarterCardSide(username, flipped);
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(username) instanceof SocketClientConnection ) {
             if (result == 0) {
                 try {
                     ((SocketClientConnection) connections.get(username)).waitingOthersStartingChoice();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                 }
             } else if (result==1){
                 String currentPlayer = controller.getGameController().getCurrentPlayer(controller.getUserToGame().get(username));
@@ -187,12 +187,12 @@ public class ConnectionBridge {
         try {
             PlaceCardSuccessInfo placeCardSuccessInfo = controller.placeCard(username, cardId, position, flipped);
 
-            if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
+            if (connections.get(username) instanceof SocketClientConnection ) {
                 if (placeCardSuccessInfo != null) {
                     try {
                         ((SocketClientConnection) connections.get(username)).placeCardSuccess(placeCardSuccessInfo);
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                     }
                 }
             } else {
@@ -201,11 +201,11 @@ public class ConnectionBridge {
             }
 
         } catch (RequirementsNotSatisfied | InvalidPositionException e) {
-            if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE){
+            if (connections.get(username) instanceof SocketClientConnection){
                 try {
                     ((SocketClientConnection) connections.get(username)).placeCardFailure();
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                 }
             } else {
                 return null;
@@ -217,12 +217,12 @@ public class ConnectionBridge {
 
     public ArrayList<CardInfo> drawResource(String username, int index) {
         ArrayList<CardInfo> result = controller.drawResource(username, index);
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(username) instanceof SocketClientConnection ) {
             if (result != null) {
                 try {
                     ((SocketClientConnection) connections.get(username)).drawSuccess(result);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                 }
             }
         } else {
@@ -234,12 +234,12 @@ public class ConnectionBridge {
 
     public ArrayList<CardInfo> drawGold(String username, int index) {
         ArrayList<CardInfo> result = controller.drawGold(username, index);
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(username) instanceof SocketClientConnection ) {
             if (result != null) {
                 try {
                     ((SocketClientConnection) connections.get(username)).drawSuccess(result);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
                 }
             }
         } else {
@@ -253,12 +253,12 @@ public class ConnectionBridge {
 
     public String createLobby(String username, int numPlayers) {
         String lobbyId = controller.createLobby(username, numPlayers);
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE){
+        if (connections.get(username) instanceof SocketClientConnection ){
             if (lobbyId!=null) {
                 addPlayerToLobby(username, lobbyId);
             }
         }
-             else {
+        else {
             // TODO: handle RMI
             return lobbyId;
         }
@@ -282,23 +282,23 @@ public class ConnectionBridge {
 
 
     public void initTurn(String username, TurnInfo turnInfo){
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
-                try {
-                    ((SocketClientConnection) connections.get(username)).initTurn(turnInfo);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        if (connections.get(username) instanceof SocketClientConnection ) {
+            try {
+                ((SocketClientConnection) connections.get(username)).initTurn(turnInfo);
+            } catch (IOException e) {
+                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
+            }
         } else {
             // TODO: handle RMI
         }
     }
 
     public void otherPlayerTurn(String username, String currentPlayer){
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(username) instanceof SocketClientConnection ) {
             try {
                 ((SocketClientConnection) connections.get(username)).otherPlayerTurnMessage(currentPlayer);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
             }
         } else {
             // TODO: handle RMI
@@ -306,11 +306,11 @@ public class ConnectionBridge {
     }
 
     public void endGame(String username, HashMap<String, Integer> leaderboard) {
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(username) instanceof SocketClientConnection ) {
             try {
                 ((SocketClientConnection) connections.get(username)).gameEnded(leaderboard);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
             }
         } else {
             // TODO: handle RMI
@@ -319,11 +319,11 @@ public class ConnectionBridge {
 
     public void gameCreated(String username, StarterData starterData) {
 
-        if ((connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE) ) {
+        if ((connections.get(username) instanceof SocketClientConnection) ) {
             try {
                 ((SocketClientConnection) connections.get(username)).gameStarted(starterData);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
             }
         } else {
             // TODO handle RMI
@@ -331,11 +331,11 @@ public class ConnectionBridge {
     }
 
     public void validUsername(ClientConnection connection) {
-        if (connection instanceof SocketClientConnection && connection.getStatus() == ConnectionStatus.ONLINE) {
+        if (connection instanceof SocketClientConnection ) {
             try {
                 ((SocketClientConnection) connection).validUsername();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connection.setStatus(ConnectionStatus.OFFLINE) ;
             }
         } else {
             // TODO handle RMI
@@ -343,11 +343,11 @@ public class ConnectionBridge {
     }
 
     public void invalidUsername(ClientConnection connection) {
-        if (connection instanceof SocketClientConnection && connection.getStatus() == ConnectionStatus.ONLINE) {
+        if (connection instanceof SocketClientConnection ) {
             try {
                 ((SocketClientConnection) connection).invalidUsername();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connection.setStatus(ConnectionStatus.OFFLINE) ;
             }
         } else {
             // TODO handle RMI
@@ -357,15 +357,15 @@ public class ConnectionBridge {
 
 
     public void gameState(String username, GameStateInfo gameStateInfo) {
-        if (connections.get(username) instanceof SocketClientConnection && connections.get(username).getStatus() == ConnectionStatus.ONLINE){
+        if (connections.get(username) instanceof SocketClientConnection ){
             try {
                 ((SocketClientConnection) connections.get(username)).sendStatus(gameStateInfo);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
             }
         } else {
 
-        //TODO handle RMI
+            //TODO handle RMI
         }
     }
 
@@ -379,11 +379,11 @@ public class ConnectionBridge {
     }
 
     public void playerDisconnected(String username, String receiver, boolean gameStarted){
-        if (connections.get(receiver) instanceof SocketClientConnection && connections.get(receiver).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(receiver) instanceof SocketClientConnection ) {
             try {
                 ((SocketClientConnection) connections.get(receiver)).playerDisconnected(username, gameStarted);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
             }
         } else {
 
@@ -392,11 +392,11 @@ public class ConnectionBridge {
     }
 
     public void playerReconnected(String username, String receiver) {
-        if (connections.get(receiver) instanceof SocketClientConnection && connections.get(receiver).getStatus() == ConnectionStatus.ONLINE) {
+        if (connections.get(receiver) instanceof SocketClientConnection ) {
             try {
                 ((SocketClientConnection) connections.get(receiver)).playerReconnected(username);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                connections.get(username).setStatus(ConnectionStatus.OFFLINE) ;
             }
         } else {
 
@@ -408,5 +408,4 @@ public class ConnectionBridge {
         return connections;
     }
 }
-
 

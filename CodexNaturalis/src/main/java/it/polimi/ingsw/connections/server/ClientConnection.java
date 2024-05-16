@@ -9,4 +9,5 @@ public interface ClientConnection {
     void close() throws IOException;
     String getRemoteAddr();
 
+    void setStatus(ConnectionStatus connectionStatus);
 }

@@ -54,6 +54,11 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         return this.remoteAddr.toString();
     }
 
+    @Override
+    public void setStatus(ConnectionStatus connectionStatus) {
+
+    }
+
     public InputStreamRunnable getInputStream() {
         return inputStream;
     }
