@@ -35,6 +35,7 @@ public abstract class UIManager {
     public abstract void joinedLobby(String username);
     public abstract void playerDisconnected(String username, boolean gameStarted);
     public abstract void playerReconnected(String username) ;
+    public abstract void reconnectionState() ;
     public abstract void joinedLobbyLast();
     public abstract void lobbyFull();
     public abstract void gameStarted(StarterData starterData);
@@ -97,5 +98,6 @@ public abstract class UIManager {
             .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
     }
+
 
 }

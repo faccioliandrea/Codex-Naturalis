@@ -183,4 +183,8 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     public void playerReconnected(String username) throws IOException {
         this.outputStream.sendMessage(new PlayerReconnectedMessage(username));
     }
+
+    public void reconnectionState(GameStateInfo gameStateInfo) throws IOException{
+        this.outputStream.sendMessage(new ReconnectionStateMessage(gameStateInfo));
+    }
 }

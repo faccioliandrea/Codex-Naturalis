@@ -311,6 +311,18 @@ public class TUI extends UIManager {
     }
 
     @Override
+    public void reconnectionState() {
+        printColorDebug(TUIColors.GREEN, String.format("Welcome back %s!", data.getUsername()));
+        this.printColorDebug(TUIColors.CYAN,"This is your board:");
+        this.displayBoard(data.getBoard(), data.getAvailablePositions(), data.getSymbols());
+        this.printColorDebug(TUIColors.CYAN, "Your current hand:");
+        data.getHand().forEach(x->this.printDebug(String.format("Card id: %s", x.getId())));
+        printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
+        otherPlayerTurn(data.getCurrentPlayer());
+
+    }
+
+    @Override
     public void joinedLobbyLast() {
         printDebug("You joined the lobby. The game will start soon!");
     }

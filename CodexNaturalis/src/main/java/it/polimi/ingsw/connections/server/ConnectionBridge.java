@@ -450,6 +450,20 @@ public class ConnectionBridge {
         }
     }
 
+    public void reconnectionState(GameStateInfo gameStateInfo){
+        if (connections.get(gameStateInfo.getUsername()) instanceof SocketClientConnection ) {
+            try {
+                ((SocketClientConnection) connections.get(gameStateInfo.getUsername())).reconnectionState(gameStateInfo);
+            } catch (IOException e) {
+                connectionsStatus.replace(connections.get(gameStateInfo.getUsername()), ConnectionStatus.OFFLINE);
+            }
+        } else {
+
+            //TODO handle RMI
+        }
+
+    }
+
     public HashMap<String, ClientConnection> getConnections() {
         return connections;
     }

@@ -187,6 +187,7 @@ public class UIData implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        this.username = ((ClientGameData)o).getUsername();
         this.currentPlayer = ((ClientGameData)o).getCurrentPlayer();
         this.lastPlayer = ((ClientGameData)o).getLastPlayer();
         this.hand = ((ClientGameData)o).getHand();

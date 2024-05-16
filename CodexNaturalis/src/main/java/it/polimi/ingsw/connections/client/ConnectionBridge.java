@@ -343,4 +343,8 @@ public class ConnectionBridge {
     }
 
     public void playerReconnected(String username) {controller.playerReconnected(username);}
+
+    public void reconnectionState(GameStateInfo gameStateInfo) {
+        controller.reconnectionState(gameStateInfo);
+    }
 }

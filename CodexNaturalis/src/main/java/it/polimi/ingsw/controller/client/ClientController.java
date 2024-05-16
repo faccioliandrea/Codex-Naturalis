@@ -180,7 +180,11 @@ public class ClientController {
     public void playerReconnected(String username) {
         this.gameData.replaceEntry(this.gameData.getConnectionStatus(), username, ConnectionStatus.ONLINE);
         ui.playerReconnected(username);
+    }
 
+    public void reconnectionState(GameStateInfo gameStateInfo) {
+        this.gameData.fromGameStateInfo(gameStateInfo);
+        ui.reconnectionState();
     }
 
     public String getUsername() {
@@ -194,5 +198,6 @@ public class ClientController {
     public TurnInfo getCurrentTurnInfo() {
         return currentTurnInfo;
     }
+
 
 }
