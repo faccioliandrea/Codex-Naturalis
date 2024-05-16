@@ -7,10 +7,10 @@ import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.view.data.UIData;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.OptionalInt;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public abstract class UIManager {
     protected UIData data = new UIData();
@@ -91,6 +91,11 @@ public abstract class UIManager {
         return this.data;
     }
 
-
+    protected LinkedHashMap<String, Integer> getSortedLeaderboard() {
+        return data.getLeaderboard().entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
+    }
 
 }

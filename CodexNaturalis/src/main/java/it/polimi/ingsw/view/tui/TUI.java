@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.tui;
 
 import it.polimi.ingsw.connections.data.*;
-import it.polimi.ingsw.controller.client.ClientController;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.view.UIManager;
 
@@ -9,7 +8,6 @@ import java.awt.*;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TUI extends UIManager {
@@ -401,14 +399,22 @@ public class TUI extends UIManager {
         printDebug("Covered: " + gameStateInfo.getGoldDeck().get(2).getColor());
         printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
         vRule();
-        printLeaderboard(gameStateInfo.getLeaderboard());
+        printLeaderboard(getSortedLeaderboard());
         vRule();
     }
 
     @Override
     public void gameEnded() {
         printDebug("Game ended!");
-        printLeaderboard(data.getLeaderboard());
+        String[] messages = {
+                "You won!",
+                "You won 2nd place!",
+                "You won 3rd place!",
+                "You arrived last, better luck next time!"
+        };
+        ArrayList<String> orderedUsernames = new ArrayList<>(getSortedLeaderboard().keySet());
+        printColorDebug(TUIColors.YELLOW, messages[orderedUsernames.indexOf(data.getUsername())]);
+        printLeaderboard(getSortedLeaderboard());
     }
 
     @Override
@@ -416,7 +422,6 @@ public class TUI extends UIManager {
         printColorDebug(TUIColors.BLUE, "See you next time!");
     }
 
-    // TODO: print symbols hashmap
     public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {
         boolean padding = availablePos != null && !availablePos.isEmpty();
 
@@ -426,11 +431,8 @@ public class TUI extends UIManager {
         for (CardInfo card: board) {
             Point matrCoord = toMatrixCoord(card.getCoord(), padding);
 
-            try {
-                grid[matrCoord.y][matrCoord.x] = String.format("%s %s %s", CardColors.valueOf(card.getColor()), card.getId(), TUIColors.reset());
-            } catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();
-            }
+            grid[matrCoord.y][matrCoord.x] = String.format("%s %s %s", CardColors.valueOf(card.getColor()), card.getId(), TUIColors.reset());
+
         }
 
         if (availablePos != null) {
@@ -521,7 +523,7 @@ public class TUI extends UIManager {
 
     protected void printLeaderboard() {
         try {
-            printLeaderboard(data.getLeaderboard());
+            printLeaderboard(getSortedLeaderboard());
         } catch (NullPointerException e) {
             this.printColorDebug(TUIColors.RED, "Leaderboard not available, wait for the game to start");
         }
@@ -534,13 +536,7 @@ public class TUI extends UIManager {
         }
         printColorDebug(TUIColors.BLUE, "Leaderboard:");
         int pos = 1;
-        for (Map.Entry<String, Integer> e:
-                leaderboard.entrySet()
-                        .stream()
-                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new)) // LinkedHashMap needed to keep the order
-                        .entrySet()
-        ) {
+        for (Map.Entry<String, Integer> e: leaderboard.entrySet()) {
             int points = e.getValue();
             this.printDebug(String.format("\t%d^  %s - %d %s", pos, e.getKey(), points, points == 1 ? "point" : "points"));
             pos++;
