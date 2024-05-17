@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Label?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" >
+    <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label text="Resource deck" />
+        <HBox alignment="CENTER" fx:id="resourceHBox" spacing="20" />
+        <Label text="Gold deck" />
+        <HBox alignment="CENTER" fx:id="goldHBox" spacing="20" />
+    </VBox>
+
+</AnchorPane>

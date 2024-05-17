@@ -2,10 +2,11 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.connections.client.RMIClientConnection;
 import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
-import it.polimi.ingsw.connections.client.ServerConnection;
 import it.polimi.ingsw.connections.server.RMIServerConnectionInterface;
 import it.polimi.ingsw.controller.client.ClientController;
 import it.polimi.ingsw.connections.client.SocketServerConnection;
+import it.polimi.ingsw.view.UIManager;
+import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.tui.TUI;
 
 import java.io.IOException;
@@ -67,14 +68,18 @@ public class Client {
         } while(!(choice == 1 || choice == 2));
         chosenConnection = (choice == 1) ? "Socket" : "RMI";
 
-        TUI ui = new TUI();
+        UIManager ui;
+        if (chosenMode.equals("GUI")){
+            ui = new GUI();
+        } else {
+            ui = new TUI();
+        }
 
         ClientController matchController;
         matchController = new ClientController(ui);
 
         if(chosenConnection.equals("Socket")) {
             address = ui.askForServerAddr(DEFAULT_ADDRESS);
-
             Socket socket = null;
             boolean connected = false;
             while (!connected) {
@@ -86,7 +91,7 @@ public class Client {
                     new Thread(conn).start();
                     matchController.getConnectionBridge().loginRequest();
                 } catch (IOException  e) {
-                    ui.printDebug("Could not connect to the server. Retrying...");
+                    ui.showErrorMessage("Could not connect to the server. Retrying...");
                 }
             }
         } else {

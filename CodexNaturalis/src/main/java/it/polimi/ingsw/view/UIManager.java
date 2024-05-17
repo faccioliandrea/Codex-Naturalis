@@ -48,6 +48,7 @@ public abstract class UIManager {
     public abstract void turnEnded(GameStateInfo gameStateInfo);
     public abstract void gameEnded();
     public abstract void goodbye();
+    public abstract void showErrorMessage(String message);
 
 
 
