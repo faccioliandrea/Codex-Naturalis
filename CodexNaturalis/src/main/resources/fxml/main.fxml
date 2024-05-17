@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:id="mainAnchorPane">
+    <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Group fx:id="boardGroup">
+        </Group>
+        <HBox alignment="CENTER" fx:id="handHBox" spacing="20" AnchorPane.bottomAnchor="0.0">
+            <VBox.margin>
+                <Insets bottom="20.0" top="-20.0"/>
+            </VBox.margin>
+            <effect>
+                <DropShadow/>
+            </effect>
+        </HBox>
+    </VBox>
+    <VBox fx:id="goalsVBox" alignment="TOP_CENTER" spacing="20" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0"/>
+</AnchorPane>

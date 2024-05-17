@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.stage.Screen?>
+
+<fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.GridPane">
+   <fx:define>
+      <Screen fx:factory="getPrimary" fx:id="screen" />
+   </fx:define>
+   <GridPane alignment="CENTER" fx:id="boardGridPane" >
+   </GridPane>
+</fx:root>

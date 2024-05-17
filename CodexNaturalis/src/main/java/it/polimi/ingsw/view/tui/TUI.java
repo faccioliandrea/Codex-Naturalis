@@ -434,6 +434,11 @@ public class TUI extends UIManager {
         printColorDebug(TUIColors.BLUE, "See you next time!");
     }
 
+    @Override
+    public void showErrorMessage(String message) {
+        printColorDebug(TUIColors.RED, message);
+    }
+
     public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {
         boolean padding = availablePos != null && !availablePos.isEmpty();
 
