@@ -105,6 +105,7 @@ public class ConnectionBridge {
                     ((SocketClientConnection) connections.get(username)).lobbyExists(idList);
 
                 } catch (IOException e) {
+
                     connectionsStatus.replace(connections.get(username), ConnectionStatus.OFFLINE);
                 }
             } else {
@@ -119,6 +120,8 @@ public class ConnectionBridge {
             return idList;
         }
     }
+
+    // TODO: return the lobbyId
 
     public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) {
         AddPlayerToLobbyresponse result = controller.addPlayerToLobby(username, lobbyId);
@@ -415,6 +418,7 @@ public class ConnectionBridge {
 
     // TODO
     public void onClientDisconnect(ClientConnection c){
+        connectionsStatus.replace(c, ConnectionStatus.OFFLINE);
         try {
             System.out.println(String.format("Client %s disconnected", c.getRemoteAddr()));
         } catch (IOException e) {

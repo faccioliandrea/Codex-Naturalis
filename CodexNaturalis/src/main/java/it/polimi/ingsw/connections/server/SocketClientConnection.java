@@ -93,7 +93,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
             inputStream.close();
             outputStream.close();
             clientSocket.close();
-            this.connectionStatus = ConnectionStatus.CLOSED;
+            this.connectionStatus = ConnectionStatus.OFFLINE;
         }
     }
 

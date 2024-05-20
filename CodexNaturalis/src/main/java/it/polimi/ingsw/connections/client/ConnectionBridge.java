@@ -308,12 +308,10 @@ public class ConnectionBridge {
 
     public void WaitingOthersStartingChoiceMessage() {
         controller.waitingOthersStartingChoice();
-
     }
 
     public void OtherPlayerTurnMessage(String currentPlayer) {
         controller.otherPlayerTurnMessage(currentPlayer);
-
     }
 
     public void privateGoalChosen(){
@@ -326,11 +324,6 @@ public class ConnectionBridge {
 
     public void setServerConnection(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
-    }
-
-
-    public void lobbyIsReady() {
-        controller.lobbyIsReady();
     }
 
     public void setRmiClientConnectionInterface(RMIClientConnectionInterface client) {

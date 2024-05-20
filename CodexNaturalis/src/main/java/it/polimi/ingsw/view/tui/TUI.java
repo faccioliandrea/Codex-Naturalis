@@ -84,16 +84,16 @@ public class TUI extends UIManager {
         String lobbyId;
         do {
             inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Type the lobby id you want to join: ");
+            this.printColorDebug(TUIColors.PURPLE, "Type the lobby id you want to join (leave blank to create a new lobby):");
             try {
                 lobbyId =  inputQueue.take();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            if (!lobbies.contains(lobbyId)) {
+            if (!lobbies.contains(lobbyId) && !lobbyId.isEmpty()) {
                 System.out.println("Please, type a valid lobby id");
             }
-        } while(!lobbies.contains(lobbyId));
+        } while(!lobbies.contains(lobbyId) && !lobbyId.isEmpty());
         return lobbyId;
     }
 

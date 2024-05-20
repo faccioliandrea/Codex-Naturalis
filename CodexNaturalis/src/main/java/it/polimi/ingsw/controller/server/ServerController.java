@@ -17,6 +17,7 @@ import it.polimi.ingsw.model.player.Player;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -83,7 +84,6 @@ public class ServerController {
 
     /**
      * Initialize the turn of the player and send the status to the client
-     *
      * @param user the username of the player
      */
     public void initTurn(String user){
@@ -109,11 +109,7 @@ public class ServerController {
                 gameController.getGames().get(userToGame.get(user)).getGameModel().setTotalTurns(gameController.getGames().get(userToGame.get(user)).getGameModel().getTotalTurns()-1);
                 initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
             }
-
-
         }
-
-
     }
 
     public void initTurnAck(String user){
@@ -131,7 +127,11 @@ public class ServerController {
 
     }
 
-
+    /**
+     * Handle the choice of the starter card side
+     * @param username the username of the player
+     * @param flipped side of the starter card
+     */
     public ChooseStarterCardSideResponse chooseStarterCardSide(String username, boolean flipped) {
         gameController.chooseStarterCardSide(userToGame.get(username), username, flipped);
         if(gameController.getGames().get(userToGame.get(username)).getPlayers().stream().anyMatch(x->x.getBoard().getPlayedCards().isEmpty())){
@@ -170,6 +170,8 @@ public class ServerController {
      * @param index the index of the resource to draw
      */
     public ArrayList<CardInfo> drawResource(String user, int index){
+
+        //TODO check if deck is empty
         if(checkUserCurrentPlayer(user)) {
             gameController.drawResource(userToGame.get(user), index);
             return gameController.getHand(userToGame.get(user), user);
@@ -183,6 +185,7 @@ public class ServerController {
      * @param index the index of the gold to draw
      */
     public ArrayList<CardInfo> drawGold(String user, int index){
+        //TODO check if deck is empty
         if(checkUserCurrentPlayer(user)) {
             gameController.drawGold(userToGame.get(user), index);
             return gameController.getHand(userToGame.get(user), user);
@@ -224,16 +227,11 @@ public class ServerController {
                         gameController.getUserGoalsPointsByUsername(userToGame.get(user), player.getUsername()),
                         gameController.isGameFinished(userToGame.get(user))
                 );
-                if (!player.getUsername().equals(user)) {
-                    connectionBridge.gameState(player.getUsername(), gameState);
-                }
+
+                connectionBridge.gameState(player.getUsername(), gameState);
+
             }
 
-            /*for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
-                if (!username.getUsername().equals(user)) {
-                    connectionBridge.gameState(username.getUsername(), gameState);
-                }
-            }*/
             if (gameController.isGameFinished(userToGame.get(user)))
                 endGame(userToGame.get(user));
             else {
@@ -259,6 +257,13 @@ public class ServerController {
                 //connectionBridge.endGame(username, leaderboard);
             }
         }
+        destroyGame(gameId);
+    }
+
+    private void destroyGame(String gameId){
+        List<String> names = userToGame.keySet().stream().filter(username -> userToGame.get(username).equals(gameId)).collect(Collectors.toList());
+        names.forEach(username -> userToGame.remove(username));
+        gameController.getGames().remove(gameId);
     }
 
 
@@ -278,6 +283,10 @@ public class ServerController {
     }
 
 
+    /**
+     * Handle player disconnection
+     * @param username the username of the player
+     */
     public void playerDisconnected(String username){
         if(userToGame.containsKey(username)) {
             for (String u : userToGame.keySet()) {
@@ -308,7 +317,10 @@ public class ServerController {
         }
     }
 
-
+    /**
+     * Handle player reconnection
+     * @param username the username of the player
+     */
     public void playerReconnected(String username){
         if(userToGame.containsKey(username)) {
             for (String u : userToGame.keySet()) {
@@ -373,7 +385,9 @@ public class ServerController {
     }
 
     /**
-     * send the lobbies to the client
+     * Get the lobbies available
+     * @param username the username of the player
+     * @return the list of lobbies available
      */
     public ArrayList<String> getLobbies(String username) {
         if (connectionBridge.checkUserConnected(username)){
@@ -397,26 +411,50 @@ public class ServerController {
         return username.equals(gameController.getCurrentPlayer(userToGame.get(username)));
     }
 
+    /**
+     * Getter for the user to lobby map
+     * @return the user to lobby map
+     */
     public HashMap<String, String> getUserToLobby() {
         return userToLobby;
     }
 
+    /**
+     * Getter for the user to game map
+     * @return the user to game map
+     */
     public HashMap<String, String> getUserToGame() {
         return userToGame;
     }
 
+    /**
+     * Getter for the connection bridge
+     * @return the connection bridge
+     */
     public ConnectionBridge getConnectionBridge() {
         return connectionBridge;
     }
 
+    /**
+     * Remove a user from the lobby
+     * @param username the username of the player
+     */
     public void removeUser(String username){
         userToLobby.remove(username);
     }
 
+    /**
+     * Getter for the game controller
+     * @return the game controller
+     */
     public GameController getGameController() {
         return gameController;
     }
 
+    /**
+     * Getter for the lobby controller
+     * @return the lobby controller
+     */
     public LobbyController getLobbyController() {
         return lobbyController;
     }

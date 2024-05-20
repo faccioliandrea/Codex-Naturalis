@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 public class GameController {
-    private ArrayList<String> users;
+    //private ArrayList<String> users;
     private HashMap<String, Game> games;
 
     public GameController(){
-        users = new ArrayList<>();
+        //users = new ArrayList<>();
         games = new HashMap<>();
     }
 
@@ -36,14 +36,14 @@ public class GameController {
     }
 
 
-    private void addPlayer(String user){
+   /* private void addPlayer(String user){
         if(!users.contains(user))
             users.add(user);
-    }
+    }*/
 
     protected void createGame(String gameId, ArrayList<String> users) throws DeckInitializationException, InvalidNumberOfPlayersException {
-        for(String user : users)
-            addPlayer(user);
+        //for(String user : users)
+        //    addPlayer(user);
         games.put(gameId, new Game(gameId, users));
     }
 

@@ -13,12 +13,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClientController {
-
     private UIManager ui;
-
     private String username;
     private ConnectionBridge connectionBridge;
-
     private TurnInfo currentTurnInfo = new TurnInfo();
     private final ClientGameData gameData = new ClientGameData();
 
@@ -48,7 +45,6 @@ public class ClientController {
         connectionBridge.lobbyRequest();
     }
 
-
     public void lobbyDoesNotExist() {
         ui.noLobbies();
         int n = ui.askForPlayerNum();
@@ -57,9 +53,13 @@ public class ClientController {
 
     public void lobbyExists(ArrayList<String> lobbies) {
         String id = ui.askForLobbyId(lobbies);
-        connectionBridge.joinLobbyRequest(id);
+        if(id.isEmpty()) {
+            // TODO: handle in GUI
+            int n = ui.askForPlayerNum();
+            connectionBridge.createLobbyRequest(n);
+        } else
+            connectionBridge.joinLobbyRequest(id);
     }
-
 
     public void joinLobbySuccess(boolean isLastPlayer) {
 
@@ -71,6 +71,7 @@ public class ClientController {
             ui.joinedLobby();
         }
     }
+
     public void lobbyFull(){
         ui.lobbyFull();
     }
@@ -78,10 +79,6 @@ public class ClientController {
     public void playerJoinedLobby(String username) {
         gameData.putEntry(gameData.getConnectionStatus(), username, ConnectionStatus.ONLINE);
         ui.joinedLobby(username);
-    }
-
-    public void lobbyIsReady() {
-
     }
 
     public void gameStarted(StarterData starterData){
@@ -156,8 +153,9 @@ public class ClientController {
         this.gameData.fromGameStateInfo(gameStateInfo);
         //this.gameData.setLeaderboard(gameStateInfo.getLeaderboard());
         //this.gameData.putEntry(this.gameData.getBoards(), gameStateInfo.getUsername(), gameStateInfo.getBoard());
-
-        ui.turnEnded(gameStateInfo);
+        if(!username.equals(gameStateInfo.getLastPlayer())){
+            ui.turnEnded(gameStateInfo);
+        }
     }
 
     public void gameEnd(HashMap<String, Integer> leaderboard){
