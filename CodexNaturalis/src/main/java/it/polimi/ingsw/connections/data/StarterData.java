@@ -1,7 +1,10 @@
 package it.polimi.ingsw.connections.data;
 
+import it.polimi.ingsw.model.enumeration.PlayerColor;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class StarterData implements Serializable {
 
@@ -10,13 +13,15 @@ public class StarterData implements Serializable {
     private ArrayList<GoalInfo> sharedGoals;
     private CardInfo starterCard;
     private ArrayList<String> users;
+    private Map<String, PlayerColor> playerColors;
 
-    public StarterData(ArrayList<CardInfo> hand, ArrayList<GoalInfo> privateGoals, ArrayList<GoalInfo> sharedGoals, CardInfo starterCard, ArrayList<String> users) {
+    public StarterData(ArrayList<CardInfo> hand, ArrayList<GoalInfo> privateGoals, ArrayList<GoalInfo> sharedGoals, CardInfo starterCard, ArrayList<String> users, Map<String, PlayerColor> playerColors) {
         this.hand = hand;
         this.privateGoals = privateGoals;
         this.sharedGoals = sharedGoals;
         this.starterCard = starterCard;
         this.users = users;
+        this.playerColors = playerColors;
     }
 
     public ArrayList<CardInfo> getHand() {
@@ -37,5 +42,9 @@ public class StarterData implements Serializable {
 
     public ArrayList<String> getUsers() {
         return users;
+    }
+
+    public Map<String, PlayerColor> getPlayerColors() {
+        return playerColors;
     }
 }

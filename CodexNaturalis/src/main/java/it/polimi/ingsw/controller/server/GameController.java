@@ -128,6 +128,10 @@ public class GameController {
         return privateGoals;
     }
 
+    protected GoalInfo getPrivateGoal(String gameId, String username) {
+        return new GoalInfo(games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getPrivateGoal());
+    }
+
     /**
      * @param gameId the id of the game
      * @return the shared goals of the game

@@ -52,7 +52,7 @@ public abstract class UIManager {
 
 
 
-    protected boolean isValidIP(String ipAddr, String defaultAddr) {
+    public static boolean isValidIP(String ipAddr, String defaultAddr) {
         Pattern ip_addr_pattern = Pattern.compile(String.format("(^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\.(?!$)|$)){4}$)|(%s)", defaultAddr), Pattern.CASE_INSENSITIVE);
         Matcher matcher = ip_addr_pattern.matcher(ipAddr);
         return matcher.matches() || ipAddr.isEmpty();
@@ -92,13 +92,5 @@ public abstract class UIManager {
     public UIData getData() {
         return this.data;
     }
-
-    protected LinkedHashMap<String, Integer> getSortedLeaderboard() {
-        return data.getLeaderboard().entrySet()
-            .stream()
-            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
-    }
-
 
 }
