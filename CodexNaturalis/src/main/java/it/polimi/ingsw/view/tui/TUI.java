@@ -411,7 +411,7 @@ public class TUI extends UIManager {
         printDebug("Covered: " + gameStateInfo.getGoldDeck().get(2).getColor());
         printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
         vRule();
-        printLeaderboard(getSortedLeaderboard());
+        printLeaderboard(data.getSortedLeaderboard());
         vRule();
     }
 
@@ -424,9 +424,9 @@ public class TUI extends UIManager {
                 "You won 3rd place!",
                 "You arrived last, better luck next time!"
         };
-        ArrayList<String> orderedUsernames = new ArrayList<>(getSortedLeaderboard().keySet());
+        ArrayList<String> orderedUsernames = new ArrayList<>(data.getSortedLeaderboard().keySet());
         printColorDebug(TUIColors.YELLOW, messages[orderedUsernames.indexOf(data.getUsername())]);
-        printLeaderboard(getSortedLeaderboard());
+        printLeaderboard(data.getSortedLeaderboard());
     }
 
     @Override
@@ -540,7 +540,7 @@ public class TUI extends UIManager {
 
     protected void printLeaderboard() {
         try {
-            printLeaderboard(getSortedLeaderboard());
+            printLeaderboard(data.getSortedLeaderboard());
         } catch (NullPointerException e) {
             this.printColorDebug(TUIColors.RED, "Leaderboard not available, wait for the game to start");
         }
@@ -555,7 +555,7 @@ public class TUI extends UIManager {
         int pos = 1;
         for (Map.Entry<String, Integer> e: leaderboard.entrySet()) {
             int points = e.getValue();
-            this.printDebug(String.format("\t%d^  %s - %d %s", pos, e.getKey(), points, points == 1 ? "point" : "points"));
+            this.printDebug(String.format("\t%d^  %s%s%s - %d %s", pos, TUIColors.valueOf(data.getPlayerColors().get(e.getKey()).toString()), e.getKey(), TUIColors.reset(), points, points == 1 ? "point" : "points"));
             pos++;
         }
     }

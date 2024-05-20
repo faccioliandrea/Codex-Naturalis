@@ -7,6 +7,7 @@ import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
+import it.polimi.ingsw.model.enumeration.PlayerColor;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.exceptions.InvalidNumberOfPlayersException;
 import it.polimi.ingsw.model.exceptions.InvalidPositionException;
@@ -14,12 +15,12 @@ import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
 import it.polimi.ingsw.model.player.Player;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Class that manages the server
@@ -65,8 +66,9 @@ public class ServerController {
                 ArrayList<CardInfo> hand = gameController.getHand(gameId, username);
                 ArrayList<GoalInfo> privateGoals = gameController.getPrivateGoals(gameId, username);
                 ArrayList<GoalInfo> sharedGoals = gameController.getSharedGoals(gameId);
+                Map<String, PlayerColor> playerColors = gameController.getGamePlayers(gameId).stream().collect(Collectors.toMap(Player::getUsername, Player::getPlayerColor, (x, y) -> x, HashMap::new));
                 CardInfo starterCard = gameController.getStarterCard(gameId, username);
-                executorService.submit(() -> connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, users)));
+                executorService.submit(() -> connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, users, playerColors)));
             }
 
 
@@ -216,7 +218,8 @@ public class ServerController {
                         leaderboard,
                         gameController.getBoards(userToGame.get(user)),
                         connectionStatus,
-                        gameController.getPrivateGoals(userToGame.get(user), player.getUsername()),
+                        gameController.getSharedGoals(userToGame.get(user)),
+                        gameController.getPrivateGoal(userToGame.get(user), player.getUsername()),
                         gameController.getUserCardsPointsByUsername(userToGame.get(user), player.getUsername()),
                         gameController.getUserGoalsPointsByUsername(userToGame.get(user), player.getUsername()),
                         gameController.isGameFinished(userToGame.get(user))
@@ -334,7 +337,8 @@ public class ServerController {
                             leaderboard,
                             gameController.getBoards(userToGame.get(username)),
                             connectionStatus,
-                            gameController.getPrivateGoals(userToGame.get(username), username),
+                            gameController.getSharedGoals(userToGame.get(username)),
+                            gameController.getPrivateGoals(userToGame.get(username), username).get(0),
                             gameController.getUserCardsPointsByUsername(userToGame.get(username), username),
                             gameController.getUserGoalsPointsByUsername(userToGame.get(username), username),
                             gameController.isGameFinished(userToGame.get(username))

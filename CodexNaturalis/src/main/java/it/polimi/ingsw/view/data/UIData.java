@@ -6,10 +6,11 @@ import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.controller.client.ClientGameData;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
-import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
+import it.polimi.ingsw.model.enumeration.PlayerColor;
 
 import java.awt.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UIData implements Observer {
     private String username;
@@ -30,6 +31,7 @@ public class UIData implements Observer {
     private int cardPoints = 0;
     private int goalPoints = 0;
     private boolean gameAborted = false;
+    private Map<String, PlayerColor> playerColors;
 
 
     public String getUsername() {
@@ -184,6 +186,13 @@ public class UIData implements Observer {
         this.lastPlayer = lastPlayer;
     }
 
+    public Map<String, PlayerColor> getPlayerColors() {
+        return playerColors;
+    }
+
+    public void setPlayerColors(HashMap<String, PlayerColor> playerColors) {
+        this.playerColors = playerColors;
+    }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -205,5 +214,13 @@ public class UIData implements Observer {
         this.symbols = ((ClientGameData)o).getSymbols();
         this.leaderboard = ((ClientGameData)o).getLeaderboard();
         this.gameAborted = ((ClientGameData)o).isGameAborted();
+        this.playerColors = ((ClientGameData)o).getPlayerColors();
+    }
+
+    public LinkedHashMap<String, Integer> getSortedLeaderboard() {
+        return this.getLeaderboard().entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
     }
 }

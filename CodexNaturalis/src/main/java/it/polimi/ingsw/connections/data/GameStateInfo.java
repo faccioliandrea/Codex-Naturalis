@@ -11,27 +11,6 @@ import java.util.Map;
 
 public class GameStateInfo implements Serializable {
 
-    public GameStateInfo(String username, String currentPlayer, String lastPlayer, ArrayList<CardInfo> hand, ArrayList<CardInfo> resourceDeck, ArrayList<CardInfo> goldDeck, ArrayList<Point> availablePositions, int currentTurn, boolean isLastTurn, ArrayList<CardInfo> board, Map<CardSymbol, Integer> symbols, Map<String, Integer> leaderboard, Map<String, ArrayList<CardInfo>> boards, Map<String, ConnectionStatus> connectionStatus, ArrayList<GoalInfo> goals, int cardPoints, int goalPoints, boolean gameAborted) {
-        this.username = username;
-        this.currentPlayer = currentPlayer;
-        this.lastPlayer = lastPlayer;
-        this.hand = hand;
-        this.resourceDeck = resourceDeck;
-        this.goldDeck = goldDeck;
-        this.availablePositions = availablePositions;
-        this.currentTurn = currentTurn;
-        this.isLastTurn = isLastTurn;
-        this.board = board;
-        this.symbols = symbols;
-        this.leaderboard = leaderboard;
-        this.boards = boards;
-        this.connectionStatus = connectionStatus;
-        this.goals = goals;
-        this.cardPoints = cardPoints;
-        this.goalPoints = goalPoints;
-        this.gameAborted = gameAborted;
-    }
-
     private String username;
     private String currentPlayer;
     private String lastPlayer;
@@ -50,6 +29,48 @@ public class GameStateInfo implements Serializable {
     private int cardPoints = 0;
     private int goalPoints = 0;
     private boolean gameAborted = false;
+
+    public GameStateInfo(
+            String username,
+            String currentPlayer,
+            String lastPlayer,
+            ArrayList<CardInfo> hand,
+            ArrayList<CardInfo> resourceDeck,
+            ArrayList<CardInfo> goldDeck,
+            ArrayList<Point> availablePositions,
+            int currentTurn,
+            boolean isLastTurn,
+            ArrayList<CardInfo> board,
+            Map<CardSymbol, Integer> symbols,
+            Map<String, Integer> leaderboard,
+            Map<String, ArrayList<CardInfo>> boards,
+            Map<String, ConnectionStatus> connectionStatus,
+            ArrayList<GoalInfo> sharedGoals,
+            GoalInfo privateGoal,
+            int cardPoints,
+            int goalPoints,
+            boolean gameAborted
+    ) {
+        this.username = username;
+        this.currentPlayer = currentPlayer;
+        this.lastPlayer = lastPlayer;
+        this.hand = hand;
+        this.resourceDeck = resourceDeck;
+        this.goldDeck = goldDeck;
+        this.availablePositions = availablePositions;
+        this.currentTurn = currentTurn;
+        this.isLastTurn = isLastTurn;
+        this.board = board;
+        this.symbols = symbols;
+        this.leaderboard = leaderboard;
+        this.boards = boards;
+        this.connectionStatus = connectionStatus;
+        this.goals = sharedGoals;
+        this.goals.add(privateGoal);
+        this.cardPoints = cardPoints;
+        this.goalPoints = goalPoints;
+        this.gameAborted = gameAborted;
+    }
 
 
 

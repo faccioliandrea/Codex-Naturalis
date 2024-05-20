@@ -8,6 +8,7 @@ import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
+import it.polimi.ingsw.model.enumeration.PlayerColor;
 
 import java.awt.*;
 import java.util.*;
@@ -32,6 +33,7 @@ public class ClientGameData extends Observable {
     private int goalPoints = 0;
     private Map<CardSymbol, Integer> symbols;
     private boolean gameAborted = false;
+    private Map<String, PlayerColor> playerColors;
 
 
     public String getUsername() {
@@ -198,6 +200,8 @@ public class ClientGameData extends Observable {
 
     public void setConnectionStatus(Map<String, ConnectionStatus> connectionStatus) {
         this.connectionStatus = connectionStatus;
+        setChanged();
+        notifyObservers();
     }
 
     public boolean isGameAborted() {
@@ -206,6 +210,8 @@ public class ClientGameData extends Observable {
 
     public void setGameAborted(boolean gameAborted) {
         this.gameAborted = gameAborted;
+        setChanged();
+        notifyObservers();
     }
 
     public String getCurrentPlayer() {
@@ -214,6 +220,8 @@ public class ClientGameData extends Observable {
 
     public void setCurrentPlayer(String currentPlayer) {
         this.currentPlayer = currentPlayer;
+        setChanged();
+        notifyObservers();
     }
 
     public String getLastPlayer() {
@@ -222,6 +230,24 @@ public class ClientGameData extends Observable {
 
     public void setLastPlayer(String lastPlayer) {
         this.lastPlayer = lastPlayer;
+        setChanged();
+        notifyObservers();
+    }
+
+    public void setBoards(Map<String, ArrayList<CardInfo>> boards) {
+        this.boards = boards;
+        setChanged();
+        notifyObservers();
+    }
+
+    public Map<String, PlayerColor> getPlayerColors() {
+        return playerColors;
+    }
+
+    public void setPlayerColors(Map<String, PlayerColor> playerColors) {
+        this.playerColors = playerColors;
+        setChanged();
+        notifyObservers();
     }
 
     public void fromTurnInfo(TurnInfo turnInfo) {
