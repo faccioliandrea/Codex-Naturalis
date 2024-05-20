@@ -99,6 +99,32 @@ public class ServerController {
                 ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
                 TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, (HashMap<CardSymbol, Integer>) symbols, isLastTurn, board);
                 for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
+                    if(gameController.getCurrentTurn(userToGame.get(user))==0){
+                        Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
+                        connectionStatus.put(username.getUsername(), connectionBridge.getConnectionsStatus().get(connectionBridge.getConnections().get(username.getUsername())));
+                        connectionBridge.gameState(username.getUsername(), new GameStateInfo(
+                                username.getUsername(),
+                                gameController.getCurrentPlayer(userToGame.get(user)),
+                                user,
+                                gameController.getGamePlayers(userToGame.get(user)).stream().collect(Collectors.toMap(Player::getUsername, Player::getPlayerColor, (x, y) -> x, HashMap::new)),
+                                gameController.getHand(userToGame.get(username.getUsername()), username.getUsername()),
+                                rd,
+                                gd,
+                                gameController.getAvailablePositions(userToGame.get(user), username.getUsername()),
+                                gameController.getCurrentTurn(userToGame.get(user)),
+                                gameController.isLast(userToGame.get(user)),
+                                gameController.getUserBoardByUsername(userToGame.get(user), username.getUsername()),
+                                gameController.getUserSymbolsByUsername(userToGame.get(user), username.getUsername()),
+                                gameController.getLeaderboard(userToGame.get(user)),
+                                gameController.getBoards(userToGame.get(user)),
+                                connectionStatus,
+                                gameController.getSharedGoals(userToGame.get(user)),
+                                gameController.getPrivateGoal(userToGame.get(user), username.getUsername()),
+                                gameController.getUserCardsPointsByUsername(userToGame.get(user), username.getUsername()),
+                                gameController.getUserGoalsPointsByUsername(userToGame.get(user), username.getUsername()),
+                                gameController.isGameFinished(userToGame.get(user))
+                        ));
+                    }
                     if (!username.getUsername().equals(user)) {
                         connectionBridge.otherPlayerTurn(username.getUsername(), user);
                     }

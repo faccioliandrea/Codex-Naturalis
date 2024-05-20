@@ -5,6 +5,7 @@ import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.view.UIManager;
+import it.polimi.ingsw.view.tui.TUIColors;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -132,14 +133,15 @@ public class ClientController {
         this.gameData.setAvailablePositions(placeCardSuccessInfo.getAvailable());
         this.gameData.setSymbols(placeCardSuccessInfo.getSymbols());
         ui.placeCardSuccess();
-
-        int choice = ui.askForDrawCard(currentTurnInfo);
-        if(choice!=-1){
+        if(!gameData.getResourceDeck().isEmpty() && !gameData.getGoldDeck().isEmpty()){
+            int choice = ui.askForDrawCard(currentTurnInfo);
             if(choice / 10 == 1){
                 connectionBridge.drawResourceRequest(choice%10);
             } else {
                 connectionBridge.drawGoldRequest(choice%10);
             }
+        } else {
+            connectionBridge.endTurn();
         }
     }
 
@@ -160,7 +162,7 @@ public class ClientController {
         this.gameData.fromGameStateInfo(gameStateInfo);
         //this.gameData.setLeaderboard(gameStateInfo.getLeaderboard());
         //this.gameData.putEntry(this.gameData.getBoards(), gameStateInfo.getUsername(), gameStateInfo.getBoard());
-        if(!username.equals(gameStateInfo.getLastPlayer())){
+        if(!username.equals(gameStateInfo.getLastPlayer()) && gameStateInfo.getCurrentTurn()!=0){
             ui.turnEnded(gameStateInfo);
         }
     }

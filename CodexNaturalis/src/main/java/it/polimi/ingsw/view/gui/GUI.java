@@ -199,9 +199,10 @@ public class GUI extends UIManager {
     @Override
     public void otherPlayerTurn(String currentPlayer) {
         // TODO: Implement
-        Platform.runLater(() ->
-                mainController.setTitle("It's " + currentPlayer + "'s turn!")
-        );
+        Platform.runLater(() -> {
+            mainController.updateData(data);
+            mainController.setTitle("It's " + currentPlayer + "'s turn!");
+        });
     }
 
     @Override
