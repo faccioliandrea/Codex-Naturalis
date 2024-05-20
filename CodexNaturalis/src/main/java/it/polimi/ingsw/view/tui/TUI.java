@@ -222,6 +222,10 @@ public class TUI extends UIManager {
     public int askForDrawCard(TurnInfo turnInfo) {
         int choice = -1;
         int deck;
+        if(turnInfo.getResourceDeck().isEmpty() && turnInfo.getGoldDeck().isEmpty()){
+            this.printColorDebug(TUIColors.RED, "Both decks are empty, you can't draw any card.");
+            return -1;
+        }
         do {
             inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose which deck do you want to draw from: [1] Resource [2] Gold");
@@ -229,6 +233,10 @@ public class TUI extends UIManager {
                 choice =  Integer.parseInt(inputQueue.take());
                 if (choice != 1 && choice != 2) {
                     System.out.println("Please, type 1 or 2");
+                } else if(choice == 1 && turnInfo.getResourceDeck().isEmpty()){
+                    this.printColorDebug(TUIColors.RED, "Deck is empty, you can't draw from it. Choose the gold deck.");
+                } else if(choice == 2 && turnInfo.getGoldDeck().isEmpty()){
+                    this.printColorDebug(TUIColors.RED, "Deck is empty, you can't draw from it. Choose the resource deck.");
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -299,6 +307,11 @@ public class TUI extends UIManager {
     public void joinedLobby(String username) {
         printDebug(String.format("%s joined lobby", username));
     }
+
+    @Override
+    public void lobbyCreated(String lobbyId){
+        printDebug(String.format("Lobby %s created", lobbyId));
+    };
 
     @Override
     public void playerDisconnected(String username, boolean gameStarted) {

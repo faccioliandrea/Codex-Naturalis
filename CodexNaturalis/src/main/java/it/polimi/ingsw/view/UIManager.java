@@ -33,6 +33,7 @@ public abstract class UIManager {
     public abstract void noLobbies();
     public abstract void joinedLobby();
     public abstract void joinedLobby(String username);
+    public abstract void lobbyCreated(String lobbyId);
     public abstract void playerDisconnected(String username, boolean gameStarted);
     public abstract void playerReconnected(String username) ;
     public abstract void reconnectionState() ;
@@ -92,5 +93,6 @@ public abstract class UIManager {
     public UIData getData() {
         return this.data;
     }
+
 
 }

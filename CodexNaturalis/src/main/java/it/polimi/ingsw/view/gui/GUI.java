@@ -155,6 +155,11 @@ public class GUI extends UIManager {
         Platform.runLater(() -> waitLobbyController.userJoined(username));
     }
 
+    @Override
+    public void lobbyCreated(String lobbyId) {
+
+    }
+
 
     @Override
     public void playerDisconnected(String username, boolean gameStarted) {

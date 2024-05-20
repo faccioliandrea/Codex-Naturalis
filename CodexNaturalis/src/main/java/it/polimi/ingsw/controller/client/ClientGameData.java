@@ -50,6 +50,12 @@ public class ClientGameData extends Observable {
         return hand;
     }
 
+    public void removeCardFromHand(String cardId){
+        hand.remove(hand.stream().filter(x->x.getId().equals(cardId)).findFirst().get());
+        setChanged();
+        notifyObservers();
+    }
+
     public void setHand(ArrayList<CardInfo> hand) {
         this.hand = hand;
         setChanged();
@@ -282,6 +288,7 @@ public class ClientGameData extends Observable {
         this.cardPoints = gameStateInfo.getCardPoints();
         this.goalPoints = gameStateInfo.getGoalPoints();
         this.gameAborted = gameStateInfo.isGameAborted();
+        this.playerColors = gameStateInfo.getPlayerColors();
         setChanged();
         notifyObservers();
     }

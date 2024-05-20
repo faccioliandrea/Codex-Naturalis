@@ -141,11 +141,16 @@ public class ConnectionBridge {
         } else {
             try {
                 String lobbyid = ((RMIServerConnectionInterface) serverConnection).createLobbyAndJoin(controller.getUsername(), numPlayers);
+                lobbyCreated(lobbyid);
                 joinLobbyRequest(lobbyid);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void lobbyCreated(String lobbyId) {
+        this.controller.lobbyCreated(lobbyId);
     }
 
     public void gameStarted(StarterData starterData) {
@@ -340,4 +345,6 @@ public class ConnectionBridge {
     public void reconnectionState(GameStateInfo gameStateInfo) {
         controller.reconnectionState(gameStateInfo);
     }
+
+
 }

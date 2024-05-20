@@ -2,6 +2,7 @@ package it.polimi.ingsw.connections.data;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
+import it.polimi.ingsw.model.enumeration.PlayerColor;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class GameStateInfo implements Serializable {
     private String username;
     private String currentPlayer;
     private String lastPlayer;
+    private Map<String, PlayerColor> playerColors;
     private ArrayList<CardInfo> hand = new ArrayList<>();
     private ArrayList<CardInfo> resourceDeck = new ArrayList<>();
     private ArrayList<CardInfo> goldDeck = new ArrayList<>();
@@ -30,10 +32,12 @@ public class GameStateInfo implements Serializable {
     private int goalPoints = 0;
     private boolean gameAborted = false;
 
+
     public GameStateInfo(
             String username,
             String currentPlayer,
             String lastPlayer,
+            Map<String, PlayerColor> playerColors,
             ArrayList<CardInfo> hand,
             ArrayList<CardInfo> resourceDeck,
             ArrayList<CardInfo> goldDeck,
@@ -54,6 +58,7 @@ public class GameStateInfo implements Serializable {
         this.username = username;
         this.currentPlayer = currentPlayer;
         this.lastPlayer = lastPlayer;
+        this.playerColors = playerColors;
         this.hand = hand;
         this.resourceDeck = resourceDeck;
         this.goldDeck = goldDeck;
@@ -71,8 +76,6 @@ public class GameStateInfo implements Serializable {
         this.goalPoints = goalPoints;
         this.gameAborted = gameAborted;
     }
-
-
 
 
     public ArrayList<CardInfo> getResourceDeck() {
@@ -145,5 +148,9 @@ public class GameStateInfo implements Serializable {
 
     public boolean isGameAborted() {
         return gameAborted;
+    }
+
+    public Map<String, PlayerColor> getPlayerColors() {
+        return playerColors;
     }
 }

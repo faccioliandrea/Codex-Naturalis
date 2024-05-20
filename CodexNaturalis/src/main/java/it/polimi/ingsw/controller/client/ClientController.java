@@ -81,6 +81,10 @@ public class ClientController {
         ui.joinedLobby(username);
     }
 
+    public void lobbyCreated(String lobbyId) {
+        ui.lobbyCreated(lobbyId);
+    }
+
     public void gameStarted(StarterData starterData){
         ui.gameStarted(starterData);
         this.gameData.setHand(starterData.getHand());
@@ -120,6 +124,7 @@ public class ClientController {
     }
 
     public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo) {
+        this.gameData.removeCardFromHand(placeCardSuccessInfo.getPlayedCard().getId());
         this.gameData.addToList(this.gameData.getBoard(), placeCardSuccessInfo.getPlayedCard());
         this.gameData.replaceEntry(this.gameData.getLeaderboard(), this.username, placeCardSuccessInfo.getCardsPoint());
         this.gameData.setCardPoints(placeCardSuccessInfo.getCardsPoint());
@@ -129,10 +134,12 @@ public class ClientController {
         ui.placeCardSuccess();
 
         int choice = ui.askForDrawCard(currentTurnInfo);
-        if(choice / 10 == 1){
-            connectionBridge.drawResourceRequest(choice%10);
-        } else {
-            connectionBridge.drawGoldRequest(choice%10);
+        if(choice!=-1){
+            if(choice / 10 == 1){
+                connectionBridge.drawResourceRequest(choice%10);
+            } else {
+                connectionBridge.drawGoldRequest(choice%10);
+            }
         }
     }
 
@@ -197,6 +204,7 @@ public class ClientController {
     public TurnInfo getCurrentTurnInfo() {
         return currentTurnInfo;
     }
+
 
 
 }

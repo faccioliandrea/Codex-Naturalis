@@ -132,6 +132,10 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new LobbyDoesNotExistMessage());
     }
 
+    public void lobbyCreated(String lobbyId) throws IOException{
+        this.outputStream.sendMessage(new LobbyCreatedMessage(lobbyId));
+    }
+
     public void playerJoined(String username) throws IOException {
         this.outputStream.sendMessage(new PlayerJoinedMessage(username));
     }
@@ -187,4 +191,6 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     public void reconnectionState(GameStateInfo gameStateInfo) throws IOException{
         this.outputStream.sendMessage(new ReconnectionStateMessage(gameStateInfo));
     }
+
+
 }

@@ -109,7 +109,7 @@ public class MainController implements Initializable {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {
                         try {
-                            GUI.getQueue().put(20 + data.getResourceDeck().indexOf(card));
+                            GUI.getQueue().put(20 + data.getGoldDeck().indexOf(card));
                             disableDrawing();
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);

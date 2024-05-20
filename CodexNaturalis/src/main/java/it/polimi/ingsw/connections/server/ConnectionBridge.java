@@ -46,7 +46,6 @@ public class ConnectionBridge {
             System.out.printf("%s Reconnected%n", username);
             controller.playerReconnected(username);
             return LogInResponse.RECONNECT;
-            // TODO: handle reconnection
         }
         else if(connections.containsKey(username)) {
             if (connection instanceof SocketClientConnection)
@@ -149,7 +148,6 @@ public class ConnectionBridge {
                     }
                     break;
                 case LOBBY_FULL:
-
                     try {
                         ((SocketClientConnection) connections.get(username)).lobbyFull();
                     } catch (IOException e) {
@@ -289,6 +287,11 @@ public class ConnectionBridge {
         String lobbyId = controller.createLobby(username, numPlayers);
         if (connections.get(username) instanceof SocketClientConnection ){
             if (lobbyId!=null) {
+                try {
+                    ((SocketClientConnection) connections.get(username)).lobbyCreated(lobbyId);
+                } catch (IOException e) {
+                    connectionsStatus.replace(connections.get(username), ConnectionStatus.OFFLINE);
+                }
                 addPlayerToLobby(username, lobbyId);
             }
         }
