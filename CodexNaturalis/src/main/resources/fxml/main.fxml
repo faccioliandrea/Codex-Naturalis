@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.text.Font?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.effect.DropShadow?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml" fx:id="mainAnchorPane">
-    <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Group fx:id="boardGroup">
-        </Group>
-        <HBox alignment="CENTER" fx:id="handHBox" spacing="20" AnchorPane.bottomAnchor="0.0">
-            <VBox.margin>
-                <Insets bottom="20.0" top="-20.0"/>
-            </VBox.margin>
-            <effect>
-                <DropShadow/>
-            </effect>
-        </HBox>
-    </VBox>
-    <VBox fx:id="goalsVBox" alignment="TOP_CENTER" spacing="20" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0"/>
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <VBox BorderPane.alignment="CENTER" spacing="10">
+         <VBox>
+            <Label text="Goals" />
+            <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="goalsHBox" spacing="5.0"/>
+         </VBox>
+         <VBox>
+            <Label text="Resource deck" />
+            <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="resourcesHBox" spacing="5.0"/>
+         </VBox>
+         <VBox>
+            <Label text="Gold deck" />
+            <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="goldHBox" spacing="5.0"/>
+         </VBox>
+      </VBox>
+   </left>
+   <top>
+      <Label BorderPane.alignment="CENTER" fx:id="turnInfoLabel">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+   </top>
+   <bottom>
+      <HBox prefHeight="100.0" BorderPane.alignment="CENTER" alignment="CENTER" fx:id="handHBox" spacing="10.0" >
+      </HBox>
+   </bottom>
+   <right>
+      <Group fx:id="leaderboardGroup"/>
+   </right>
+   <center>
+      <Group fx:id="boardGroup"/>
+   </center>
+</BorderPane>

@@ -5,18 +5,14 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">
-    <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0"
+          AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
         <Label fx:id="titleLabel">
             <font>
                 <Font size="40.0"/>
             </font>
-            <padding>
-                <Insets top="40.0"/>
-            </padding>
         </Label>
         <Group fx:id="boardGroup">
         </Group>

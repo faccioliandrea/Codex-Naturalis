@@ -53,7 +53,13 @@ public class LobbiesController implements Initializable {
     }
 
     @FXML
-    private void onCreateLobbyButtonClicked() {}
+    private void onCreateLobbyButtonClicked() {
+        try {
+            GUI.getQueue().put("");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private void lobbySelected(String lobbyId) {
         selectedLobby = lobbyId;
@@ -63,10 +69,13 @@ public class LobbiesController implements Initializable {
     public void showLobbies(ArrayList<String> lobbies) {
         this.lobbies = lobbies;
         lobbiesListView.getItems().clear();
-        lobbiesListView.getItems().addAll(lobbies);
-        lobbiesListView.setDisable(false);
+        if (!lobbies.isEmpty()) {
+            lobbiesListView.getItems().addAll(lobbies);
+            lobbiesListView.setDisable(false);
+        }
         lobbiesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> lobbySelected(newValue));
         usernameButton.setDisable(true);
+        createLobbyButton.setDisable(false);
     }
 
     public void askForUsername() {

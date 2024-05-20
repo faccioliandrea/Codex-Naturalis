@@ -24,7 +24,7 @@
          <Image url="@../img/logo.png"/>
       </ImageView>
       <Label text="Server IP"/>
-      <TextField maxWidth="200.0" promptText="192.168.0.1" fx:id="ipTextField"/>
-      <Button mnemonicParsing="false" text="Join Server" fx:id="joinButton" disable="false" onAction="#submitIp"/>
+      <TextField maxWidth="200.0" promptText="localhost" fx:id="ipTextField"/>
+      <Button mnemonicParsing="false" text="Join Server" fx:id="joinButton" onAction="#submitIp"/>
    </VBox>
 </AnchorPane>

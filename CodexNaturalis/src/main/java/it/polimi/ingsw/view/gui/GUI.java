@@ -2,10 +2,7 @@ package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.view.UIManager;
-import it.polimi.ingsw.view.gui.controller.DrawViewController;
-import it.polimi.ingsw.view.gui.controller.LobbiesController;
-import it.polimi.ingsw.view.gui.controller.MainController;
-import it.polimi.ingsw.view.gui.controller.WaitLobbyController;
+import it.polimi.ingsw.view.gui.controller.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -23,10 +20,12 @@ public class GUI extends UIManager {
     private final WaitLobbyController waitLobbyController = new WaitLobbyController();
     private final MainController mainController = new MainController();
 
+    private boolean ipErrorShown = false;
+
     public GUI() {
-        new Thread(() -> {
-            Application.launch(GUIApp.class);
-        }).start();
+        new Thread(() ->
+            Application.launch(GUIApp.class)
+        ).start();
     }
 
     public static BlockingQueue<Object> getQueue() {
@@ -57,8 +56,13 @@ public class GUI extends UIManager {
 
     @Override
     public int askForPlayerNum() {
-        // TODO: Implement
-        return 2;
+        GUIApp.changeScene("new-lobby", new NewLobbyController());
+        try {
+            queue.clear();
+            return (int) queue.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -86,40 +90,30 @@ public class GUI extends UIManager {
 
     @Override
     public CardInfo askForPlayCard(ArrayList<CardInfo> hand, ArrayList<Point> availablePositions) {
-        //GUIApp.showAlert("It's your turn!", Alert.AlertType.INFORMATION);
+        //GUIApp.changeScene("new-main", newMainController);
         Platform.runLater(() -> {
-            mainController.setupHand(hand);
-            mainController.setupBoard(data.getBoard());
-            mainController.setupAvailablePositions(availablePositions);
-            mainController.setHandSelection(true);
-            mainController.setAvailablePositionSelection(false);
-            mainController.updateLeaderboard(getSortedLeaderboard());
-            // TODO: Goals empty
-            // mainController.setupGoals(data.getGoals());
-        });
-        CardInfo selectedCard;
-        try {
-            queue.clear();
-            selectedCard = (CardInfo) queue.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        Platform.runLater(() -> {
-            mainController.setHandSelection(false);
-            mainController.setAvailablePositionSelection(true);
+            mainController.updateData(data);
+            mainController.askForPlayCard(data);
+            mainController.setTitle("Select a card to play and a position to place it in");
         });
         try {
             queue.clear();
-            selectedCard.setCoord((Point) queue.take());
+            Point point = (Point) queue.take();
+            CardInfo selected = mainController.cardSelected();
+            selected.setCoord(point);
+            return selected;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        return selectedCard;
     }
 
     @Override
     public int askForDrawCard(TurnInfo turnInfo) {
-        GUIApp.changeScene("draw-view", new DrawViewController(turnInfo));
+        Platform.runLater(() -> {
+            mainController.updateData(data);
+            mainController.askForDrawCard(data);
+            mainController.setTitle("Select a card to draw from the resource or gold deck");
+        });
         try {
             queue.clear();
             return (int) queue.take();
@@ -140,20 +134,15 @@ public class GUI extends UIManager {
     }
 
     @Override
-    public void welcome(String username) {
-        // TODO: Implement
-        //GUIApp.showAlert("Welcome " + username, Alert.AlertType.INFORMATION);
-    }
+    public void welcome(String username) {}
 
     @Override
-    public void showCommands() {
-        // TODO: Implement
-    }
+    public void showCommands() {}
 
     @Override
     public void noLobbies() {
         // TODO: Implement
-        GUIApp.showAlert("No lobbies available. Please create one", Alert.AlertType.WARNING);
+        // GUIApp.showAlert("No lobbies available. Please create one", Alert.AlertType.WARNING);
     }
 
     @Override
@@ -165,6 +154,7 @@ public class GUI extends UIManager {
     public void joinedLobby(String username) {
         Platform.runLater(() -> waitLobbyController.userJoined(username));
     }
+
 
     @Override
     public void playerDisconnected(String username, boolean gameStarted) {
@@ -193,10 +183,6 @@ public class GUI extends UIManager {
     @Override
     public void gameStarted(StarterData starterData) {
         GUIApp.changeScene("main", mainController);
-        Platform.runLater(() -> {
-            mainController.setupBoard(data.getBoard());
-            mainController.setupHand(starterData.getHand());
-        });
     }
 
     @Override
@@ -208,6 +194,9 @@ public class GUI extends UIManager {
     @Override
     public void otherPlayerTurn(String currentPlayer) {
         // TODO: Implement
+        Platform.runLater(() ->
+                mainController.setTitle("It's " + currentPlayer + "'s turn!")
+        );
     }
 
     @Override
@@ -218,11 +207,9 @@ public class GUI extends UIManager {
 
     @Override
     public void placeCardSuccess() {
-        Platform.runLater(() -> {
-            mainController.setupBoard(data.getBoard());
-            mainController.setupAvailablePositions(data.getAvailablePositions());
-            mainController.setupHand(data.getHand());
-        });
+        Platform.runLater(() ->
+            mainController.updateData(data)
+        );
     }
 
     @Override
@@ -232,22 +219,17 @@ public class GUI extends UIManager {
 
     @Override
     public void drawCardSuccess() {
-        // TODO: Implement
-        GUIApp.showAlert("Turn ended. Now wait for your opponent(s) to finish their turn", Alert.AlertType.INFORMATION);
-        GUIApp.changeScene("main", mainController);
-        Platform.runLater(() -> {
-            mainController.setupBoard(data.getBoard());
-            //mainController.setupAvailablePositions(data.getAvailablePositions());
-            mainController.setupHand(data.getHand());
-            mainController.updateLeaderboard(getSortedLeaderboard());
-        });
+        Platform.runLater(() ->
+            mainController.updateData(data)
+        );
     }
 
     @Override
     public void turnEnded(GameStateInfo gameStateInfo) {
         // TODO: Implement
         Platform.runLater(() -> {
-            mainController.updateLeaderboard(getSortedLeaderboard());
+            mainController.updateData(data);
+            mainController.setTitle("Turn ended. Now wait for your opponent(s) to finish their turn");
         });
     }
 
@@ -265,7 +247,9 @@ public class GUI extends UIManager {
     @Override
     public void showErrorMessage(String message) {
         // TODO: Display once
-       // GUIApp.showError(message);
+        if (ipErrorShown) return;
+        GUIApp.notInteractableAlert(message, Alert.AlertType.ERROR);
+        ipErrorShown = true;
     }
 
     public static String getCardPath(CardInfo card) {

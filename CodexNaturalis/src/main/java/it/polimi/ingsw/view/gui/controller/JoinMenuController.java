@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.gui.controller;
 
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.GUIApp;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -31,6 +32,12 @@ public class JoinMenuController implements Initializable {
 
     @FXML
     public void submitIp() {
+        String ipAddress = ipTextField.getText();
+        boolean isIpValid = GUI.isValidIP(ipAddress, "localhost");
+        if (!isIpValid) {
+            GUIApp.showAlert("Invalid IP address", javafx.scene.control.Alert.AlertType.ERROR);
+            return;
+        }
         try {
             GUI.getQueue().put(ipTextField.getText());
         } catch (InterruptedException e) {
