@@ -1,6 +1,7 @@
 package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
+import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.client.ServerConnection;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.PlaceCardSuccessInfo;
@@ -19,10 +20,10 @@ import java.util.ArrayList;
  * This class is the RMI server connection interface
  */
 public interface RMIServerConnectionInterface extends Remote, ServerConnection {
-    LogInResponse loginRequest(String username, ClientConnection client) throws IOException;
+    LogInResponse loginRequest(String username, RMIClientConnectionInterface client) throws IOException;
     ArrayList<String> getLobby(String username) throws RemoteException;
     AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) throws RemoteException;
-    int choosePrivateGoal(String username, int index) throws RemoteException;
+    void choosePrivateGoal(String username, int index) throws RemoteException;
     ChooseStarterCardSideResponse chooseStarterCardSide(String username, boolean flipped) throws RemoteException;
     PlaceCardSuccessInfo placeCard(String username, String cardId, Point position, boolean flipped) throws RemoteException;
     ArrayList<CardInfo> drawResource(String username, int index) throws RemoteException;

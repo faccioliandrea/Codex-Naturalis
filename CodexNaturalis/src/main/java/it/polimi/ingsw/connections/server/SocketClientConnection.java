@@ -8,16 +8,13 @@ import it.polimi.ingsw.connections.messages.Message;
 import it.polimi.ingsw.connections.messages.client.ClientToServerMessage;
 import it.polimi.ingsw.connections.messages.client.LoginRequestMessage;
 import it.polimi.ingsw.connections.messages.server.*;
-import it.polimi.ingsw.model.enumeration.CardSymbol;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -48,6 +45,16 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
     public String getRemoteAddr() {
         return this.remoteAddr.toString();
+    }
+
+    @Override
+    public void setOffline() {
+        this.connectionStatus = ConnectionStatus.OFFLINE;
+    }
+
+    @Override
+    public ConnectionStatus getStatus() {
+        return this.connectionStatus;
     }
 
 
@@ -93,7 +100,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
             inputStream.close();
             outputStream.close();
             clientSocket.close();
-            this.connectionStatus = ConnectionStatus.OFFLINE;
+            this.connectionStatus = ConnectionStatus.CLOSED;
         }
     }
 
@@ -108,7 +115,6 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     public void validUsername() throws IOException {
         this.outputStream.sendMessage(new ValidUsernameMessage());
     }
-
 
     public void invalidUsername() throws IOException {
         this.outputStream.sendMessage(new InvalidUsernameMessage());
@@ -136,10 +142,12 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new LobbyCreatedMessage(lobbyId));
     }
 
+    @Override
     public void playerJoined(String username) throws IOException {
         this.outputStream.sendMessage(new PlayerJoinedMessage(username));
     }
 
+    @Override
     public void gameStarted(StarterData starterData) throws IOException {
         this.outputStream.sendMessage(new GameStartedMessage(starterData));
     }
@@ -152,10 +160,12 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new WaitingOthersStartingChoiceMessage());
     }
 
+    @Override
     public void otherPlayerTurnMessage(String currentPlayer) throws IOException {
         this.outputStream.sendMessage(new OtherPlayerTurnMessage(currentPlayer));
     }
 
+    @Override
     public void initTurn(TurnInfo turnInfo) throws IOException {
         this.outputStream.sendMessage(new InitTurnMessage(turnInfo));
     }
@@ -172,22 +182,27 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new DrawSuccessMessage(hand));
     }
 
+    @Override
     public void sendStatus(GameStateInfo gameState) throws IOException {
         this.outputStream.sendMessage(new GameStateMessage(gameState));
     }
 
+    @Override
     public void gameEnded(HashMap<String, Integer> leaderboard) throws IOException {
         this.outputStream.sendMessage(new GameEndMessage(leaderboard));
     }
 
+    @Override
     public void playerDisconnected(String username, boolean gameStarted) throws IOException {
         this.outputStream.sendMessage(new PlayerDisconnectedMessage(username, gameStarted));
     }
 
+    @Override
     public void playerReconnected(String username) throws IOException {
         this.outputStream.sendMessage(new PlayerReconnectedMessage(username));
     }
 
+    @Override
     public void reconnectionState(GameStateInfo gameStateInfo) throws IOException{
         this.outputStream.sendMessage(new ReconnectionStateMessage(gameStateInfo));
     }

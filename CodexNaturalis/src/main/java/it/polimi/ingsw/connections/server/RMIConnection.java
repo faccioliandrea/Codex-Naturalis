@@ -1,22 +1,96 @@
 package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
+import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
+import it.polimi.ingsw.connections.data.GameStateInfo;
+import it.polimi.ingsw.connections.data.StarterData;
+import it.polimi.ingsw.connections.data.TurnInfo;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.HashMap;
 
+/**
+ * This class is used to handle the RMI connection from the server side to the client.
+ * It implements the ClientConnection interface to manage the connection status and the methods to handle the connection.
+ */
 public class RMIConnection implements ClientConnection{
 
     private ConnectionStatus connectionStatus;
 
+    private RMIClientConnectionInterface rmiClientConnection;
 
-        @Override
-        public void close() throws IOException {
 
-        }
+    public RMIConnection(RMIClientConnectionInterface rmiClientConnection) {
+        this.rmiClientConnection = rmiClientConnection;
+        connectionStatus = ConnectionStatus.ONLINE;
+    }
 
-        @Override
-        public String getRemoteAddr() {
-            return null;
-        }
+    @Override
+    public void close(){
+        connectionStatus = ConnectionStatus.CLOSED;
+    }
 
+    @Override
+    public String getRemoteAddr() {
+        return null;
+    }
+
+    @Override
+    public void setOffline() {
+        connectionStatus = ConnectionStatus.OFFLINE;
+    }
+
+    @Override
+    public ConnectionStatus getStatus() {
+        return connectionStatus;
+    }
+
+    @Override
+    public void playerJoined(String username) throws IOException {
+        rmiClientConnection.playerJoined(username);
+    }
+
+    @Override
+    public void gameStarted(StarterData starterData) throws RemoteException{
+        rmiClientConnection.gameStarted(starterData);
+    }
+
+    @Override
+    public void otherPlayerTurnMessage(String currentPlayer) throws RemoteException{
+        rmiClientConnection.otherPlayerTurn(currentPlayer);
+    }
+
+    @Override
+    public void initTurn(TurnInfo turnInfo) throws RemoteException{
+        rmiClientConnection.initTurn(turnInfo);
+    }
+
+    @Override
+    public void sendStatus(GameStateInfo gameStateInfo) throws RemoteException{
+        rmiClientConnection.sendStatus(gameStateInfo);
+    }
+
+    @Override
+    public void gameEnded(HashMap<String, Integer> leaderboard) throws RemoteException{
+        rmiClientConnection.gameEnded(leaderboard);
+    }
+
+    @Override
+    public void playerDisconnected(String username, boolean gameStarted) throws RemoteException {
+        rmiClientConnection.playerDisconnected(username, gameStarted);
+    }
+    @Override
+    public void playerReconnected(String username)throws RemoteException {
+        rmiClientConnection.playerReconnected(username);
+    }
+
+    @Override
+    public void reconnectionState(GameStateInfo gameStateInfo)throws RemoteException {
+        rmiClientConnection.reconnectionState(gameStateInfo);
+    }
+
+    public void ping() throws RemoteException {
+        rmiClientConnection.ping();
+    }
 }

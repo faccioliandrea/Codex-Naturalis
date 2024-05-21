@@ -1,12 +1,7 @@
 package it.polimi.ingsw.connections.client;
-
-import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
-import it.polimi.ingsw.connections.server.ClientConnection;
-
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -24,16 +19,6 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
     public RMIClientConnection() throws RemoteException {
     }
 
-
-    @Override
-    public void close() throws IOException {
-
-    }
-
-    @Override
-    public String getRemoteAddr() {
-        return null;
-    }
 
     /**
      * Method to handle the joining of a player in the lobby
@@ -101,5 +86,44 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
     public void gameEnded(HashMap<String, Integer> leaderboard) throws RemoteException {
         connectionBridge.gameEnd(leaderboard);
     }
+
+    /**
+     * Method to handle the disconnection of a player
+     * @param username the username of the player
+     * @param gameStarted if the game has started
+     */
+    @Override
+    public void playerDisconnected(String username, boolean gameStarted) {
+        connectionBridge.playerDisconnected(username, gameStarted);
+    }
+
+    /**
+     * Method to handle the reconnection of a different player
+     * @param username the username of the player
+     * @throws RemoteException if the connection fails
+     */
+    @Override
+    public void playerReconnected(String username) throws RemoteException {
+        connectionBridge.playerReconnected(username);
+    }
+
+    /**
+     * Method to handle the reconnection of  this a player
+     * @param gameStateInfo the game state info
+     * @throws RemoteException if the connection fails
+     */
+    @Override
+    public void reconnectionState(GameStateInfo gameStateInfo) throws RemoteException {
+        connectionBridge.reconnectionState(gameStateInfo);
+    }
+
+    /**
+     * Method to ping the connection
+     * @throws RemoteException if the connection fails
+     */
+    @Override
+    public void ping() throws RemoteException {
+    }
+
 
 }

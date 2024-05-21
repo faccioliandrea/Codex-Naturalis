@@ -39,8 +39,8 @@ public class ServerController {
      * Default constructor
      */
     public ServerController() {
-        userToLobby = new HashMap<String,String>();
-        userToGame = new HashMap<String,String>();
+        userToLobby = new HashMap<>();
+        userToGame = new HashMap<>();
         lobbyController = new LobbyController();
         gameController = new GameController();
         connectionBridge = new ConnectionBridge(this);
@@ -97,11 +97,11 @@ public class ServerController {
                 int currTurn = gameController.getCurrentTurn(userToGame.get(user));
                 boolean isLastTurn = gameController.isLast(userToGame.get(user));
                 ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
-                TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, (HashMap<CardSymbol, Integer>) symbols, isLastTurn, board);
+                TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, symbols, isLastTurn, board);
                 for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
                     if(gameController.getCurrentTurn(userToGame.get(user))==0){
                         Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
-                        connectionStatus.put(username.getUsername(), connectionBridge.getConnectionsStatus().get(connectionBridge.getConnections().get(username.getUsername())));
+                        connectionStatus.put(username.getUsername(), connectionBridge.getConnections().get(username.getUsername()).getStatus());
                         connectionBridge.gameState(username.getUsername(), new GameStateInfo(
                                 username.getUsername(),
                                 gameController.getCurrentPlayer(userToGame.get(user)),
@@ -138,19 +138,13 @@ public class ServerController {
         }
     }
 
-    public void initTurnAck(String user){
-        //TODO: add the timer to reset when this ack is received, but there is the ping (to manage)
-    }
-
     /**
      * let the player choose its private goal
      * @param username the username of the player
      * @param index the index of the private goal to choose
      */
-    public int choosePrivateGoal(String username,int index){
+    public void choosePrivateGoal(String username,int index){
         gameController.choosePrivateGoal(userToGame.get(username), username,  index);
-        return 1;
-
     }
 
     /**
@@ -230,7 +224,8 @@ public class ServerController {
             HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
             Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
             for (Player player : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
-                connectionStatus.put(player.getUsername(), connectionBridge.getConnectionsStatus().get(connectionBridge.getConnections().get(player.getUsername())));
+
+                connectionStatus.put(player.getUsername(), connectionBridge.getConnections().get(player.getUsername()).getStatus());
 
                 GameStateInfo gameState = new GameStateInfo(
                         player.getUsername(),
@@ -254,9 +249,7 @@ public class ServerController {
                         gameController.getUserGoalsPointsByUsername(userToGame.get(user), player.getUsername()),
                         gameController.isGameFinished(userToGame.get(user))
                 );
-
                 connectionBridge.gameState(player.getUsername(), gameState);
-
             }
 
             if (gameController.isGameFinished(userToGame.get(user)))
@@ -280,8 +273,7 @@ public class ServerController {
         HashMap<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
         for(String username : userToGame.keySet()){
             if(userToGame.get(username).equals(userToGame.get(username))) {
-                executorService.submit(() -> connectionBridge.endGame(username, leaderboard));
-                //connectionBridge.endGame(username, leaderboard);
+                connectionBridge.endGame(username, leaderboard);
             }
         }
         destroyGame(gameId);
@@ -318,7 +310,7 @@ public class ServerController {
         if(userToGame.containsKey(username)) {
             for (String u : userToGame.keySet()) {
                 if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
-                    connectionBridge.playerDisconnected(username, u, true);
+                   connectionBridge.playerDisconnected(username, u, true);
                 }
             }
             if(gameController.getUserBoardByUsername(userToGame.get(username), username).isEmpty() && !gameController.getHand(userToGame.get(username), username).isEmpty()){
@@ -359,7 +351,7 @@ public class ServerController {
                     HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(username));
                     Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
                     for (Player player : gameController.getGames().get(userToGame.get(username)).getPlayers()) {
-                        connectionStatus.put(player.getUsername(), connectionBridge.getConnectionsStatus().get(connectionBridge.getConnections().get(player.getUsername())));
+                        connectionStatus.put(player.getUsername(), connectionBridge.getConnections().get(player.getUsername()).getStatus());
                     }
                     GameStateInfo gameState = new GameStateInfo(
                             username,
@@ -423,7 +415,7 @@ public class ServerController {
                 return new ArrayList<>();
             }
             else {
-                return new ArrayList<String>(lobbyController.getLobbies().keySet());
+                return new ArrayList<>(lobbyController.getLobbies().keySet());
             }
             //the lobbies can't be full, when a lobby is full a game is created and the lobby is removed
         }
@@ -461,14 +453,6 @@ public class ServerController {
      */
     public ConnectionBridge getConnectionBridge() {
         return connectionBridge;
-    }
-
-    /**
-     * Remove a user from the lobby
-     * @param username the username of the player
-     */
-    public void removeUser(String username){
-        userToLobby.remove(username);
     }
 
     /**

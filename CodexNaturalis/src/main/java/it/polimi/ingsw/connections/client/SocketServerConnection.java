@@ -106,10 +106,6 @@ public class SocketServerConnection implements ServerConnection, Runnable {
         this.outputStream.sendMessage(new ChooseStarterCardSideMessage(username, flipped));
     }
 
-    public void initTurnAck(String username) throws IOException {
-        this.outputStream.sendMessage(new InitTurnAckMessage(username));
-    }
-
     public void placeCard(String username, String cardId, Point pos, boolean flipped) throws IOException {
         this.outputStream.sendMessage(new PlaceCardMessage(username, cardId, pos, flipped));
     }

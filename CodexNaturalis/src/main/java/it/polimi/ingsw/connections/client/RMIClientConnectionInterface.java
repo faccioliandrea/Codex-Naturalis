@@ -1,12 +1,7 @@
 package it.polimi.ingsw.connections.client;
-
-import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
-import it.polimi.ingsw.connections.server.ClientConnection;
-
-import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -14,10 +9,7 @@ import java.util.HashMap;
 /**
  * This class is the RMI client connection interface
  */
-public interface RMIClientConnectionInterface extends Remote, ClientConnection {
-    void close() throws IOException;
-    String getRemoteAddr()throws IOException;
-
+public interface RMIClientConnectionInterface extends Remote {
     void playerJoined(String username) throws RemoteException;
 
      void setBridge(ConnectionBridge connectionBridge) throws RemoteException;
@@ -31,4 +23,12 @@ public interface RMIClientConnectionInterface extends Remote, ClientConnection {
     void sendStatus(GameStateInfo gameStateInfo) throws RemoteException;
 
     void gameEnded(HashMap<String, Integer> leaderboard) throws RemoteException;
+
+    void playerDisconnected(String username, boolean gameStarted) throws RemoteException;
+
+    void playerReconnected(String username)  throws RemoteException;
+
+    void reconnectionState(GameStateInfo gameStateInfo)throws RemoteException;
+
+    void ping()throws RemoteException;
 }

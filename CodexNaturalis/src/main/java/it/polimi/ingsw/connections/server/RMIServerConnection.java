@@ -1,6 +1,7 @@
 package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
+import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.PlaceCardSuccessInfo;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class RMIServerConnection extends UnicastRemoteObject implements RMIServerConnectionInterface {
     private final ConnectionBridge connectionBridge;
     private ConnectionStatus connectionStatus = ConnectionStatus.INITIALIZING;
+    private final Object lock = new Object();
 
     /**
      * Constructor for the RMI server connection
@@ -37,8 +39,25 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      * @throws IOException if the connection fails
      */
     @Override
-    public LogInResponse loginRequest(String username, ClientConnection client) throws IOException {
-        return connectionBridge.addConnection(client, username);
+    public LogInResponse loginRequest(String username, RMIClientConnectionInterface client) throws IOException {
+        RMIConnection rmiConnection = new RMIConnection(client);
+        new Thread(()->{
+
+            while (true){
+                try {
+                    rmiConnection.ping();
+                    synchronized (lock){
+                        lock.wait(3000);
+                    }
+                } catch (RemoteException | InterruptedException e) {
+                    connectionStatus = ConnectionStatus.OFFLINE;
+                    connectionBridge.onClientDisconnect(rmiConnection);
+                    break;
+                }
+            }
+        }).start();
+
+        return connectionBridge.addConnection(rmiConnection, username);
     }
 
     /**
@@ -68,12 +87,11 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      * Method to choose a private goal
      * @param username the username of the player
      * @param index the index of the private goal
-     * @return
      * @throws RemoteException if the connection fails
      */
     @Override
-    public int choosePrivateGoal(String username, int index) throws RemoteException {
-        return connectionBridge.choosePrivateGoal(username, index);
+    public void choosePrivateGoal(String username, int index) throws RemoteException {
+        connectionBridge.choosePrivateGoal(username, index);
     }
 
     /**
