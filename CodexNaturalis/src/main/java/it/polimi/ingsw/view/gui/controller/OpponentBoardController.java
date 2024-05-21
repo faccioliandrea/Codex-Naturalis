@@ -14,9 +14,9 @@ import java.util.ResourceBundle;
 
 public class OpponentBoardController implements Initializable {
     @FXML
-    Group boardGroup;
+    private Group boardGroup;
     @FXML
-    Label titleLabel;
+    private Label titleLabel;
 
     private String opponentName;
     private ArrayList<CardInfo> board;

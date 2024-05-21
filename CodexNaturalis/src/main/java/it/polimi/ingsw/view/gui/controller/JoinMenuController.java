@@ -14,24 +14,21 @@ import java.util.ResourceBundle;
 
 public class JoinMenuController implements Initializable {
     @FXML
-    Screen screen;
+    private Screen screen;
     @FXML
-    ImageView logoImageView;
+    private ImageView logoImageView;
     @FXML
-    Button joinButton;
+    private Button joinButton;
     @FXML
-    TextField ipTextField;
-
-    private Boolean isIpValid = false;
+    private TextField ipTextField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logoImageView.setFitHeight(screen.getVisualBounds().getHeight() * 0.5);
-        ipTextField.textProperty().addListener((observable, oldValue, newValue) -> ipEntered(newValue));
+        joinButton.setOnMouseClicked(e -> submitIp());
     }
 
-    @FXML
-    public void submitIp() {
+    private void submitIp() {
         String ipAddress = ipTextField.getText();
         boolean isIpValid = GUI.isValidIP(ipAddress, "localhost");
         if (!isIpValid) {
@@ -43,10 +40,5 @@ public class JoinMenuController implements Initializable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void ipEntered(String value) {
-        isIpValid = !value.isEmpty();
-        joinButton.setDisable(!isIpValid);
     }
 }

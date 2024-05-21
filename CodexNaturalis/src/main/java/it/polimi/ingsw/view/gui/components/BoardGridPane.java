@@ -80,11 +80,9 @@ public class BoardGridPane extends StackPane {
             group.setTranslateY(event.getY() - group.getLayoutBounds().getMaxY() / 2);
         });
 
-        stackPane.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
-            @Override public void changed(ObservableValue<? extends Bounds> observable, Bounds oldBounds, Bounds bounds) {
-                stackPane.setClip(new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
-            }
-        });
+        stackPane.layoutBoundsProperty().addListener((ObservableValue<? extends Bounds> observable, Bounds oldBounds, Bounds bounds) ->
+                stackPane.setClip(new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()))
+        );
     }
 
     /**
@@ -125,7 +123,7 @@ public class BoardGridPane extends StackPane {
         double cellHeight = boardGridPane.getPrefHeight() / rowCount;
         double cellWidth = boardGridPane.getPrefWidth() / columnCount;
         for(CardInfo card: cards) {
-            ImageView img = GUIUtility.createImageView(GUI.getCardPath(card), cellHeight, cellWidth);
+            ImageView img = GUIUtility.createImageView(GUIUtility.getCardPath(card), cellHeight, cellWidth);
             Point translatedCoord = UIManager.toMatrixCoord(card.getCoord(), padding);
             boardGridPane.add(img, translatedCoord.x, translatedCoord.y);
         }

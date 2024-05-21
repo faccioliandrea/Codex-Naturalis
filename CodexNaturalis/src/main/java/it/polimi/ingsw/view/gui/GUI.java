@@ -1,6 +1,9 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.connections.data.*;
+import it.polimi.ingsw.connections.data.CardInfo;
+import it.polimi.ingsw.connections.data.GameStateInfo;
+import it.polimi.ingsw.connections.data.StarterData;
+import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.view.UIManager;
 import it.polimi.ingsw.view.gui.controller.*;
 import javafx.application.Application;
@@ -19,6 +22,8 @@ public class GUI extends UIManager {
     private final LobbiesController lobbiesController = new LobbiesController();
     private final WaitLobbyController waitLobbyController = new WaitLobbyController();
     private final MainController mainController = new MainController();
+    private final GameEndController gameEndController = new GameEndController();
+    private  final GameSetupController gameSetupController = new GameSetupController();
 
     private boolean ipErrorShown = false;
 
@@ -78,14 +83,24 @@ public class GUI extends UIManager {
 
     @Override
     public int askForPrivateGoal() {
-        // TODO: Implement
-        return 0;
+        Platform.runLater(gameSetupController::askPublicGoals);
+        try {
+            queue.clear();
+            return (int) queue.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public boolean askForStarterCardSide() {
-        // TODO: Implement
-        return false;
+        Platform.runLater(gameSetupController::askStarterCardSide);
+        try {
+            queue.clear();
+            return (boolean) queue.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -96,15 +111,17 @@ public class GUI extends UIManager {
             mainController.askForPlayCard(data);
             mainController.setTitle("Select a card to play and a position to place it in");
         });
+        CardInfo selected;
         try {
             queue.clear();
             Point point = (Point) queue.take();
-            CardInfo selected = mainController.cardSelected();
+            selected = mainController.cardSelected();
             selected.setCoord(point);
-            return selected;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        Platform.runLater(mainController::endPickCard);
+        return selected;
     }
 
     @Override
@@ -124,8 +141,13 @@ public class GUI extends UIManager {
 
     @Override
     public boolean askForNewGame() {
-        // TODO: Implement
-        return false;
+        Platform.runLater(gameEndController::askNewGame);
+        try {
+            queue.clear();
+            return (boolean) queue.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -140,10 +162,7 @@ public class GUI extends UIManager {
     public void showCommands() {}
 
     @Override
-    public void noLobbies() {
-        // TODO: Implement
-        // GUIApp.showAlert("No lobbies available. Please create one", Alert.AlertType.WARNING);
-    }
+    public void noLobbies() {}
 
     @Override
     public void joinedLobby() {
@@ -157,7 +176,8 @@ public class GUI extends UIManager {
 
     @Override
     public void lobbyCreated(String lobbyId) {
-
+        GUIApp.changeScene("wait-lobby", waitLobbyController);
+        Platform.runLater(() -> waitLobbyController.setLobbyId(lobbyId));
     }
 
 
@@ -174,6 +194,11 @@ public class GUI extends UIManager {
     @Override
     public void reconnectionState() {
         // TODO: Implement
+        GUIApp.changeScene("main", mainController);
+        Platform.runLater(() -> {
+            mainController.updateData(data);
+            mainController.setTitle(data.getCurrentPlayer() + "'s turn");
+        });
     }
 
     @Override
@@ -181,24 +206,25 @@ public class GUI extends UIManager {
 
     @Override
     public void lobbyFull() {
-        // TODO: Implement
         GUIApp.showAlert("Lobby is full", Alert.AlertType.ERROR);
     }
 
     @Override
     public void gameStarted(StarterData starterData) {
-        GUIApp.changeScene("main", mainController);
+        GUIApp.changeScene("game-setup", gameSetupController);
+        gameSetupController.setPrivateGoals(starterData.getPrivateGoals());
+        gameSetupController.setStarterCard(starterData.getStarterCard());
     }
 
     @Override
     public void waitingOthersStartingChoice() {
-        // TODO: Implement
-        GUIApp.showAlert("Awesome! Now wait for the other players to choose their private goals and starter cards", Alert.AlertType.INFORMATION);
+        GUIApp.changeScene("wait-setup", null);
     }
 
     @Override
     public void otherPlayerTurn(String currentPlayer) {
         // TODO: Implement
+        GUIApp.changeScene("main", mainController);
         Platform.runLater(() -> {
             mainController.updateData(data);
             mainController.setTitle("It's " + currentPlayer + "'s turn!");
@@ -207,8 +233,10 @@ public class GUI extends UIManager {
 
     @Override
     public void yourTurn(boolean isLastTurn) {
-        // TODO: Implement
-        GUIApp.showAlert("It's your turn!" + (isLastTurn ? " This is your last turn." : ""), Alert.AlertType.INFORMATION);
+        GUIApp.changeScene("main", mainController);
+        if (isLastTurn) {
+            GUIApp.showAlert("This is your last turn", Alert.AlertType.INFORMATION);
+        }
     }
 
     @Override
@@ -241,13 +269,16 @@ public class GUI extends UIManager {
 
     @Override
     public void gameEnded() {
-        // TODO: Implement
-        GUIApp.showAlert("Game ended!", Alert.AlertType.INFORMATION);
+        GUIApp.changeScene("game-end", gameEndController);
+        Platform.runLater(() -> {
+            gameEndController.setLeaderboard(data);
+        });
     }
 
     @Override
     public void goodbye() {
-        // TODO: Implement
+        Platform.exit();
+        System.exit(0);
     }
 
     @Override
@@ -256,10 +287,6 @@ public class GUI extends UIManager {
         if (ipErrorShown) return;
         GUIApp.notInteractableAlert(message, Alert.AlertType.ERROR);
         ipErrorShown = true;
-    }
-
-    public static String getCardPath(CardInfo card) {
-        return "/" + (card.isFlipped() ? "back/" : "front/") + card.getId() + ".png";
     }
 
     /*public void showOpponentBoard(String opponent) {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml">
+    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" alignment="CENTER">
+        <Label textAlignment="CENTER" text="Awesome! Now wait for the other players to choose their private goals and starter cards" styleClass="bigTitle" wrapText="true"/>
+    </VBox>
+
+</AnchorPane>

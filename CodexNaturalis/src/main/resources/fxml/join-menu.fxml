@@ -6,10 +6,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.stage.Screen?>
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <fx:define>
@@ -23,8 +21,8 @@
          </VBox.margin>
          <Image url="@../img/logo.png"/>
       </ImageView>
-      <Label text="Server IP"/>
+      <Label text="Server IP" styleClass="midTitle"/>
       <TextField maxWidth="200.0" promptText="localhost" fx:id="ipTextField"/>
-      <Button mnemonicParsing="false" text="Join Server" fx:id="joinButton" onAction="#submitIp"/>
+      <Button mnemonicParsing="false" text="Join Server" fx:id="joinButton"/>
    </VBox>
 </AnchorPane>

@@ -24,17 +24,19 @@ public class LobbiesController implements Initializable {
     private ListView<String> lobbiesListView;
 
     private ArrayList<String> lobbies;
-
     private String selectedLobby;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {}
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        usernameButton.setOnMouseClicked(e -> onUsernameButtonClicked());
+        joinLobbyButton.setOnMouseClicked(e -> onJoinButtonClicked());
+        createLobbyButton.setOnMouseClicked(e -> onCreateLobbyButtonClicked());
+    }
 
     private void usernameEntered(String value) {
         usernameButton.setDisable(value.isEmpty());
     }
 
-    @FXML
     private void onUsernameButtonClicked() {
         try {
             GUI.getQueue().put(usernameTextField.getText());
@@ -43,7 +45,6 @@ public class LobbiesController implements Initializable {
         }
     }
 
-    @FXML
     private void onJoinButtonClicked() {
         try {
             GUI.getQueue().put(selectedLobby);
@@ -52,7 +53,6 @@ public class LobbiesController implements Initializable {
         }
     }
 
-    @FXML
     private void onCreateLobbyButtonClicked() {
         try {
             GUI.getQueue().put("");

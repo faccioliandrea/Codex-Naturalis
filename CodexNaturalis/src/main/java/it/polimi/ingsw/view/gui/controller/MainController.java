@@ -55,7 +55,7 @@ public class MainController implements Initializable {
     private void setupHand(UIData data) {
         handHBox.getChildren().clear();
         for (CardInfo card : data.getHand()) {
-            ImageView imageView = GUIUtility.createImageView(GUI.getCardPath(card), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
+            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
             imageView.setOnMouseClicked(e -> {
                 if (e.getButton().equals(MouseButton.PRIMARY)) {
                     if (selectedCard != null && selectedCard.getKey() != card) {
@@ -66,7 +66,7 @@ public class MainController implements Initializable {
                     imageView.setEffect(new Glow(0.5));
                 } else if (e.getButton().equals(MouseButton.SECONDARY)) {
                     card.setFlipped(!card.isFlipped());
-                    imageView.setImage(GUIUtility.createImage(GUI.getCardPath(card)));
+                    imageView.setImage(GUIUtility.createImage(GUIUtility.getCardPath(card)));
                 }
             });
             handHBox.getChildren().add(imageView);
@@ -76,7 +76,7 @@ public class MainController implements Initializable {
     private void setupGoals(UIData data) {
         goalsHBox.getChildren().clear();
         for (GoalInfo goal : data.getGoals()) {
-            ImageView imageView = GUIUtility.createImageView("/front/" + goal.getId() + ".png", GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
+            ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(goal), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
             goalsHBox.getChildren().add(imageView);
         }
     }
@@ -84,13 +84,13 @@ public class MainController implements Initializable {
     private void setupResources(UIData data, boolean selectable) {
         resourcesHBox.getChildren().clear();
         for (CardInfo card : data.getResourceDeck()) {
-            ImageView imageView = GUIUtility.createImageView(GUI.getCardPath(card), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
+            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
             if (selectable) {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {
                         try {
                             GUI.getQueue().put(10 + data.getResourceDeck().indexOf(card));
-                            disableDrawing();
+                            drawEnded();
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -104,13 +104,13 @@ public class MainController implements Initializable {
     private void setupGold(UIData data, boolean selectable) {
         goldHBox.getChildren().clear();
         for (CardInfo card : data.getGoldDeck()) {
-            ImageView imageView = GUIUtility.createImageView(GUI.getCardPath(card), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
+            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
             if (selectable) {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {
                         try {
                             GUI.getQueue().put(20 + data.getGoldDeck().indexOf(card));
-                            disableDrawing();
+                            drawEnded();
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -132,6 +132,7 @@ public class MainController implements Initializable {
     public void askForPlayCard(UIData data) {
         setupHand(data);
         setupBoard(data, true);
+        handHBox.setEffect(GUIUtility.highlightShadow());
         boardGridPane.addAvailablePositionsToBoard(data.getAvailablePositions());
         if (selectedCard != null) {
             boardGridPane.setAvailablePositionDisabled(false);
@@ -141,11 +142,15 @@ public class MainController implements Initializable {
     public void askForDrawCard(UIData data) {
         setupResources(data, true);
         setupGold(data, true);
+        resourcesHBox.setEffect(GUIUtility.highlightShadow());
+        goldHBox.setEffect(GUIUtility.highlightShadow());
     }
 
-    private void disableDrawing() {
+    private void drawEnded() {
         resourcesHBox.getChildren().forEach(x -> x.setDisable(true));
         goldHBox.getChildren().forEach(x -> x.setDisable(true));
+        resourcesHBox.setEffect(null);
+        goldHBox.setEffect(null);
     }
 
     public void updateData(UIData data) {
@@ -165,5 +170,9 @@ public class MainController implements Initializable {
 
     public void setTitle(String title) {
         turnInfoLabel.setText(title);
+    }
+
+    public void endPickCard() {
+        handHBox.setEffect(null);
     }
 }

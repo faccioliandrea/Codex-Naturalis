@@ -1,0 +1,17 @@
+.mainTitle {
+    -fx-font-size: 30;
+}
+
+.bigTitle {
+    -fx-font-size: 40;
+}
+
+.midTitle {
+    -fx-font-size: 20;
+}
+
+.border {
+    -fx-border-insets: 20;
+    -fx-border-color: black;
+    -fx-border-width: 3;
+}

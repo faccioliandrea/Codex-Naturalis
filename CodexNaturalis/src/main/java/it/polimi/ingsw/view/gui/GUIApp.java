@@ -1,4 +1,5 @@
 package it.polimi.ingsw.view.gui;
+
 import it.polimi.ingsw.view.gui.controller.JoinMenuController;
 import it.polimi.ingsw.view.gui.controller.OpponentBoardController;
 import it.polimi.ingsw.view.gui.utility.GUIConstants;
@@ -6,14 +7,15 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.*;
-import javafx.scene.control.*;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.geometry.*;
 import javafx.stage.StageStyle;
 
 public class GUIApp extends Application {
@@ -63,6 +65,7 @@ public class GUIApp extends Application {
             String paddingStyle = "-fx-padding: " + GUIConstants.scenePadding;
             root.setStyle(paddingStyle);
             Scene scene = new Scene(root);
+            scene.getStylesheets().add("/css/styles.css");
             lastFXML = fxml;
             Platform.runLater(() -> stage.setScene(scene));
         } catch (Exception e) {
@@ -106,7 +109,7 @@ public class GUIApp extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(GUIApp.class.getResource("/fxml/opponent-board.fxml"));
             fxmlLoader.setController(controller);
             Parent root = fxmlLoader.load();
-            root.setMouseTransparent(true);
+            root.setStyle("-fx-effect: innershadow(gaussian, #000000, 3, 3.0, 0, 0);");
             Scene scene = new Scene(root);
             opponentStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
                 if (KeyCode.ESCAPE == event.getCode()) {

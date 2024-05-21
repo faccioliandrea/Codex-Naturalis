@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 public class LeaderboxVBox extends VBox {
     @FXML
@@ -45,12 +46,14 @@ public class LeaderboxVBox extends VBox {
             Label usernameLabel = new Label(username);
             // TODO: Add colors
             // Color.valueOf("BLACK");
-            usernameLabel.hoverProperty().addListener((obs, oldVal, newValue) -> {
-                if (newValue) {
-                    OpponentBoardController controller = new OpponentBoardController(username, data.getBoards().get(username));
-                    GUIApp.showOpponentBoard(controller);
-                }
-            });
+            if (!Objects.equals(username, data.getUsername()) && !data.getBoards().get(username).isEmpty()) {
+                usernameLabel.hoverProperty().addListener((obs, oldVal, newValue) -> {
+                    if (newValue) {
+                        OpponentBoardController controller = new OpponentBoardController(username, data.getBoards().get(username));
+                        GUIApp.showOpponentBoard(controller);
+                    }
+                });
+            }
             leaderboardHBox.getChildren().add(usernameLabel);
             Region spacing = new Region();
             HBox.setHgrow(spacing, Priority.ALWAYS);

@@ -14,11 +14,11 @@ import java.util.ResourceBundle;
 public class WaitLobbyController implements Initializable {
     @FXML
     private VBox notificationVBox;
+    @FXML
+    private Label lobbyIdLabel;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    }
+    public void initialize(URL url, ResourceBundle resourceBundle) {}
 
     public void userJoined(String username) {
         PauseTransition pause = new PauseTransition(Duration.seconds(10));
@@ -34,5 +34,9 @@ public class WaitLobbyController implements Initializable {
         pause.setOnFinished(e -> fadeIn.playFromStart());
         notificationVBox.getChildren().add(label);
         fadeIn.play();
+    }
+
+    public void setLobbyId(String id) {
+        lobbyIdLabel.setText("Lobby ID: " + id);
     }
 }

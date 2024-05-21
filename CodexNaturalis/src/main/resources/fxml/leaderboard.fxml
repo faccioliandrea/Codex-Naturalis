@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
 <fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" type="javafx.scene.layout.VBox" >
     <VBox alignment="TOP_CENTER" spacing="20" prefWidth="200.0">
-        <Label text="Leaderboard">
-            <font>
-                <Font size="20.0"/>
-            </font>
+        <Label text="Leaderboard" styleClass="midTitle">
         </Label>
         <VBox fx:id="leaderboardVBox" alignment="TOP_CENTER" spacing="10" />
     </VBox>
