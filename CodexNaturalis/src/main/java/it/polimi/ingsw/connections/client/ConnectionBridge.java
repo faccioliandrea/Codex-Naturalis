@@ -6,8 +6,6 @@ import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.connections.server.RMIServerConnectionInterface;
 import it.polimi.ingsw.controller.client.ClientController;
-
-import java.awt.*;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -161,18 +159,6 @@ public class ConnectionBridge {
         controller.initTurn(turnInfo);
     }
 
-    public void initTurnAck() {
-        if (serverConnection instanceof SocketServerConnection) {
-            try {
-                ((SocketServerConnection) serverConnection).initTurnAck(controller.getUsername());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            // TODO: handle RMI
-        }
-    }
-
     public void createGame() {
         if (serverConnection instanceof SocketServerConnection) {
             try {
@@ -285,8 +271,8 @@ public class ConnectionBridge {
             }
         } else {
             try {
-                if(((RMIServerConnectionInterface) serverConnection).choosePrivateGoal(controller.getUsername(), index) == 1)
-                    privateGoalChosen();
+                ((RMIServerConnectionInterface) serverConnection).choosePrivateGoal(controller.getUsername(), index);
+                privateGoalChosen();
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
