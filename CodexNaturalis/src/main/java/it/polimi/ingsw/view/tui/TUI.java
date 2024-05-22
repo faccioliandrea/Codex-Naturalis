@@ -448,6 +448,11 @@ public class TUI extends UIManager {
         printColorDebug(TUIColors.RED, message);
     }
 
+    @Override
+    public void noOtherPlayerConnected() {
+        printColorDebug(TUIColors.RED, "No other player connected. The game will end in 1 minute");
+    }
+
     public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {
         boolean padding = availablePos != null && !availablePos.isEmpty();
 

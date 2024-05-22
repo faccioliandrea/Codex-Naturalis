@@ -1,6 +1,8 @@
 package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
+import it.polimi.ingsw.connections.client.RMIClientConnection;
+import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
@@ -22,7 +24,7 @@ public class ConnectionBridge {
     public ConnectionBridge(ServerController controller) {
 
         this.controller = controller;
-        connections = new HashMap<>();
+        connections = new HashMap<String, ClientConnection>();
     }
 
     /**
@@ -354,6 +356,15 @@ public class ConnectionBridge {
         } catch (IOException e) {
             connections.get(gameStateInfo.getUsername()).setOffline();
         }
+    }
+
+    public void noOtherPlayerConnected(String user) {
+        try {
+            connections.get(user).noOtherPlayerConnected();
+        } catch (IOException e) {
+            connections.get(user).setOffline();
+        }
+
     }
 
     public HashMap<String, ClientConnection> getConnections() {

@@ -289,6 +289,11 @@ public class GUI extends UIManager {
         ipErrorShown = true;
     }
 
+    @Override
+    public void noOtherPlayerConnected() {
+        //TODO implement
+    }
+
     /*public void showOpponentBoard(String opponent) {
         GUIApp.changeScene("opponent-board", new OpponentBoardController(opponent, data.getBoards().get(opponent)));
     }*/

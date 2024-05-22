@@ -2,6 +2,8 @@ package it.polimi.ingsw.connections.client;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
+
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -23,6 +25,8 @@ public interface RMIClientConnectionInterface extends Remote {
     void sendStatus(GameStateInfo gameStateInfo) throws RemoteException;
 
     void gameEnded(HashMap<String, Integer> leaderboard) throws RemoteException;
+
+    void noOtherPlayerConnected() throws IOException;
 
     void playerDisconnected(String username, boolean gameStarted) throws RemoteException;
 

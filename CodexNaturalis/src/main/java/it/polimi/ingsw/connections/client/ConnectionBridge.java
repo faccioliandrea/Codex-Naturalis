@@ -321,10 +321,7 @@ public class ConnectionBridge {
         this.clientConnection = client;
     }
 
-
-    public void playerDisconnected(String username, boolean gameStarted){
-        controller.playerDisconnected(username, gameStarted);
-    }
+    public void playerDisconnected(String username, boolean gameStarted){controller.playerDisconnected(username, gameStarted);}
 
     public void playerReconnected(String username) {controller.playerReconnected(username);}
 
@@ -332,5 +329,7 @@ public class ConnectionBridge {
         controller.reconnectionState(gameStateInfo);
     }
 
-
+    public void noOtherPlayerConnected() {
+        controller.noOtherPlayerConnected();
+    }
 }

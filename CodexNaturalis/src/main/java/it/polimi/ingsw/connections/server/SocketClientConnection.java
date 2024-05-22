@@ -33,7 +33,6 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     public SocketClientConnection(ServerSocket serverSocket, Socket clientSocket, ConnectionBridge connectionBridge) {
         synchronized (this) {
             this.connectionStatus = ConnectionStatus.INITIALIZING;
-
             this.connectionBridge = connectionBridge;
             this.serverSocket = serverSocket;
             this.clientSocket = clientSocket;
@@ -56,6 +55,8 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     public ConnectionStatus getStatus() {
         return this.connectionStatus;
     }
+
+
 
 
     public InputStreamRunnable getInputStream() {
@@ -205,6 +206,11 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     @Override
     public void reconnectionState(GameStateInfo gameStateInfo) throws IOException{
         this.outputStream.sendMessage(new ReconnectionStateMessage(gameStateInfo));
+    }
+
+    @Override
+    public void noOtherPlayerConnected() throws IOException {
+        this.outputStream.sendMessage(new NoOtherPlayerConnectedMessage());
     }
 
 

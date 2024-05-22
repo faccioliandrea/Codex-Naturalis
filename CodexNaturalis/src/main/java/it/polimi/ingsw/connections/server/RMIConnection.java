@@ -37,6 +37,11 @@ public class RMIConnection implements ClientConnection{
     }
 
     @Override
+    public void noOtherPlayerConnected() throws IOException {
+
+    }
+
+    @Override
     public void setOffline() {
         connectionStatus = ConnectionStatus.OFFLINE;
     }

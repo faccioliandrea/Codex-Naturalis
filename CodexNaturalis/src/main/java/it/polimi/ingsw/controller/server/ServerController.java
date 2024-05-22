@@ -15,10 +15,8 @@ import it.polimi.ingsw.model.exceptions.RequirementsNotSatisfied;
 import it.polimi.ingsw.model.player.Player;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -34,6 +32,7 @@ public class ServerController {
     private HashMap<String, String> userToGame;
     private ConnectionBridge connectionBridge;
     private ExecutorService executorService;
+    private TimerTask finishGame;
 
     /**
      * Default constructor
@@ -114,14 +113,14 @@ public class ServerController {
                                 gameController.getCurrentTurn(userToGame.get(user)),
                                 gameController.isLast(userToGame.get(user)),
                                 gameController.getUserBoardByUsername(userToGame.get(user), username.getUsername()),
-                                gameController.getUserSymbolsByUsername(userToGame.get(user), username.getUsername()),
+                                gameController.getUserSymbols(userToGame.get(user), username.getUsername()),
                                 gameController.getLeaderboard(userToGame.get(user)),
                                 gameController.getBoards(userToGame.get(user)),
                                 connectionStatus,
                                 gameController.getSharedGoals(userToGame.get(user)),
                                 gameController.getPrivateGoal(userToGame.get(user), username.getUsername()),
-                                gameController.getUserCardsPointsByUsername(userToGame.get(user), username.getUsername()),
-                                gameController.getUserGoalsPointsByUsername(userToGame.get(user), username.getUsername()),
+                                gameController.getUserCardsPoints(userToGame.get(user), username.getUsername()),
+                                gameController.getUserGoalsPoints(userToGame.get(user), username.getUsername()),
                                 gameController.isGameFinished(userToGame.get(user))
                         ));
                     }
@@ -134,9 +133,11 @@ public class ServerController {
                 gameController.endTurn(userToGame.get(user));
                 gameController.getGames().get(userToGame.get(user)).getGameModel().setTotalTurns(gameController.getGames().get(userToGame.get(user)).getGameModel().getTotalTurns()-1);
                 initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
+
             }
         }
     }
+
 
     /**
      * let the player choose its private goal
@@ -239,24 +240,26 @@ public class ServerController {
                         gameController.getCurrentTurn(userToGame.get(user)),
                         gameController.isLast(userToGame.get(user)),
                         gameController.getUserBoardByUsername(userToGame.get(user), player.getUsername()),
-                        gameController.getUserSymbolsByUsername(userToGame.get(user), player.getUsername()),
+                        gameController.getUserSymbols(userToGame.get(user), player.getUsername()),
                         leaderboard,
                         gameController.getBoards(userToGame.get(user)),
                         connectionStatus,
                         gameController.getSharedGoals(userToGame.get(user)),
                         gameController.getPrivateGoal(userToGame.get(user), player.getUsername()),
-                        gameController.getUserCardsPointsByUsername(userToGame.get(user), player.getUsername()),
-                        gameController.getUserGoalsPointsByUsername(userToGame.get(user), player.getUsername()),
+                        gameController.getUserCardsPoints(userToGame.get(user), player.getUsername()),
+                        gameController.getUserGoalsPoints(userToGame.get(user), player.getUsername()),
                         gameController.isGameFinished(userToGame.get(user))
                 );
                 connectionBridge.gameState(player.getUsername(), gameState);
             }
 
             if (gameController.isGameFinished(userToGame.get(user)))
-                endGame(userToGame.get(user));
+                endGame(userToGame.get(user), null);
             else {
                 gameController.endTurn(userToGame.get(user));
                 initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
+
+
             }
 
 
@@ -269,8 +272,16 @@ public class ServerController {
      * End the game and send a notification to all the players in the lobby
      * @param gameId the id of the game
      */
-    private void endGame(String gameId){
+    private void endGame(String gameId, String forceWinner){
+
         HashMap<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
+        if(forceWinner!= null){
+            leaderboard.keySet().forEach(x->{
+                if(!x.equals(forceWinner)){
+                    leaderboard.replace(x, 0);
+                }
+            });
+        }
         for(String username : userToGame.keySet()){
             if(userToGame.get(username).equals(userToGame.get(username))) {
                 connectionBridge.endGame(username, leaderboard);
@@ -308,23 +319,44 @@ public class ServerController {
      */
     public void playerDisconnected(String username){
         if(userToGame.containsKey(username)) {
-            for (String u : userToGame.keySet()) {
-                if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
-                   connectionBridge.playerDisconnected(username, u, true);
+            if(gameController.getGamePlayers(userToGame.get(username)).stream().noneMatch(x -> connectionBridge.checkUserConnected(x.getUsername()))){
+                System.out.println("0 player connected, game will finish in 1 minute.");
+                Timer timer = new Timer();
+                this.finishGame = new TimerTask() {
+                    @Override
+                    public void run() {
+                        destroyGame(userToGame.get(username));
+                    }
+                };
+                timer.schedule(finishGame, 60 * 1000);
+            } else if(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).count()==1){
+                System.out.println("Only 1 player connected, game will finish in 1 minute.");
+                connectionBridge.noOtherPlayerConnected(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst().get().getUsername());
+                Timer timer = new Timer();
+                this.finishGame = new TimerTask() {
+                    @Override
+                    public void run() {
+                        endGame(userToGame.get(username), gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst().get().getUsername());
+                    }
+                };
+                timer.schedule(finishGame, 30 * 1000);
+            } else {
+                for (String u : userToGame.keySet()) {
+                    if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
+                        connectionBridge.playerDisconnected(username, u, true);
+                    }
+                }
+                if(gameController.getUserBoardByUsername(userToGame.get(username), username).isEmpty() && !gameController.getHand(userToGame.get(username), username).isEmpty()){
+                    gameController.choosePrivateGoal(userToGame.get(username), username,  0);
+                    gameController.chooseStarterCardSide(userToGame.get(username), username, false);
+                } else if( gameController.getCurrentPlayer(userToGame.get(username)).equals(username)){
+                    if(gameController.getHand(userToGame.get(username), username).size()!=3){
+                        //disconnection during the turn before draw -> draw a resource and end the turn
+                        gameController.drawResource(userToGame.get(username), 0);
+                    }
+                    endTurn(username);
                 }
             }
-            if(gameController.getUserBoardByUsername(userToGame.get(username), username).isEmpty() && !gameController.getHand(userToGame.get(username), username).isEmpty()){
-                // TODO: disconnection before private goals and starter card choice -> end game and remove all players!
-                endGame(userToGame.get(username));
-
-            } else if( gameController.getCurrentPlayer(userToGame.get(username)).equals(username)){
-                if(gameController.getHand(userToGame.get(username), username).size()!=3){
-                    //disconnection during the turn before draw -> draw a resource and end the turn
-                    gameController.drawResource(userToGame.get(username), 0);
-                }
-                endTurn(username);
-            }
-
         } else if (userToLobby.containsKey(username)) {
             for (String u : userToLobby.keySet()) {
                 if (userToLobby.get(u).equals(userToLobby.get(username)) && !u.equals(username)) {
@@ -342,6 +374,11 @@ public class ServerController {
      */
     public void playerReconnected(String username){
         if(userToGame.containsKey(username)) {
+            if(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x->connectionBridge.checkUserConnected(x.getUsername())).count()<=2){
+                System.out.println("One player reconnected, game will continue.");
+                finishGame.cancel();
+                initTurn(username);
+            }
             for (String u : userToGame.keySet()) {
                 if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
                     connectionBridge.playerReconnected(username, u);
@@ -365,19 +402,21 @@ public class ServerController {
                             gameController.getCurrentTurn(userToGame.get(username)),
                             gameController.isLast(userToGame.get(username)),
                             gameController.getUserBoardByUsername(userToGame.get(username), username),
-                            gameController.getUserSymbolsByUsername(userToGame.get(username), username),
+                            gameController.getUserSymbols(userToGame.get(username), username),
                             leaderboard,
                             gameController.getBoards(userToGame.get(username)),
                             connectionStatus,
                             gameController.getSharedGoals(userToGame.get(username)),
                             gameController.getPrivateGoal(userToGame.get(username), username),
-                            gameController.getUserCardsPointsByUsername(userToGame.get(username), username),
-                            gameController.getUserGoalsPointsByUsername(userToGame.get(username), username),
+                            gameController.getUserCardsPoints(userToGame.get(username), username),
+                            gameController.getUserGoalsPoints(userToGame.get(username), username),
                             gameController.isGameFinished(userToGame.get(username))
                     );
                     connectionBridge.reconnectionState(gameState);
                 }
             }
+        } else {
+            connectionBridge.validUsername(connectionBridge.getConnections().get(username));
         }
     }
 

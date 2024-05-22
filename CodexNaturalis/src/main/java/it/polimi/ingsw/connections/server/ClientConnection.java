@@ -11,6 +11,7 @@ import java.util.HashMap;
 public interface ClientConnection {
     void close() throws IOException;
     String getRemoteAddr();
+    void noOtherPlayerConnected() throws IOException;
     void setOffline();
     ConnectionStatus getStatus();
 

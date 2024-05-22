@@ -207,6 +207,7 @@ public class ClientController {
         return currentTurnInfo;
     }
 
-
-
+    public void noOtherPlayerConnected() {
+        ui.noOtherPlayerConnected();
+    }
 }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.controller.server;
 
-import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.model.cards.Card;
@@ -60,7 +59,6 @@ public class GameController {
      * @param index the index of the card to choose
      */
     protected void choosePrivateGoal(String gameID,String username, int index){
-        //TODO: devo passagli anche il riferimento al client?
         games.get(gameID).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().choosePrivateGoal(index);
 
     }
@@ -230,7 +228,7 @@ public class GameController {
         return games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints();
     }
 
-    protected int getUserCardsPointsByUsername(String gameId, String username) {
+    protected int getUserCardsPoints(String gameId, String username) {
         return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getCardsPoints();
     }
 
@@ -238,7 +236,7 @@ public class GameController {
         return games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getSymbols();
     }
 
-    protected Map<CardSymbol, Integer> getUserSymbolsByUsername(String gameId, String username) {
+    protected Map<CardSymbol, Integer> getUserSymbols(String gameId, String username) {
         return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getSymbols();
     }
 
@@ -250,7 +248,7 @@ public class GameController {
         return games.get(gameId).getGameModel().getCurrentPlayer().getGoalPoints();
     }
 
-    protected int getUserGoalsPointsByUsername(String gameId, String username){
+    protected int getUserGoalsPoints(String gameId, String username){
         return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getGoalPoints();
     }
 
@@ -276,11 +274,6 @@ public class GameController {
         for( int i = 0; i < games.get(gameId).getPlayers().size(); i++)
             leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints() + games.get(gameId).getPlayers().get(i).getGoalPoints());
         return leaderboard;
-    }
-
-    protected void controller(){
-        //cicla fino a che non finisce la partita e chiama i metodi:
-        // e gestisce la partita
     }
 
 

@@ -87,6 +87,11 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
         connectionBridge.gameEnd(leaderboard);
     }
 
+    @Override
+    public void noOtherPlayerConnected() throws RemoteException {
+        // TODO implement
+    }
+
     /**
      * Method to handle the disconnection of a player
      * @param username the username of the player
