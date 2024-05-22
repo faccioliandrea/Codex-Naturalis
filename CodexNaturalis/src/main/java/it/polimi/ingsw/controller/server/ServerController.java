@@ -4,6 +4,7 @@ import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
+import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
@@ -372,7 +373,8 @@ public class ServerController {
      * Handle player reconnection
      * @param username the username of the player
      */
-    public void playerReconnected(String username){
+    public LogInResponse playerReconnected(String username){
+        LogInResponse response;
         if(userToGame.containsKey(username)) {
             if(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x->connectionBridge.checkUserConnected(x.getUsername())).count()<=2){
                 System.out.println("One player reconnected, game will continue.");
@@ -415,9 +417,12 @@ public class ServerController {
                     connectionBridge.reconnectionState(gameState);
                 }
             }
+            response = LogInResponse.RECONNECT;
         } else {
             connectionBridge.validUsername(connectionBridge.getConnections().get(username));
+            response = LogInResponse.LOGGED_IN;
         }
+        return response;
     }
 
 

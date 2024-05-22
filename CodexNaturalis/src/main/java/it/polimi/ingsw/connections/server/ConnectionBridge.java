@@ -1,8 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
-import it.polimi.ingsw.connections.client.RMIClientConnection;
-import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
@@ -24,7 +22,7 @@ public class ConnectionBridge {
     public ConnectionBridge(ServerController controller) {
 
         this.controller = controller;
-        connections = new HashMap<String, ClientConnection>();
+        connections = new HashMap<>();
     }
 
     /**
@@ -38,8 +36,8 @@ public class ConnectionBridge {
             connections.replace(username, connection);
 
             System.out.printf("%s Reconnected%n", username);
-            controller.playerReconnected(username);
-            return LogInResponse.RECONNECT;
+            return controller.playerReconnected(username);
+
         }
         else if(connections.containsKey(username)) {
             if (connection instanceof SocketClientConnection)
@@ -302,7 +300,8 @@ public class ConnectionBridge {
 
     public void validUsername(ClientConnection connection) {
         try {
-            ((SocketClientConnection) connection).validUsername();
+            if (connection instanceof SocketClientConnection)
+                ((SocketClientConnection) connection).validUsername();
         } catch (IOException e) {
             connection.setOffline();
         }
