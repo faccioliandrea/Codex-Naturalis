@@ -5,12 +5,9 @@ import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.view.UIManager;
-import it.polimi.ingsw.view.tui.TUIColors;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClientController {
@@ -18,7 +15,7 @@ public class ClientController {
     private String username;
     private ConnectionBridge connectionBridge;
     private TurnInfo currentTurnInfo = new TurnInfo();
-    private final ClientGameData gameData = new ClientGameData();
+    private ClientGameData gameData = new ClientGameData();
 
     public ClientController(UIManager ui) {
         this.ui = ui;
@@ -63,7 +60,6 @@ public class ClientController {
     }
 
     public void joinLobbySuccess(boolean isLastPlayer) {
-
         if (isLastPlayer) {
             ui.joinedLobbyLast();
             connectionBridge.createGame();
@@ -173,6 +169,8 @@ public class ClientController {
         ui.gameEnded();
         boolean newGame = ui.askForNewGame();
         if(newGame) {
+            this.gameData= new ClientGameData();
+            this.gameData.addObserver(this.ui.getData());
             this.lobbyRequest();
         } else {
             ui.goodbye();
