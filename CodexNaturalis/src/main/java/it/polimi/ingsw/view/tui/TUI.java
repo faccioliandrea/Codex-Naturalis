@@ -159,15 +159,15 @@ public class TUI extends UIManager {
     }
 
 
-    public CardInfo askForPlayCard(ArrayList<CardInfo> hand, ArrayList<Point> availablePositions) {
+    public CardInfo askForPlayCard() {
         int choice = -1;
         do {
             inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose which card do you want to play:");
-            hand.forEach(x->printColorDebug(TUIColors.PURPLE, String.format("[%s] %s", hand.indexOf(x)+1, x.getId())));
+            this.data.getHand().forEach(x->printColorDebug(TUIColors.PURPLE, String.format("[%s] %s", this.data.getHand().indexOf(x)+1, x.getId())));
             try {
                 choice =  Integer.parseInt(inputQueue.take()) - 1;
-                if (choice < 0 || choice > hand.size()-1) {
+                if (choice < 0 || choice > this.data.getHand().size()-1) {
                     System.out.println("Please, choose a valid card");
                 }
             } catch (InterruptedException e) {
@@ -176,7 +176,7 @@ public class TUI extends UIManager {
                 System.out.println("Oops, you inserted a string!");
             }
 
-        } while(choice < 0 || choice > hand.size()-1);
+        } while(choice < 0 || choice > this.data.getHand().size()-1);
 
         int choiceSide=-1;
         do {
@@ -193,20 +193,20 @@ public class TUI extends UIManager {
                 System.out.println("Oops, you inserted a string!");
             }
         } while(choiceSide != 1 && choiceSide != 2);
-        hand.get(choice).setFlipped(choiceSide==2);
+        this.data.getHand().get(choice).setFlipped(choiceSide==2);
 
         int choicePos = -1;
         do {
             inputQueue.clear();
             this.printColorDebug(TUIColors.PURPLE, "Choose the position:");
             String availablePos = "";
-            for (Point p: availablePositions) {
-                availablePos = availablePos.concat("[" + availablePositions.indexOf(p) + "] ");
+            for (Point p: this.data.getAvailablePositions()) {
+                availablePos = availablePos.concat("[" + this.data.getAvailablePositions().indexOf(p) + "] ");
             }
             printColorDebug(TUIColors.PURPLE, availablePos);
             try {
                 choicePos =  Integer.parseInt(inputQueue.take());
-                if (availablePositions.size()-1<choicePos || choicePos < 0) {
+                if (this.data.getAvailablePositions().size()-1<choicePos || choicePos < 0) {
                     System.out.println("Please, type a valid position");
                 }
             } catch (InterruptedException e) {
@@ -214,12 +214,12 @@ public class TUI extends UIManager {
             } catch (NumberFormatException e) {
                 System.out.println("Oops, you inserted a string!");
             }
-        } while(availablePositions.size()-1<choicePos || choicePos < 0);
-        hand.get(choice).setCoord(availablePositions.get(choicePos));
-        return hand.get(choice);
+        } while(this.data.getAvailablePositions().size()-1<choicePos || choicePos < 0);
+        this.data.getHand().get(choice).setCoord(this.data.getAvailablePositions().get(choicePos));
+        return this.data.getHand().get(choice);
     }
 
-    public int askForDrawCard(TurnInfo turnInfo) {
+    public int askForDrawCard() {
         int choice = -1;
         int deck;
         do {
@@ -229,9 +229,9 @@ public class TUI extends UIManager {
                 choice =  Integer.parseInt(inputQueue.take());
                 if (choice != 1 && choice != 2) {
                     System.out.println("Please, type 1 or 2");
-                } else if (choice == 1 && turnInfo.getResourceDeck().isEmpty()){
+                } else if (choice == 1 && this.data.getResourceDeck().isEmpty()){
                     this.printColorDebug(TUIColors.RED, "Deck is empty, you can't draw from it. Choose the gold deck.");
-                } else if (choice == 2 && turnInfo.getGoldDeck().isEmpty()){
+                } else if (choice == 2 && this.data.getGoldDeck().isEmpty()){
                     this.printColorDebug(TUIColors.RED, "Deck is empty, you can't draw from it. Choose the resource deck.");
                 }
             } catch (InterruptedException e) {
@@ -242,7 +242,7 @@ public class TUI extends UIManager {
         } while(choice != 1 && choice != 2);
         deck = choice == 1 ? 10 : 20;
 
-        this.printColorDebug(TUIColors.PURPLE, String.format("Choose which card do you want to draw: [1] %s [2] %s [3] Covered", deck == 10 ? turnInfo.getResourceDeck().get(0).getId() : turnInfo.getGoldDeck().get(0).getId(), deck == 10 ? turnInfo.getResourceDeck().get(1).getId() : turnInfo.getGoldDeck().get(1).getId() ));
+        this.printColorDebug(TUIColors.PURPLE, String.format("Choose which card do you want to draw: [1] %s [2] %s [3] Covered", deck == 10 ? this.data.getResourceDeck().get(0).getId() : this.data.getGoldDeck().get(0).getId(), deck == 10 ? this.data.getResourceDeck().get(1).getId() : this.data.getGoldDeck().get(1).getId() ));
 
         int choiceCard = -1;
         do {
@@ -327,8 +327,6 @@ public class TUI extends UIManager {
         this.printColorDebug(TUIColors.CYAN, "Your current hand:");
         data.getHand().forEach(x->this.printDebug(String.format("Card id: %s", x.getId())));
         printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
-        otherPlayerTurn(data.getCurrentPlayer());
-
     }
 
     @Override

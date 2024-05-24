@@ -38,6 +38,7 @@ public class RMIConnection implements ClientConnection{
 
     @Override
     public void noOtherPlayerConnected() throws IOException {
+        rmiClientConnection.noOtherPlayerConnected();
 
     }
 

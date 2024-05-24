@@ -337,7 +337,7 @@ public class ConnectionBridge {
         try {
             connections.get(receiver).playerDisconnected(username, gameStarted);
         } catch (IOException e) {
-            connections.get(username).setOffline();
+            connections.get(receiver).setOffline();
         }
     }
 
@@ -345,7 +345,7 @@ public class ConnectionBridge {
         try {
             connections.get(receiver).playerReconnected(username);
         } catch (IOException e) {
-            connections.get(username).setOffline();
+            connections.get(receiver).setOffline();
         }
     }
 

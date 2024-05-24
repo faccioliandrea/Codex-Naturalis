@@ -120,7 +120,7 @@ public class ClientController {
         this.gameData.fromTurnInfo(turnInfo);
         ui.yourTurn(turnInfo.isLastTurn());
 
-        CardInfo playedCard = ui.askForPlayCard(turnInfo.getHand(), turnInfo.getAvailablePositions());
+        CardInfo playedCard = ui.askForPlayCard();
         connectionBridge.placeCardRequest(playedCard);
     }
 
@@ -133,8 +133,8 @@ public class ClientController {
         this.gameData.setAvailablePositions(placeCardSuccessInfo.getAvailable());
         this.gameData.setSymbols(placeCardSuccessInfo.getSymbols());
         ui.placeCardSuccess();
-        if(!gameData.getResourceDeck().isEmpty() && !gameData.getGoldDeck().isEmpty()){
-            int choice = ui.askForDrawCard(currentTurnInfo);
+        if(!gameData.getResourceDeck().isEmpty() || !gameData.getGoldDeck().isEmpty()){
+            int choice = ui.askForDrawCard();
             if(choice / 10 == 1){
                 connectionBridge.drawResourceRequest(choice%10);
             } else {
@@ -147,7 +147,7 @@ public class ClientController {
 
     public void placeCardFailure(){
         ui.placeCardFailure();
-        CardInfo playedCard = ui.askForPlayCard(this.currentTurnInfo.getHand(), this.currentTurnInfo.getAvailablePositions());
+        CardInfo playedCard = ui.askForPlayCard();
         connectionBridge.placeCardRequest(playedCard);
     }
 
@@ -193,6 +193,13 @@ public class ClientController {
     public void reconnectionState(GameStateInfo gameStateInfo) {
         this.gameData.fromGameStateInfo(gameStateInfo);
         ui.reconnectionState();
+        if(this.gameData.getCurrentPlayer().equals(this.gameData.getUsername())){
+            ui.yourTurn(this.gameData.isLastTurn());
+            CardInfo playedCard = ui.askForPlayCard();
+            connectionBridge.placeCardRequest(playedCard);
+        } else {
+            ui.otherPlayerTurn(this.gameData.getCurrentPlayer());
+        }
     }
 
     public String getUsername() {

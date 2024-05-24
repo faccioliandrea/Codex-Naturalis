@@ -104,7 +104,7 @@ public class GUI extends UIManager {
     }
 
     @Override
-    public CardInfo askForPlayCard(ArrayList<CardInfo> hand, ArrayList<Point> availablePositions) {
+    public CardInfo askForPlayCard() {
         //GUIApp.changeScene("new-main", newMainController);
         Platform.runLater(() -> {
             mainController.updateData(data);
@@ -125,7 +125,7 @@ public class GUI extends UIManager {
     }
 
     @Override
-    public int askForDrawCard(TurnInfo turnInfo) {
+    public int askForDrawCard() {
         Platform.runLater(() -> {
             mainController.updateData(data);
             mainController.askForDrawCard(data);

@@ -24,8 +24,8 @@ public abstract class UIManager {
     public abstract String askForLobbyId(ArrayList<String> lobbies);
     public abstract int askForPrivateGoal();
     public abstract boolean askForStarterCardSide();
-    public abstract CardInfo askForPlayCard(ArrayList<CardInfo> hand, ArrayList<Point> availablePositions);
-    public abstract int askForDrawCard(TurnInfo turnInfo);
+    public abstract CardInfo askForPlayCard();
+    public abstract int askForDrawCard();
     public abstract boolean askForNewGame();
     public abstract void invalidUsername(String username);
     public abstract void welcome(String username);

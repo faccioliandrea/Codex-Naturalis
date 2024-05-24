@@ -89,7 +89,7 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
 
     @Override
     public void noOtherPlayerConnected() throws RemoteException {
-        // TODO implement
+        connectionBridge.noOtherPlayerConnected();
     }
 
     /**

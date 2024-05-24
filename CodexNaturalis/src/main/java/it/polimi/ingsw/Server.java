@@ -6,6 +6,7 @@ import it.polimi.ingsw.connections.server.SocketClientConnection;
 import it.polimi.ingsw.controller.server.ServerController;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.registry.LocateRegistry;
@@ -41,6 +42,7 @@ public class Server
         }).start();
 
         try {
+            System.setProperty("java.rmi.server.hostname", InetAddress.getLocalHost().getHostAddress());
             RMIServerConnectionInterface obj = new RMIServerConnection(serverController.getConnectionBridge());
             Registry registry = LocateRegistry.createRegistry(localPortRMI);
             registry.rebind(name, obj);
