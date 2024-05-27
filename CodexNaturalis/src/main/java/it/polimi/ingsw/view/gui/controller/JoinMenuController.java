@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Screen;
 
 import java.net.URL;
@@ -26,6 +27,10 @@ public class JoinMenuController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logoImageView.setFitHeight(screen.getVisualBounds().getHeight() * 0.5);
         joinButton.setOnMouseClicked(e -> submitIp());
+        ipTextField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                submitIp();
+            }});
     }
 
     private void submitIp() {

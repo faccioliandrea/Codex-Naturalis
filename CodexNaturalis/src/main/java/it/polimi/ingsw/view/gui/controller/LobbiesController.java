@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,6 +32,14 @@ public class LobbiesController implements Initializable {
         usernameButton.setOnMouseClicked(e -> onUsernameButtonClicked());
         joinLobbyButton.setOnMouseClicked(e -> onJoinButtonClicked());
         createLobbyButton.setOnMouseClicked(e -> onCreateLobbyButtonClicked());
+        usernameTextField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                onUsernameButtonClicked();
+            }});
+        lobbiesListView.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                onJoinButtonClicked();
+            }});
     }
 
     private void usernameEntered(String value) {

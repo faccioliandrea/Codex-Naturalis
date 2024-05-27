@@ -45,7 +45,7 @@ public class Client {
                 System.out.println("Oops, you inserted a string!");
             }
             if (!(choice == 1 || choice == 2)) {
-                System.out.println("Please, type [1] GUI or [2] CLI");
+                System.out.println("Please, type [1] TUI or [2] GUI");
             }
         } while(!(choice == 1 || choice == 2));
         chosenMode = (choice == 1) ? "TUI" : "GUI";
