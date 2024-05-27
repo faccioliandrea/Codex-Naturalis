@@ -49,7 +49,6 @@ public class SocketServerConnection implements ServerConnection, Runnable {
             }
         } catch (IOException | InterruptedException e ) {
             this.connectionStatus = ConnectionStatus.OFFLINE;
-            return;
         }
     }
 

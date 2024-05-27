@@ -85,14 +85,13 @@ public class ClientController {
     public void gameStarted(StarterData starterData){
         ui.gameStarted(starterData);
         this.gameData.setHand(starterData.getHand());
-
-        int chosenGoal = ui.askForPrivateGoal();
-        connectionBridge.choosePrivateGoalRequest(chosenGoal);
         this.gameData.setLeaderboard(starterData.getUsers().stream().collect(Collectors.toMap(s -> s, s -> 0, (x, y) -> x, HashMap::new)));
         this.gameData.setBoards(starterData.getUsers().stream().collect(Collectors.toMap(s -> s, x -> new ArrayList<>(), (x, y) -> x, HashMap::new)));
         this.gameData.setPlayerColors(starterData.getPlayerColors());
-        // TODO: move this in privateGoalChosen?
         this.gameData.setGoals(starterData.getSharedGoals());
+        int chosenGoal = ui.askForPrivateGoal();
+        connectionBridge.choosePrivateGoalRequest(chosenGoal);
+
         this.gameData.addToList(this.gameData.getGoals(), starterData.getPrivateGoals().get(chosenGoal));
     }
 

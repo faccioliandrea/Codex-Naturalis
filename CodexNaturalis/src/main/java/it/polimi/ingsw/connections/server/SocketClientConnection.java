@@ -41,7 +41,6 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         }
     }
 
-
     public String getRemoteAddr() {
         return this.remoteAddr.toString();
     }
@@ -55,9 +54,6 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     public ConnectionStatus getStatus() {
         return this.connectionStatus;
     }
-
-
-
 
     public InputStreamRunnable getInputStream() {
         return inputStream;

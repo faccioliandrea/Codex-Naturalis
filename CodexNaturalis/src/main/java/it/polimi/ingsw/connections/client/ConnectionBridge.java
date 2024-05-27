@@ -321,7 +321,8 @@ public class ConnectionBridge {
         this.clientConnection = client;
     }
 
-    public void playerDisconnected(String username, boolean gameStarted){controller.playerDisconnected(username, gameStarted);}
+    public void playerDisconnected(String username, boolean gameStarted){
+        controller.playerDisconnected(username, gameStarted);}
 
     public void playerReconnected(String username) {controller.playerReconnected(username);}
 

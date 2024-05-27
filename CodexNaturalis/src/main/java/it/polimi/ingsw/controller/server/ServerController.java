@@ -326,7 +326,7 @@ public class ServerController {
     public void playerDisconnected(String username){
         if(userToGame.containsKey(username)) {
             if(gameController.getUserBoardByUsername(userToGame.get(username), username).isEmpty() && !gameController.getHand(userToGame.get(username), username).isEmpty()){
-                if(gameController.getPrivateGoal(userToGame.get(username), username)==null) {
+                if(gameController.getPrivateGoals(userToGame.get(username), username).size()==2) {
                     gameController.choosePrivateGoal(userToGame.get(username), username, 0);
                 }
                 gameController.chooseStarterCardSide(userToGame.get(username), username, false);
