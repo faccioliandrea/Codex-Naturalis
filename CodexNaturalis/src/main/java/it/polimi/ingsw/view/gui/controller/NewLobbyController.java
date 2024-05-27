@@ -31,7 +31,7 @@ public class NewLobbyController implements Initializable {
         playerButtons.getChildren().forEach(node -> {
             Button button = (Button) node;
             button.setOnAction(e ->
-                GUI.getQueue().add(Integer.parseInt(button.getText()))
+                    GUI.getQueue().add(Integer.parseInt(button.getText()))
             );
         });
     }

@@ -444,6 +444,12 @@ public class TUI extends UIManager {
     @Override
     public void showErrorMessage(String message) {
         printColorDebug(TUIColors.RED, message);
+        System.exit(0);
+    }
+
+    @Override
+    public void connectingToServer() {
+        printColorDebug(TUIColors.RED, "Could not connect to the server. Retrying...");
     }
 
     @Override

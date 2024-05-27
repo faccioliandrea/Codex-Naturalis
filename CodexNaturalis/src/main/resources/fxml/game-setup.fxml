@@ -5,11 +5,12 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">
 
-        <VBox fx:id="privateGoalsVBox" spacing="20.0" visible="false" alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
-            <Label text="Select you private goal" styleClass="bigTitle"/>
-        </VBox>
-        <VBox fx:id="starterCardVBox" spacing="20.0" visible="false" alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
-            <Label text="Select your starter card side" styleClass="bigTitle"/>
-        </VBox>
-
+    <VBox fx:id="privateGoalsVBox" spacing="20.0" visible="false" alignment="CENTER" AnchorPane.topAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <Label text="Select you private goal" styleClass="bigTitle"/>
+    </VBox>
+    <VBox fx:id="starterCardVBox" spacing="20.0" visible="false" alignment="CENTER" AnchorPane.topAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <Label text="Select your starter card side" styleClass="bigTitle"/>
+    </VBox>
 </AnchorPane>

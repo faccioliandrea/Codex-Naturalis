@@ -20,16 +20,21 @@ import javafx.stage.StageStyle;
 
 public class GUIApp extends Application {
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     private static Stage stage;
     private static Stage opponentStage;
     private static String lastFXML = "";
 
     /**
      * Starts the GUI application
+     *
      * @param stage stage to start
      */
-    @Override public void start(final Stage stage) {
+    @Override
+    public void start(final Stage stage) {
         GUIApp.stage = stage;
         GUIApp.opponentStage = new Stage();
         opponentStage.initModality(Modality.APPLICATION_MODAL);
@@ -53,7 +58,8 @@ public class GUIApp extends Application {
 
     /**
      * Changes the scene to the one specified by the fxml file and controller
-     * @param fxml FXML name
+     *
+     * @param fxml       FXML name
      * @param controller controller for the FXML
      */
     public static void changeScene(String fxml, Initializable controller) {
@@ -75,8 +81,9 @@ public class GUIApp extends Application {
 
     /**
      * Shows an alert with the specified message and type
+     *
      * @param errorMessage message to show
-     * @param type type of the alert
+     * @param type         type of the alert
      */
     public static void showAlert(String errorMessage, Alert.AlertType type) {
         Platform.runLater(() -> {
@@ -90,8 +97,9 @@ public class GUIApp extends Application {
 
     /**
      * Shows a not interactable alert with the specified message and type
+     *
      * @param errorMessage message to show
-     * @param type type of the alert
+     * @param type         type of the alert
      */
     public static void notInteractableAlert(String errorMessage, Alert.AlertType type) {
         Platform.runLater(() -> {

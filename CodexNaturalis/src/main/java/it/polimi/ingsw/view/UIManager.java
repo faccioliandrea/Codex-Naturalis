@@ -3,14 +3,12 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
-import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.view.data.UIData;
 
 import java.awt.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public abstract class UIManager {
     protected UIData data = new UIData();
@@ -51,6 +49,7 @@ public abstract class UIManager {
     public abstract void goodbye();
     public abstract void showErrorMessage(String message);
     public abstract void noOtherPlayerConnected() ;
+    public abstract void connectingToServer();
 
 
 

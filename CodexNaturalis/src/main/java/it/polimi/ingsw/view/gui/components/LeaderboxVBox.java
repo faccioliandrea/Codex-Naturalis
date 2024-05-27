@@ -20,7 +20,7 @@ public class LeaderboxVBox extends VBox {
     private VBox leaderboardVBox;
 
     public LeaderboxVBox() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/leaderboard.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/components/leaderboard.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
@@ -32,12 +32,13 @@ public class LeaderboxVBox extends VBox {
 
     /**
      * Sets up the leaderboard
+     *
      * @param data data for UI
      */
-    public void leaderboardSetup(UIData data) {
+    public void leaderboardSetup(UIData data, boolean interactable) {
         leaderboardVBox.getChildren().clear();
         int pos = 1;
-        for (Map.Entry<String, Integer> e: data.getSortedLeaderboard().entrySet()) {
+        for (Map.Entry<String, Integer> e : data.getSortedLeaderboard().entrySet()) {
             int points = e.getValue();
             HBox leaderboardHBox = new HBox();
             leaderboardHBox.setSpacing(2);
@@ -46,7 +47,7 @@ public class LeaderboxVBox extends VBox {
             Label usernameLabel = new Label(username);
             // TODO: Add colors
             // Color.valueOf("BLACK");
-            if (!Objects.equals(username, data.getUsername()) && !data.getBoards().get(username).isEmpty()) {
+            if (!Objects.equals(username, data.getUsername()) && !data.getBoards().get(username).isEmpty() && interactable) {
                 usernameLabel.hoverProperty().addListener((obs, oldVal, newValue) -> {
                     if (newValue) {
                         OpponentBoardController controller = new OpponentBoardController(username, data.getBoards().get(username));

@@ -6,7 +6,8 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
-    <VBox alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <VBox alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0">
         <Label text="Waiting for other players to join..." styleClass="bigTitle">
             <padding>
                 <Insets bottom="15.0" top="40.0"/>
@@ -17,8 +18,8 @@
                 <Insets bottom="20.0"/>
             </padding>
         </Label>
-        <VBox fx:id="notificationVBox" spacing="10" alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <VBox fx:id="notificationVBox" spacing="10" alignment="CENTER" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
         </VBox>
     </VBox>
-
 </AnchorPane>

@@ -5,13 +5,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.stage.Screen?>
 <fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.StackPane">
-   <fx:define>
-      <Screen fx:factory="getPrimary" fx:id="screen" />
-   </fx:define>
-   <StackPane fx:id="stackPane" >
-   <Group fx:id="innerGroup">
-   <GridPane alignment="CENTER" fx:id="boardGridPane" >
-   </GridPane>
-   </Group>
-   </StackPane>
+    <fx:define>
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
+    </fx:define>
+    <StackPane fx:id="stackPane">
+        <Group fx:id="innerGroup">
+            <GridPane alignment="CENTER" fx:id="boardGridPane">
+            </GridPane>
+        </Group>
+    </StackPane>
 </fx:root>

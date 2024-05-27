@@ -6,14 +6,13 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml">
-<VBox alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
-    <Label text="Game finished" AnchorPane.topAnchor="40.0" styleClass="bigTitle">
-    </Label>>
-    <Group fx:id="leaderboardGroup" />
-
-    <HBox AnchorPane.bottomAnchor="40.0" spacing="20.0">
-        <Button text="Exit" fx:id="exitButton" />
-        <Button text="New game" fx:id="newGameButton" disable="true"/>
-    </HBox>
-</VBox>
+    <VBox alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.bottomAnchor="0.0" spacing="40.0">
+        <Label text="Game finished" AnchorPane.topAnchor="40.0" styleClass="bigTitle"/>
+        <Group fx:id="leaderboardGroup"/>
+        <HBox AnchorPane.bottomAnchor="40.0" spacing="20.0" alignment="CENTER">
+            <Button text="Exit" fx:id="exitButton"/>
+            <Button text="New game" fx:id="newGameButton" disable="true"/>
+        </HBox>
+    </VBox>
 </AnchorPane>

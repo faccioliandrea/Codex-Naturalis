@@ -194,6 +194,14 @@ public class UIData implements Observer {
         this.playerColors = playerColors;
     }
 
+    public ArrayList<GoalInfo> getPublicGoals() {
+        return new ArrayList<>(this.goals.subList(0, 1));
+    }
+
+    public GoalInfo getPrivateGoal() {
+        return this.goals.get(2);
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         this.username = ((ClientGameData)o).getUsername();

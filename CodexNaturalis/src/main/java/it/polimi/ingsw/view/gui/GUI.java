@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.gui;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
-import it.polimi.ingsw.connections.data.TurnInfo;
 import it.polimi.ingsw.view.UIManager;
 import it.polimi.ingsw.view.gui.controller.*;
 import javafx.application.Application;
@@ -23,13 +22,11 @@ public class GUI extends UIManager {
     private final WaitLobbyController waitLobbyController = new WaitLobbyController();
     private final MainController mainController = new MainController();
     private final GameEndController gameEndController = new GameEndController();
-    private  final GameSetupController gameSetupController = new GameSetupController();
-
-    private boolean ipErrorShown = false;
+    private final GameSetupController gameSetupController = new GameSetupController();
 
     public GUI() {
         new Thread(() ->
-            Application.launch(GUIApp.class)
+                Application.launch(GUIApp.class)
         ).start();
     }
 
@@ -156,13 +153,16 @@ public class GUI extends UIManager {
     }
 
     @Override
-    public void welcome(String username) {}
+    public void welcome(String username) {
+    }
 
     @Override
-    public void showCommands() {}
+    public void showCommands() {
+    }
 
     @Override
-    public void noLobbies() {}
+    public void noLobbies() {
+    }
 
     @Override
     public void joinedLobby() {
@@ -183,12 +183,18 @@ public class GUI extends UIManager {
 
     @Override
     public void playerDisconnected(String username, boolean gameStarted) {
-        // TODO: Implement
+        if (gameStarted) {
+            Platform.runLater(() ->
+                mainController.setInfoTitle(username + "disconnected")
+            );
+        }
     }
 
     @Override
     public void playerReconnected(String username) {
-        // TODO: Implement
+        Platform.runLater(() ->
+            mainController.setInfoTitle(username + "reconnected")
+        );
     }
 
     @Override
@@ -202,7 +208,8 @@ public class GUI extends UIManager {
     }
 
     @Override
-    public void joinedLobbyLast() {}
+    public void joinedLobbyLast() {
+    }
 
     @Override
     public void lobbyFull() {
@@ -242,7 +249,7 @@ public class GUI extends UIManager {
     @Override
     public void placeCardSuccess() {
         Platform.runLater(() ->
-            mainController.updateData(data)
+                mainController.updateData(data)
         );
     }
 
@@ -254,7 +261,7 @@ public class GUI extends UIManager {
     @Override
     public void drawCardSuccess() {
         Platform.runLater(() ->
-            mainController.updateData(data)
+                mainController.updateData(data)
         );
     }
 
@@ -270,9 +277,9 @@ public class GUI extends UIManager {
     @Override
     public void gameEnded() {
         GUIApp.changeScene("game-end", gameEndController);
-        Platform.runLater(() -> {
-            gameEndController.setLeaderboard(data);
-        });
+        Platform.runLater(() ->
+            gameEndController.setLeaderboard(data)
+        );
     }
 
     @Override
@@ -283,15 +290,17 @@ public class GUI extends UIManager {
 
     @Override
     public void showErrorMessage(String message) {
-        // TODO: Display once
-        if (ipErrorShown) return;
         GUIApp.notInteractableAlert(message, Alert.AlertType.ERROR);
-        ipErrorShown = true;
+    }
+
+    @Override
+    public void connectingToServer() {
+        GUIApp.changeScene("connecting-server", null);
     }
 
     @Override
     public void noOtherPlayerConnected() {
-        //TODO implement
+        GUIApp.showAlert("No other player connected. The game will end in 1 minute", Alert.AlertType.WARNING);
     }
 
     /*public void showOpponentBoard(String opponent) {

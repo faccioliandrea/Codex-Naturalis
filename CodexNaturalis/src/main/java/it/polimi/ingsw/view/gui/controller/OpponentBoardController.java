@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.gui.controller;
 
 import it.polimi.ingsw.connections.data.CardInfo;
-import it.polimi.ingsw.view.gui.components.BoardGridPane;
+import it.polimi.ingsw.view.gui.components.BoardStackPane;
 import it.polimi.ingsw.view.gui.utility.GUIConstants;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,7 +28,7 @@ public class OpponentBoardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        BoardGridPane boardGridPane = new BoardGridPane(GUIConstants.opponentBoardHeightPercentage);
+        BoardStackPane boardGridPane = new BoardStackPane(GUIConstants.opponentBoardHeightPercentage);
         boardGroup.getChildren().add(boardGridPane);
         titleLabel.setText(opponentName + "'s board");
         boardGridPane.setupBoard(board, false);

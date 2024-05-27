@@ -35,7 +35,8 @@ public class GameSetupController implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {}
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+    }
 
     public void askPublicGoals() {
         privateGoalsVBox.setVisible(true);

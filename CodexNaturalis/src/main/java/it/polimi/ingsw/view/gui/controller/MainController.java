@@ -4,7 +4,8 @@ import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.view.data.UIData;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.components.BoardGridPane;
+import it.polimi.ingsw.view.gui.components.BoardStackPane;
+import it.polimi.ingsw.view.gui.components.FadingLabel;
 import it.polimi.ingsw.view.gui.components.LeaderboxVBox;
 import it.polimi.ingsw.view.gui.utility.GUIConstants;
 import it.polimi.ingsw.view.gui.utility.GUIUtility;
@@ -16,6 +17,7 @@ import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
 import java.net.URL;
@@ -36,15 +38,17 @@ public class MainController implements Initializable {
     private Group leaderboardGroup;
     @FXML
     private Label turnInfoLabel;
+    @FXML
+    private VBox infoVBox;
 
     private Pair<CardInfo, ImageView> selectedCard;
 
-    private BoardGridPane boardGridPane;
+    private BoardStackPane boardGridPane;
     private LeaderboxVBox leaderboxVBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        boardGridPane = new BoardGridPane(GUIConstants.mainBoardHeightPercentage);
+        boardGridPane = new BoardStackPane(GUIConstants.mainBoardHeightPercentage);
         leaderboxVBox = new LeaderboxVBox();
         leaderboardGroup.getChildren().clear();
         leaderboardGroup.getChildren().add(leaderboxVBox);
@@ -126,7 +130,7 @@ public class MainController implements Initializable {
     }
 
     public void updateLeaderboard(UIData data) {
-        leaderboxVBox.leaderboardSetup(data);
+        leaderboxVBox.leaderboardSetup(data, true);
     }
 
     public void askForPlayCard(UIData data) {
@@ -174,5 +178,10 @@ public class MainController implements Initializable {
 
     public void endPickCard() {
         handHBox.setEffect(null);
+    }
+
+    public void setInfoTitle(String title) {
+        FadingLabel label = new FadingLabel(title);
+        infoVBox.getChildren().add(label);
     }
 }

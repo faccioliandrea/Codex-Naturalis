@@ -4,34 +4,36 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-   <left>
-      <VBox BorderPane.alignment="CENTER" spacing="10">
-         <VBox>
-            <Label text="Goals" styleClass="midTitle"/>
-            <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="goalsHBox" spacing="5.0"/>
-         </VBox>
-         <VBox>
-            <Label text="Resource deck" styleClass="midTitle"/>
-            <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="resourcesHBox" spacing="5.0"/>
-         </VBox>
-         <VBox>
-            <Label text="Gold deck" styleClass="midTitle"/>
-            <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="goldHBox" spacing="5.0"/>
-         </VBox>
-      </VBox>
-   </left>
-   <top>
-      <Label BorderPane.alignment="CENTER" fx:id="turnInfoLabel" styleClass="mainTitle" wrapText="true">
-        </Label>
-   </top>
-   <bottom>
-      <HBox prefHeight="100.0" BorderPane.alignment="CENTER" alignment="CENTER" fx:id="handHBox" spacing="10.0">
-      </HBox>
-   </bottom>
-   <right>
-      <Group fx:id="leaderboardGroup"/>
-   </right>
-   <center>
-      <Group fx:id="boardGroup"/>
-   </center>
+    <left>
+        <VBox BorderPane.alignment="CENTER" spacing="10">
+            <VBox>
+                <Label text="Goals" styleClass="midTitle"/>
+                <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="goalsHBox" spacing="5.0"/>
+            </VBox>
+            <VBox>
+                <Label text="Resource deck" styleClass="midTitle"/>
+                <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="resourcesHBox" spacing="5.0"/>
+            </VBox>
+            <VBox>
+                <Label text="Gold deck" styleClass="midTitle"/>
+                <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="goldHBox" spacing="5.0"/>
+            </VBox>
+        </VBox>
+    </left>
+    <top>
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER" spacing="10">
+            <Label fx:id="turnInfoLabel" styleClass="mainTitle" wrapText="true" />
+            <VBox fx:id="infoVBox" alignment="CENTER" spacing="2"/>
+        </VBox>
+    </top>
+    <bottom>
+        <HBox prefHeight="100.0" BorderPane.alignment="CENTER" alignment="CENTER" fx:id="handHBox" spacing="10.0">
+        </HBox>
+    </bottom>
+    <right>
+        <Group fx:id="leaderboardGroup"/>
+    </right>
+    <center>
+        <Group fx:id="boardGroup"/>
+    </center>
 </BorderPane>

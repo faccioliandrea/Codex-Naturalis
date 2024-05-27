@@ -11,6 +11,8 @@ import it.polimi.ingsw.view.tui.TUI;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.rmi.ConnectException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
@@ -83,17 +85,22 @@ public class Client {
             address = ui.askForServerAddr(DEFAULT_ADDRESS);
             Socket socket = null;
             boolean connected = false;
-            while (!connected) {
-                try {
-                    socket = new Socket(address, port);
-                    connected = true;
-                    SocketServerConnection conn = new SocketServerConnection(matchController.getConnectionBridge(), socket);
-                    matchController.getConnectionBridge().setServerConnection(conn);
-                    new Thread(conn).start();
-                    matchController.getConnectionBridge().loginRequest();
-                } catch (IOException  e) {
-                    ui.showErrorMessage("Could not connect to the server. Retrying...");
+            try {
+                while (!connected) {
+                    try {
+                        socket = new Socket(address, port);
+                        connected = true;
+                        SocketServerConnection conn = new SocketServerConnection(matchController.getConnectionBridge(), socket);
+                        matchController.getConnectionBridge().setServerConnection(conn);
+                        new Thread(conn).start();
+                        matchController.getConnectionBridge().loginRequest();
+                    } catch (IOException e) {
+                        ui.connectingToServer();
+                    }
                 }
+            } catch (Exception e) {
+                // FIXME: Handle server crash (on its thread)
+                ui.showErrorMessage("An error occurred.");
             }
         } else {
             address = ui.askForServerAddr(DEFAULT_ADDRESS);
@@ -105,8 +112,11 @@ public class Client {
                 matchController.getConnectionBridge().setRmiClientConnectionInterface(client);
                 matchController.getConnectionBridge().setServerConnection(obj);
                 matchController.getConnectionBridge().loginRequest();
+            } catch (ConnectException e) {
+                ui.connectingToServer();
             } catch (Exception e) {
-                e.printStackTrace();
+                // FIXME: Handle server crash (on its thread)
+                ui.showErrorMessage("An error occurred.");
             }
         }
 

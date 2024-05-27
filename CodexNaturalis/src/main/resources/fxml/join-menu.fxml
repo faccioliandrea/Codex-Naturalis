@@ -10,19 +10,19 @@
 <?import javafx.stage.Screen?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-   <fx:define>
-      <Screen fx:factory="getPrimary" fx:id="screen"/>
-   </fx:define>
-   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0"
-         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <ImageView pickOnBounds="true" preserveRatio="true" fx:id="logoImageView">
-         <VBox.margin>
-            <Insets bottom="-20.0" top="-20.0"/>
-         </VBox.margin>
-         <Image url="@../img/logo.png"/>
-      </ImageView>
-      <Label text="Server IP" styleClass="midTitle"/>
-      <TextField maxWidth="200.0" promptText="localhost" fx:id="ipTextField"/>
-      <Button mnemonicParsing="false" text="Join Server" fx:id="joinButton"/>
-   </VBox>
+    <fx:define>
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
+    </fx:define>
+    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <ImageView pickOnBounds="true" preserveRatio="true" fx:id="logoImageView">
+            <VBox.margin>
+                <Insets bottom="-20.0" top="-20.0"/>
+            </VBox.margin>
+            <Image url="@../img/logo.png"/>
+        </ImageView>
+        <Label text="Server IP" styleClass="midTitle"/>
+        <TextField maxWidth="200.0" promptText="localhost" fx:id="ipTextField"/>
+        <Button mnemonicParsing="false" text="Join Server" fx:id="joinButton"/>
+    </VBox>
 </AnchorPane>

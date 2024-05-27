@@ -17,24 +17,21 @@ public class GameEndController implements Initializable {
     @FXML
     private Button exitButton;
     @FXML
-    private Button playAgainButton;
-
-    private LeaderboxVBox leaderboxVBox;
+    private Button newGameButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        leaderboxVBox = new LeaderboxVBox();
-        leaderboardGroup.getChildren().add(leaderboxVBox);
     }
 
     public void setLeaderboard(UIData data) {
-        leaderboxVBox.leaderboardSetup(data);
-        leaderboxVBox.setDisable(true);
+        LeaderboxVBox leaderboxVBox = new LeaderboxVBox();
+        leaderboardGroup.getChildren().add(leaderboxVBox);
+        leaderboxVBox.leaderboardSetup(data, false);
     }
 
     public void askNewGame() {
-        playAgainButton.setDisable(false);
-        playAgainButton.setOnAction(e -> {
+        newGameButton.setDisable(false);
+        newGameButton.setOnAction(e -> {
             try {
                 GUI.getQueue().put(true);
             } catch (InterruptedException ex) {

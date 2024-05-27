@@ -13,9 +13,10 @@ public final class GUIUtility {
 
     /**
      * Creates an ImageView from the specified path
-     * @param path path of the image
+     *
+     * @param path       path of the image
      * @param cellHeight height of the cell
-     * @param cellWidth width of the cell
+     * @param cellWidth  width of the cell
      * @return the ImageView
      */
     public static ImageView createImageView(String path, double cellHeight, double cellWidth) {
@@ -38,6 +39,7 @@ public final class GUIUtility {
 
     /**
      * Creates an Image from the specified path
+     *
      * @param path path of the image
      * @return the Image
      */
