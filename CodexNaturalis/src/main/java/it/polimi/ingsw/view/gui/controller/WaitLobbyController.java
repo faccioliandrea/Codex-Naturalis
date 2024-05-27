@@ -19,7 +19,7 @@ public class WaitLobbyController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
-    public void userJoined(String username) {
+    public void addNotification(String username) {
         FadingLabel label = new FadingLabel(username + " joined the lobby");
         notificationVBox.getChildren().add(label);
     }

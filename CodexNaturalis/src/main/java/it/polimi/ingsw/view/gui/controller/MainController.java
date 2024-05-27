@@ -48,7 +48,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        boardGridPane = new BoardStackPane(GUIConstants.mainBoardHeightPercentage);
+        boardGridPane = new BoardStackPane(GUIConstants.mainBoardWidthPercentage);
         leaderboxVBox = new LeaderboxVBox();
         leaderboardGroup.getChildren().clear();
         leaderboardGroup.getChildren().add(leaderboxVBox);

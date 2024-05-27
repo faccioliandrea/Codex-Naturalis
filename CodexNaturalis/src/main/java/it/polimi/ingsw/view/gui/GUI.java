@@ -102,7 +102,6 @@ public class GUI extends UIManager {
 
     @Override
     public CardInfo askForPlayCard() {
-        //GUIApp.changeScene("new-main", newMainController);
         Platform.runLater(() -> {
             mainController.updateData(data);
             mainController.askForPlayCard(data);
@@ -171,7 +170,7 @@ public class GUI extends UIManager {
 
     @Override
     public void joinedLobby(String username) {
-        Platform.runLater(() -> waitLobbyController.userJoined(username));
+        Platform.runLater(() -> waitLobbyController.addNotification(username));
     }
 
     @Override
@@ -183,17 +182,20 @@ public class GUI extends UIManager {
 
     @Override
     public void playerDisconnected(String username, boolean gameStarted) {
-        if (gameStarted) {
-            Platform.runLater(() ->
-                mainController.setInfoTitle(username + "disconnected")
-            );
-        }
+        Platform.runLater(() -> {
+            String title = username + " disconnected";
+            if (gameStarted) {
+                mainController.setInfoTitle(title);
+            } else {
+                waitLobbyController.addNotification(title);
+            }
+        });
     }
 
     @Override
     public void playerReconnected(String username) {
         Platform.runLater(() ->
-            mainController.setInfoTitle(username + "reconnected")
+            mainController.setInfoTitle(username + " reconnected")
         );
     }
 
@@ -312,8 +314,4 @@ public class GUI extends UIManager {
     public void sendMessage(String raw) {
 
     }
-
-    /*public void showOpponentBoard(String opponent) {
-        GUIApp.changeScene("opponent-board", new OpponentBoardController(opponent, data.getBoards().get(opponent)));
-    }*/
 }

@@ -7,9 +7,8 @@
             xmlns:fx="http://javafx.com/fxml">
     <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0"
           AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
-        <Label fx:id="titleLabel" styleClass="mainTitle">
-        </Label>
-        <Group fx:id="boardGroup">
-        </Group>
+        <Label fx:id="titleLabel" styleClass="mainTitle" />
+        <Group fx:id="boardGroup" />
+        <Label styleClass="smallTitle" text="Press ESC to exit"/>
     </VBox>
 </AnchorPane>

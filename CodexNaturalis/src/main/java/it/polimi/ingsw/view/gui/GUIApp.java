@@ -119,6 +119,7 @@ public class GUIApp extends Application {
             Parent root = fxmlLoader.load();
             root.setStyle("-fx-effect: innershadow(gaussian, #000000, 3, 3.0, 0, 0);");
             Scene scene = new Scene(root);
+            scene.getStylesheets().add("/css/styles.css");
             opponentStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
                 if (KeyCode.ESCAPE == event.getCode()) {
                     opponentStage.close();

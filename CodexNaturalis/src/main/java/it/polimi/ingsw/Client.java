@@ -12,7 +12,6 @@ import it.polimi.ingsw.view.tui.TUI;
 import java.io.IOException;
 import java.net.Socket;
 import java.rmi.ConnectException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;

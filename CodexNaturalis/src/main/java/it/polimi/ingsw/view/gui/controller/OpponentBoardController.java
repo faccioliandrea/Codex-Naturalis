@@ -18,8 +18,8 @@ public class OpponentBoardController implements Initializable {
     @FXML
     private Label titleLabel;
 
-    private String opponentName;
-    private ArrayList<CardInfo> board;
+    private final String opponentName;
+    private final ArrayList<CardInfo> board;
 
     public OpponentBoardController(String opponentName, ArrayList<CardInfo> board) {
         this.opponentName = opponentName;
@@ -28,7 +28,7 @@ public class OpponentBoardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        BoardStackPane boardGridPane = new BoardStackPane(GUIConstants.opponentBoardHeightPercentage);
+        BoardStackPane boardGridPane = new BoardStackPane(GUIConstants.opponentBoardWidthPercentage);
         boardGroup.getChildren().add(boardGridPane);
         titleLabel.setText(opponentName + "'s board");
         boardGridPane.setupBoard(board, false);
