@@ -1,6 +1,8 @@
 package it.polimi.ingsw.controller.client;
 
 
+import it.polimi.ingsw.chat.ClientChatHandler;
+import it.polimi.ingsw.chat.MessagesQueue;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.*;
@@ -14,14 +16,22 @@ public class ClientController {
     private UIManager ui;
     private String username;
     private ConnectionBridge connectionBridge;
+    private ClientChatHandler chatHandler;
+
     private TurnInfo currentTurnInfo = new TurnInfo();
     private ClientGameData gameData = new ClientGameData();
 
     public ClientController(UIManager ui) {
         this.ui = ui;
         connectionBridge = new ConnectionBridge(this);
+
         this.ui.showCommands();
         this.gameData.addObserver(this.ui.getData());
+    }
+
+
+    private void updateChat(MessagesQueue q) {
+        gameData.setLastMessages(q);
     }
 
     public String loginRequest() {
@@ -60,10 +70,11 @@ public class ClientController {
     }
 
     public void joinLobbySuccess(boolean isLastPlayer) {
+        chatHandlerSetup();
+
         if (isLastPlayer) {
             ui.joinedLobbyLast();
             connectionBridge.createGame();
-
         } else {
             ui.joinedLobby();
         }
@@ -83,12 +94,13 @@ public class ClientController {
     }
 
     public void gameStarted(StarterData starterData){
-        ui.gameStarted(starterData);
         this.gameData.setHand(starterData.getHand());
         this.gameData.setLeaderboard(starterData.getUsers().stream().collect(Collectors.toMap(s -> s, s -> 0, (x, y) -> x, HashMap::new)));
         this.gameData.setBoards(starterData.getUsers().stream().collect(Collectors.toMap(s -> s, x -> new ArrayList<>(), (x, y) -> x, HashMap::new)));
         this.gameData.setPlayerColors(starterData.getPlayerColors());
         this.gameData.setGoals(starterData.getSharedGoals());
+        ui.gameStarted(starterData);
+
         int chosenGoal = ui.askForPrivateGoal();
         connectionBridge.choosePrivateGoalRequest(chosenGoal);
 
@@ -188,6 +200,8 @@ public class ClientController {
     }
 
     public void reconnectionState(GameStateInfo gameStateInfo) {
+        chatHandlerSetup();
+
         this.gameData.fromGameStateInfo(gameStateInfo);
         ui.reconnectionState();
         if(this.gameData.getCurrentPlayer().equals(this.gameData.getUsername())){
@@ -213,5 +227,12 @@ public class ClientController {
 
     public void noOtherPlayerConnected() {
         ui.noOtherPlayerConnected();
+    }
+
+    private void chatHandlerSetup() {
+        this.chatHandler = new ClientChatHandler(connectionBridge, username, this::updateChat);
+        ui.setChatHandler(this.chatHandler);
+        connectionBridge.setChatHandler(this.chatHandler);
+        new Thread(this.chatHandler).start();
     }
 }

@@ -303,6 +303,16 @@ public class GUI extends UIManager {
         GUIApp.showAlert("No other player connected. The game will end in 1 minute", Alert.AlertType.WARNING);
     }
 
+    @Override
+    public void showChat() {
+
+    }
+
+    @Override
+    public void sendMessage(String raw) {
+
+    }
+
     /*public void showOpponentBoard(String opponent) {
         GUIApp.changeScene("opponent-board", new OpponentBoardController(opponent, data.getBoards().get(opponent)));
     }*/

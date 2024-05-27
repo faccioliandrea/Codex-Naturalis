@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.client;
 
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
@@ -45,7 +46,7 @@ public class SocketServerConnection implements ServerConnection, Runnable {
 
             while (this.connectionStatus == ConnectionStatus.ONLINE) {
                 ServerToClientMessage msg = (ServerToClientMessage) queue.take();
-                msg.execute(connectionBridge);
+                new Thread(() -> msg.execute(connectionBridge)).start();
             }
         } catch (IOException | InterruptedException e ) {
             this.connectionStatus = ConnectionStatus.OFFLINE;
@@ -73,7 +74,7 @@ public class SocketServerConnection implements ServerConnection, Runnable {
         try {
             this.close();
         } catch (IOException ex) {
-            throw new RuntimeException(ex); // TODO: Server offline (close application)
+            throw new RuntimeException(ex); // FIXME: Server offline (close application)
         }
     }
 
@@ -119,5 +120,9 @@ public class SocketServerConnection implements ServerConnection, Runnable {
 
     public void endTurn(String username) throws IOException {
         this.outputStream.sendMessage(new EndTurnMessage(username));
+    }
+
+    public void sendChatMessage(ChatMessageData msg) throws IOException {
+        this.outputStream.sendMessage(new ClientToServerChatMessage(msg));
     }
 }

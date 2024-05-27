@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller.server;
 
+import it.polimi.ingsw.chat.ServerChatHandler;
 import it.polimi.ingsw.model.GameModel;
 import it.polimi.ingsw.model.enumeration.PlayerColor;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
@@ -11,21 +12,24 @@ import java.util.ArrayList;
 public class Game {
     private ArrayList<Player> players;
     private GameModel gameModel;
+    private ServerChatHandler chatHandler;
 
     /**
      * Constructor for the Game class
      * @param gameId unique id of the game
-     * @param users List of {@code Player} (must be between 2 and 4)
+     * @param lobby Lobby object that contains players
      * @throws DeckInitializationException if there's an error in initializing the decks from the json files
      * @throws InvalidNumberOfPlayersException if the number of players is not between 2 and 4
      */
-    public Game(String gameId, ArrayList<String> users) throws DeckInitializationException, InvalidNumberOfPlayersException {
+
+    public Game(String gameId, Lobby lobby) throws DeckInitializationException, InvalidNumberOfPlayersException {
         PlayerColor[] colors = PlayerColor.values();
         players = new ArrayList<>();
-        for(String user : users){
+        for(String user : lobby.getUsers()){
             players.add(new Player(user, colors[players.size()]));
         }
         gameModel = new GameModel(gameId, players);
+        chatHandler = lobby.getChatHandler();
     }
 
     /**
@@ -42,4 +46,7 @@ public class Game {
         return players;
     }
 
+    protected ServerChatHandler getChatHandler() {
+        return chatHandler;
+    }
 }

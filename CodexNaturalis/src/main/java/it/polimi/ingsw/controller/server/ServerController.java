@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller.server;
 
+import it.polimi.ingsw.chat.ChatMessageData;
+import it.polimi.ingsw.chat.ServerChatHandler;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
@@ -44,42 +46,43 @@ public class ServerController {
     public ServerController() {
         userToLobby = new HashMap<>();
         userToGame = new HashMap<>();
-        lobbyController = new LobbyController();
-        gameController = new GameController();
         connectionBridge = new ConnectionBridge(this);
+        lobbyController = new LobbyController(connectionBridge);
+        gameController = new GameController();
     }
 
 
     /**
      * Create a new game with the specified users
-     * @param users the list of users
+     * @param lobby Lobby object containing the players
      */
-    public void createGame(ArrayList<String> users) {
+    public void createGame(Lobby lobby) {
         String gameId = "" + (int) (Math.random() * 1000);
-        String lobbyId = userToLobby.get(users.get(0));
         try {
-            gameController.createGame(gameId,users);
-            for (String username : users) {
+            gameController.createGame(gameId,lobby);
+            for (String username : lobby.getUsers()) {
                 userToGame.put(username, gameId);
                 userToLobby.remove(username);
             }
-            lobbyController.removeLobby(lobbyId);
+            lobbyController.removeLobby(lobby.getId());
             gameController.startGame(gameId);
-            executorService = Executors.newFixedThreadPool(users.size());
-            for (String username : users) {
+            executorService = Executors.newFixedThreadPool(lobby.getUsers().size());
+            for (String username : lobby.getUsers()) {
                 ArrayList<CardInfo> hand = gameController.getHand(gameId, username);
                 ArrayList<GoalInfo> privateGoals = gameController.getPrivateGoals(gameId, username);
                 ArrayList<GoalInfo> sharedGoals = gameController.getSharedGoals(gameId);
                 Map<String, PlayerColor> playerColors = gameController.getGamePlayers(gameId).stream().collect(Collectors.toMap(Player::getUsername, Player::getPlayerColor, (x, y) -> x, HashMap::new));
                 CardInfo starterCard = gameController.getStarterCard(gameId, username);
-                executorService.submit(() -> connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, users, playerColors)));
+                executorService.submit(() -> connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, lobby.getUsers(), playerColors)));
             }
 
 
         } catch (DeckInitializationException e) {
+            // TODO: sendServerError
             // for(String username : users)
                 // connections.get(username).sendNotification("Deck initialization error!");
         } catch (InvalidNumberOfPlayersException e) {
+            // TODO: sendServerError
             // for (String username : users)
                 // connections.get(username).sendNotification("Invalid number of players!");
         }
@@ -138,11 +141,9 @@ public class ServerController {
                 gameController.endTurn(userToGame.get(user));
                 gameController.getGames().get(userToGame.get(user)).getGameModel().setTotalTurns(gameController.getGames().get(userToGame.get(user)).getGameModel().getTotalTurns()+1);
                 initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
-
             }
         }
     }
-
 
     /**
      * let the player choose its private goal
@@ -258,12 +259,10 @@ public class ServerController {
             }
 
             if (gameController.isGameFinished(userToGame.get(user)))
-                endGame(userToGame.get(user), null);
+                endGame(userToGame.get(user));
             else {
                 gameController.endTurn(userToGame.get(user));
                 initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
-
-
             }
 
 
@@ -271,10 +270,10 @@ public class ServerController {
 
     }
 
-
     /**
      * End the game and send a notification to all the players in the lobby
      * @param gameId the id of the game
+     * @param forceWinner username of the player that is selected as winner
      */
     private void endGame(String gameId, String forceWinner){
 
@@ -288,6 +287,20 @@ public class ServerController {
                 }
             });
         }
+        for(String username : userToGame.keySet()){
+            if(userToGame.get(username).equals(userToGame.get(username))) {
+                connectionBridge.endGame(username, leaderboard);
+            }
+        }
+        destroyGame(gameId);
+    }
+
+    /**
+     * End the game and send a notification to all the players in the lobby
+     * @param gameId the id of the game
+     */
+    private void endGame(String gameId) {
+        HashMap<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
         for(String username : userToGame.keySet()){
             if(userToGame.get(username).equals(userToGame.get(username))) {
                 connectionBridge.endGame(username, leaderboard);
@@ -534,4 +547,16 @@ public class ServerController {
     }
 
 
+    public void distributeMessage(ChatMessageData msg) {
+        try {
+            String lobbyId = this.userToLobby.get(msg.getSender());
+            ServerChatHandler chatHandler = lobbyController.getLobbies().get(lobbyId).getChatHandler();
+            chatHandler.distributeMessage(msg);
+        } catch (NullPointerException e) {
+            String gameId = this.userToGame.get(msg.getSender());
+            ServerChatHandler chatHandler = gameController.getGames().get(gameId).getChatHandler();
+            chatHandler.distributeMessage(msg);
+        }
+
+    }
 }

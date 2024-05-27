@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller.server;
 
+import it.polimi.ingsw.connections.server.ConnectionBridge;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,12 +13,15 @@ public class LobbyController {
 
     private HashMap<String, Lobby> lobbies;
 
+    private ConnectionBridge bridge;
+
     /**
      * Default constructor
      */
-    public LobbyController() {
+    public LobbyController(ConnectionBridge bridge) {
         this.users = new ArrayList<String>();
         this.lobbies = new HashMap<String, Lobby>();
+        this.bridge = bridge;
     }
 
     /**
@@ -45,7 +50,7 @@ public class LobbyController {
      */
     public void createNewLobby(String lobbyId, int numPlayers) {
 
-        lobbies.put(lobbyId, new Lobby(numPlayers));
+        lobbies.put(lobbyId, new Lobby(lobbyId, numPlayers, bridge));
     }
 
     public void removeLobby(String lobbyId){lobbies.remove(lobbyId);}

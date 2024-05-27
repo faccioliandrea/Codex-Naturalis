@@ -20,7 +20,6 @@ import java.util.Scanner;
 public class Client {
 
     private static final int DEFAULT_PORT = 5555;
-
     private static final String DEFAULT_ADDRESS = "localhost";
     private static final String REMOTE_NAME = "Codex";
 

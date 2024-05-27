@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.tui;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.view.UIManager;
+import it.polimi.ingsw.chat.ChatMessageData;
 
 import java.awt.*;
 import java.util.*;
@@ -13,128 +14,146 @@ import java.util.stream.Stream;
 public class TUI extends UIManager {
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private final BlockingQueue<String> commandQueue = new LinkedBlockingQueue<>();
+    private final Object lock = new Object();
 
     public TUI() {
         new Thread(new InputHandler(commandQueue, inputQueue)).start();
         new Thread(new CommandHandler(commandQueue, this)).start();
     }
 
+    @Override
     public String askForServerAddr(String defaultAddr) {
-        boolean valid = false;
-        String input = "";
-        this.printColorDebug(TUIColors.PURPLE, String.format("Please enter the server address (leave blank for %s): ", defaultAddr));
-        while(!valid) {
-            try {
-                input = inputQueue.take();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        synchronized (lock) {
+            boolean valid = false;
+            String input = "";
+            this.printColorDebug(TUIColors.PURPLE, String.format("Please enter the server address (leave blank for %s): ", defaultAddr));
+            while (!valid) {
+                try {
+                    input = inputQueue.take();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                valid = isValidIP(input, defaultAddr);
+                if (!valid) {
+                    this.printColorDebug(TUIColors.RED, "Please enter a valid IP address: ");
+                }
             }
-            valid = isValidIP(input, defaultAddr);
-            if (!valid) {
-                this.printColorDebug(TUIColors.RED, "Please enter a valid IP address: ");
+            if (input.isEmpty()) {
+                return defaultAddr;
+            } else {
+                return input;
             }
-        }
-        if (input.isEmpty()) {
-            return defaultAddr;
-        } else {
-            return input;
         }
     }
 
+    @Override
     public String askForUsername() {
-        String username;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Username: " );
-            try {
-                username =  inputQueue.take();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            if (username.isEmpty()) {
-                System.out.println("Please, type a valid username");
-            }
-        } while(username.isEmpty());
-        return username;
+        synchronized (lock) {
+            String username;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Username: ");
+                try {
+                    username = inputQueue.take();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (username.isEmpty()) {
+                    System.out.println("Please, type a valid username");
+                }
+            } while (username.isEmpty());
+            return username;
+        }
     }
 
+    @Override
     public int askForPlayerNum() {
-        int playerNum=0;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Insert number of players: 2, 3 or 4");
-            try {
-                playerNum =  Integer.parseInt(inputQueue.take());
-                if (playerNum != 2 && playerNum != 3 && playerNum != 4) {
-                    System.out.println("Please, type 2, 3 or 4");
+        synchronized (lock) {
+            int playerNum = 0;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Insert number of players: 2, 3 or 4");
+                try {
+                    playerNum = Integer.parseInt(inputQueue.take());
+                    if (playerNum != 2 && playerNum != 3 && playerNum != 4) {
+                        System.out.println("Please, type 2, 3 or 4");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (NumberFormatException e) {
+                    System.out.println("Oops, you inserted a string!");
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (NumberFormatException e) {
-                System.out.println("Oops, you inserted a string!");
-            }
 
-        } while(playerNum != 2 && playerNum != 3 && playerNum != 4);
-        return playerNum;
+            } while (playerNum != 2 && playerNum != 3 && playerNum != 4);
+            return playerNum;
+        }
     }
 
+    @Override
     public String askForLobbyId(ArrayList<String> lobbies) {
-        this.printColorDebug(TUIColors.CYAN, "Available lobbies:");
-        printDebug(lobbies.toString());
-        String lobbyId;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Type the lobby id you want to join (leave blank to create a new lobby):");
-            try {
-                lobbyId =  inputQueue.take();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            if (!lobbies.contains(lobbyId) && !lobbyId.isEmpty()) {
-                System.out.println("Please, type a valid lobby id");
-            }
-        } while(!lobbies.contains(lobbyId) && !lobbyId.isEmpty());
-        return lobbyId;
+        synchronized (lock) {
+            this.printColorDebug(TUIColors.CYAN, "Available lobbies:");
+            printDebug(lobbies.toString());
+            String lobbyId;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Type the lobby id you want to join: ");
+                try {
+                    lobbyId = inputQueue.take();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (!lobbies.contains(lobbyId)) {
+                    System.out.println("Please, type a valid lobby id");
+                }
+            } while (!lobbies.contains(lobbyId));
+            return lobbyId;
+        }
     }
 
-
+    @Override
     public int askForPrivateGoal() {
-        int choice = -1;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Choose your private Goal: [1] [2]");
-            try {
-                choice =  Integer.parseInt(inputQueue.take()) - 1;
-                if (choice != 1 && choice != 0) {
-                    System.out.println("Please, type 1 or 2");
+        synchronized (lock) {
+            int choice = -1;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Choose your private Goal: [1] [2]");
+                try {
+                    choice = Integer.parseInt(inputQueue.take()) - 1;
+                    if (choice != 1 && choice != 0) {
+                        System.out.println("Please, type 1 or 2");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (NumberFormatException e) {
+                    System.out.println("Oops, you inserted a string!");
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (NumberFormatException e) {
-                System.out.println("Oops, you inserted a string!");
-            }
-        } while(choice != 1 && choice != 0);
-        return choice;
+            } while (choice != 1 && choice != 0);
+            return choice;
+        }
     }
 
+    @Override
     public boolean askForStarterCardSide() {
-        int choice = -1;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Choose your Starter card side: [1] Front [2] Back");
-            try {
-                choice =  Integer.parseInt(inputQueue.take());
-                if (choice != 1 && choice != 2) {
-                    System.out.println("Please, type 1 or 2");
+        synchronized (lock) {
+            int choice = -1;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Choose your Starter card side: [1] Front [2] Back");
+                try {
+                    choice = Integer.parseInt(inputQueue.take());
+                    if (choice != 1 && choice != 2) {
+                        System.out.println("Please, type 1 or 2");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (NumberFormatException e) {
+                    System.out.println("Oops, you inserted a string!");
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (NumberFormatException e) {
-                System.out.println("Oops, you inserted a string!");
-            }
 
-        } while(choice != 1 && choice != 2);
-        return choice == 2;
+            } while (choice != 1 && choice != 2);
+            return choice == 2;
+        }
 
     }
 
@@ -145,7 +164,7 @@ public class TUI extends UIManager {
             if (username == null) {
                 this.displayBoard(data.getBoard(), data.getAvailablePositions(), data.getSymbols());
             } else if (!data.getBoards().isEmpty()) {
-                if(data.getBoards().get(username) == null) {
+                if (data.getBoards().get(username) == null) {
                     this.printColorDebug(TUIColors.RED, String.format("User %s not found", username));
                 } else if (data.getBoards().get(username).isEmpty()) {
                     this.printColorDebug(TUIColors.RED, String.format("%s's board not available", username));
@@ -158,156 +177,178 @@ public class TUI extends UIManager {
         }
     }
 
-
+    @Override
     public CardInfo askForPlayCard() {
-        int choice = -1;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Choose which card do you want to play:");
-            this.data.getHand().forEach(x->printColorDebug(TUIColors.PURPLE, String.format("[%s] %s", this.data.getHand().indexOf(x)+1, x.getId())));
-            try {
-                choice =  Integer.parseInt(inputQueue.take()) - 1;
-                if (choice < 0 || choice > this.data.getHand().size()-1) {
-                    System.out.println("Please, choose a valid card");
+        synchronized (lock) {
+            int choice = -1;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Choose which card do you want to play:");
+                this.data.getHand().forEach(x -> printColorDebug(TUIColors.PURPLE, String.format("[%s] %s", this.data.getHand().indexOf(x) + 1, x.getId())));
+                try {
+                    choice = Integer.parseInt(inputQueue.take()) - 1;
+                    if (choice < 0 || choice > this.data.getHand().size() - 1) {
+                        System.out.println("Please, choose a valid card");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (NumberFormatException e) {
+                    System.out.println("Oops, you inserted a string!");
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (NumberFormatException e) {
-                System.out.println("Oops, you inserted a string!");
-            }
 
-        } while(choice < 0 || choice > this.data.getHand().size()-1);
+            } while (choice < 0 || choice > this.data.getHand().size() - 1);
 
-        int choiceSide=-1;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Choose the card side: [1] Front [2] Back");
-            try {
-                choiceSide =  Integer.parseInt(inputQueue.take());
-                if (choiceSide != 1 && choiceSide != 2) {
-                    System.out.println("Please, type 1 or 2");
+            int choiceSide = -1;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Choose the card side: [1] Front [2] Back");
+                try {
+                    choiceSide = Integer.parseInt(inputQueue.take());
+                    if (choiceSide != 1 && choiceSide != 2) {
+                        System.out.println("Please, type 1 or 2");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (NumberFormatException e) {
+                    System.out.println("Oops, you inserted a string!");
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (NumberFormatException e) {
-                System.out.println("Oops, you inserted a string!");
-            }
-        } while(choiceSide != 1 && choiceSide != 2);
-        this.data.getHand().get(choice).setFlipped(choiceSide==2);
+            } while (choiceSide != 1 && choiceSide != 2);
+            this.data.getHand().get(choice).setFlipped(choiceSide == 2);
 
-        int choicePos = -1;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Choose the position:");
-            String availablePos = "";
-            for (Point p: this.data.getAvailablePositions()) {
-                availablePos = availablePos.concat("[" + this.data.getAvailablePositions().indexOf(p) + "] ");
-            }
-            printColorDebug(TUIColors.PURPLE, availablePos);
-            try {
-                choicePos =  Integer.parseInt(inputQueue.take());
-                if (this.data.getAvailablePositions().size()-1<choicePos || choicePos < 0) {
-                    System.out.println("Please, type a valid position");
+            int choicePos = -1;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Choose the position:");
+                String availablePos = "";
+                for (Point p : this.data.getAvailablePositions()) {
+                    availablePos = availablePos.concat("[" + this.data.getAvailablePositions().indexOf(p) + "] ");
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (NumberFormatException e) {
-                System.out.println("Oops, you inserted a string!");
-            }
-        } while(this.data.getAvailablePositions().size()-1<choicePos || choicePos < 0);
-        this.data.getHand().get(choice).setCoord(this.data.getAvailablePositions().get(choicePos));
-        return this.data.getHand().get(choice);
+                printColorDebug(TUIColors.PURPLE, availablePos);
+                try {
+                    choicePos = Integer.parseInt(inputQueue.take());
+                    if (this.data.getAvailablePositions().size() - 1 < choicePos || choicePos < 0) {
+                        System.out.println("Please, type a valid position");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (NumberFormatException e) {
+                    System.out.println("Oops, you inserted a string!");
+                }
+            } while (this.data.getAvailablePositions().size() - 1 < choicePos || choicePos < 0);
+            this.data.getHand().get(choice).setCoord(this.data.getAvailablePositions().get(choicePos));
+            return this.data.getHand().get(choice);
+        }
     }
 
+    @Override
     public int askForDrawCard() {
-        int choice = -1;
-        int deck;
-        do {
-            inputQueue.clear();
-            this.printColorDebug(TUIColors.PURPLE, "Choose which deck do you want to draw from: [1] Resource [2] Gold");
-            try {
-                choice =  Integer.parseInt(inputQueue.take());
-                if (choice != 1 && choice != 2) {
-                    System.out.println("Please, type 1 or 2");
-                } else if (choice == 1 && this.data.getResourceDeck().isEmpty()){
-                    this.printColorDebug(TUIColors.RED, "Deck is empty, you can't draw from it. Choose the gold deck.");
-                } else if (choice == 2 && this.data.getGoldDeck().isEmpty()){
-                    this.printColorDebug(TUIColors.RED, "Deck is empty, you can't draw from it. Choose the resource deck.");
+        synchronized (lock) {
+            int choice = -1;
+            int deck;
+            do {
+                inputQueue.clear();
+                this.printColorDebug(TUIColors.PURPLE, "Choose which deck do you want to draw from: [1] Resource [2] Gold");
+                try {
+                    choice = Integer.parseInt(inputQueue.take());
+                    if (choice != 1 && choice != 2) {
+                        System.out.println("Please, type 1 or 2");
+                    } else if (choice == 1 && this.data.getResourceDeck().isEmpty()) {
+                        this.printColorDebug(TUIColors.RED, "Deck is empty, you can't draw from it. Choose the gold deck.");
+                    } else if (choice == 2 && this.data.getGoldDeck().isEmpty()) {
+                        this.printColorDebug(TUIColors.RED, "Deck is empty, you can't draw from it. Choose the resource deck.");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (NumberFormatException e) {
+                    System.out.println("Oops, you inserted a string!");
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (NumberFormatException e) {
-                System.out.println("Oops, you inserted a string!");
-            }
-        } while(choice != 1 && choice != 2);
-        deck = choice == 1 ? 10 : 20;
+            } while (choice != 1 && choice != 2);
+            deck = choice == 1 ? 10 : 20;
 
-        this.printColorDebug(TUIColors.PURPLE, String.format("Choose which card do you want to draw: [1] %s [2] %s [3] Covered", deck == 10 ? this.data.getResourceDeck().get(0).getId() : this.data.getGoldDeck().get(0).getId(), deck == 10 ? this.data.getResourceDeck().get(1).getId() : this.data.getGoldDeck().get(1).getId() ));
+            this.printColorDebug(TUIColors.PURPLE, String.format("Choose which card do you want to draw: [1] %s [2] %s [3] Covered", deck == 10 ? this.data.getResourceDeck().get(0).getId() : this.data.getGoldDeck().get(0).getId(), deck == 10 ? this.data.getResourceDeck().get(1).getId() : this.data.getGoldDeck().get(1).getId()));
 
-        int choiceCard = -1;
-        do {
-            inputQueue.clear();
-            try {
-                choiceCard =  Integer.parseInt(inputQueue.take());
-                if (choiceCard != 1 && choiceCard != 2 && choiceCard != 3) {
-                    System.out.println("Please, type 1, 2 or 3");
+            int choiceCard = -1;
+            do {
+                inputQueue.clear();
+                try {
+                    choiceCard = Integer.parseInt(inputQueue.take());
+                    if (choiceCard != 1 && choiceCard != 2 && choiceCard != 3) {
+                        System.out.println("Please, type 1, 2 or 3");
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (NumberFormatException e) {
+                    System.out.println("Oops, you inserted a string!");
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (NumberFormatException e) {
-                System.out.println("Oops, you inserted a string!");
-            }
-        } while(choiceCard != 1 && choiceCard != 2 && choiceCard != 3);
+            } while (choiceCard != 1 && choiceCard != 2 && choiceCard != 3);
 
-        deck = deck + choiceCard - 1;
-        return deck;
+            deck = deck + choiceCard - 1;
+            return deck;
+        }
     }
 
+    @Override
     public boolean askForNewGame() {
-        inputQueue.clear();
-        printColorDebug(TUIColors.PURPLE, "Would you like to play again? (y/n)");
-        try {
-            String choice = inputQueue.take();
-            return choice.equals("y");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        synchronized (lock) {
+            inputQueue.clear();
+            printColorDebug(TUIColors.PURPLE, "Would you like to play again? (y/n)");
+            try {
+                String choice = inputQueue.take();
+                return choice.equals("y");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     @Override
     public void invalidUsername(String username) {
-        this.printColorDebug(TUIColors.RED, username + " is already taken. Please select a new one");
+        synchronized (lock) {
+            this.printColorDebug(TUIColors.RED, username + " is already taken. Please select a new one");
+        }
     }
 
     @Override
     public void welcome(String username) {
-        this.printColorDebug(TUIColors.GREEN, "Welcome " + username + "!");
+        synchronized (lock) {
+            this.printColorDebug(TUIColors.GREEN, "Welcome " + username + "!");
+        }
     }
 
     @Override
     public void showCommands() {
-        printColorDebug(TUIColors.YELLOW, "Type :help to see all the available commands.");
+        synchronized (lock) {
+            printColorDebug(TUIColors.YELLOW, "Type :help to see all the available commands.");
+        }
     }
 
     @Override
     public void noLobbies() {
-        this.printDebug("There are no lobbies available. Let's create one!");
+        synchronized (lock) {
+            this.printDebug("There are no lobbies available. Let's create one!");
+        }
     }
 
     @Override
     public void joinedLobby() {
-        printDebug("You joined the lobby. Waiting for other players to join...");
+        synchronized (lock) {
+            printDebug("You joined the lobby. Waiting for other players to join...");
+        }
     }
 
     @Override
     public void joinedLobby(String username) {
-        printDebug(String.format("%s joined lobby", username));
+        synchronized (lock) {
+            printDebug(String.format("%s joined lobby", username));
+        }
     }
 
     @Override
     public void lobbyCreated(String lobbyId){
-        printDebug(String.format("Lobby %s created", lobbyId));
-    };
+        synchronized (lock) {
+            printDebug(String.format("Lobby %s created", lobbyId));
+        }
+    }
 
     @Override
     public void playerDisconnected(String username, boolean gameStarted) {
@@ -321,124 +362,150 @@ public class TUI extends UIManager {
 
     @Override
     public void reconnectionState() {
-        printColorDebug(TUIColors.GREEN, String.format("Welcome back %s!", data.getUsername()));
-        this.printColorDebug(TUIColors.CYAN,"This is your board:");
-        this.displayBoard(data.getBoard(), data.getAvailablePositions(), data.getSymbols());
-        this.printColorDebug(TUIColors.CYAN, "Your current hand:");
-        data.getHand().forEach(x->this.printDebug(String.format("Card id: %s", x.getId())));
-        printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
+        synchronized (lock) {
+            printColorDebug(TUIColors.GREEN, String.format("Welcome back %s!", data.getUsername()));
+            this.printColorDebug(TUIColors.CYAN, "This is your board:");
+            this.displayBoard(data.getBoard(), data.getAvailablePositions(), data.getSymbols());
+            this.printColorDebug(TUIColors.CYAN, "Your current hand:");
+            data.getHand().forEach(x -> this.printDebug(String.format("Card id: %s", x.getId())));
+            printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
+        }
     }
 
     @Override
     public void joinedLobbyLast() {
-        printDebug("You joined the lobby. The game will start soon!");
+        synchronized (lock) {
+            printDebug("You joined the lobby. The game will start soon!");
+        }
     }
 
     @Override
     public void lobbyFull() {
-        printDebug("lobby full");
+        synchronized (lock) {
+            printDebug("lobby full");
+        }
     }
 
     @Override
     public void gameStarted(StarterData starterData) {
-        printDebug("Game started");
-        printColorDebug(TUIColors.CYAN, "Your current hand:");
-        starterData.getHand().forEach(x->this.printDebug(String.format("Card id: %s", x.getId())));
-        printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
-        printColorDebug(TUIColors.CYAN, "Game shared goals:");
-        starterData.getSharedGoals().forEach(this::printGoalInfo);
-        printColorDebug(TUIColors.CYAN,"You have to choose one of the following private goals:");
-        starterData.getPrivateGoals().forEach(this::printGoalInfo);
-        printColorDebug(TUIColors.CYAN,"You have to choose your starter card side:");
-        printCardInfo(starterData.getStarterCard());
+        synchronized (lock) {
+            printDebug("Game started");
+            printColorDebug(TUIColors.CYAN, "Your current hand:");
+            starterData.getHand().forEach(x -> this.printDebug(String.format("Card id: %s", x.getId())));
+            printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
+            printColorDebug(TUIColors.CYAN, "Game shared goals:");
+            starterData.getSharedGoals().forEach(this::printGoalInfo);
+            printColorDebug(TUIColors.CYAN, "You have to choose one of the following private goals:");
+            starterData.getPrivateGoals().forEach(this::printGoalInfo);
+            printColorDebug(TUIColors.CYAN, "You have to choose your starter card side:");
+            printCardInfo(starterData.getStarterCard());
+        }
     }
 
     @Override
     public void waitingOthersStartingChoice() {
-        printDebug("Awesome! Now wait for the other players to choose their private goals and starter cards");
+        synchronized (lock) {
+            printDebug("Awesome! Now wait for the other players to choose their private goals and starter cards");
+        }
     }
 
     @Override
     public void otherPlayerTurn(String currentPlayer) {
-        printDebug("It's " + currentPlayer + "'s turn! Please wait for your turn!");
+        synchronized (lock) {
+            printDebug("It's " + currentPlayer + "'s turn! Please wait for your turn!");
+        }
     }
 
     @Override
     public void yourTurn(boolean isLastTurn) {
-        printDebug("It's your turn!");
-        if(isLastTurn){
-            printColorDebug(TUIColors.RED, "This is your last turn.");
+        synchronized (lock) {
+            printDebug("It's your turn!");
+            if (isLastTurn) {
+                printColorDebug(TUIColors.RED, "This is your last turn.");
+            }
+            this.printColorDebug(TUIColors.CYAN, "This is your board:");
+            this.displayBoard(data.getBoard(), data.getAvailablePositions(), data.getSymbols());
+            this.printColorDebug(TUIColors.CYAN, "Your current hand:");
+            data.getHand().forEach(x -> this.printDebug(String.format("Card id: %s", x.getId())));
+            printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
         }
-        this.printColorDebug(TUIColors.CYAN,"This is your board:");
-        this.displayBoard(data.getBoard(), data.getAvailablePositions(), data.getSymbols());
-        this.printColorDebug(TUIColors.CYAN, "Your current hand:");
-        data.getHand().forEach(x->this.printDebug(String.format("Card id: %s", x.getId())));
-        printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
     }
 
     @Override
     public void placeCardSuccess() {
-        printDebug("Card placed!");
-        printDebug("You currently have " + data.getCardPoints() + " points and you will score " + data.getGoalPoints() + " points from the goals!");
-        printColorDebug(TUIColors.CYAN,"This is your board:");
-        displayBoard(data.getBoard(), null, data.getSymbols());
-        printColorDebug(TUIColors.CYAN,"Resource deck:");
-        data.getResourceDeck().stream().filter(x -> !x.isFlipped()).forEach(x->printDebug(String.format("Card id: %s", x.getId())));
-        printDebug("Covered: " + data.getResourceDeck().get(2).getColor());
-        printColorDebug(TUIColors.CYAN,"Gold deck:");
-        data.getGoldDeck().stream().filter(x -> !x.isFlipped()).forEach(x->printDebug(String.format("Card id: %s", x.getId())));
-        printDebug("Covered: " + data.getGoldDeck().get(2).getColor());
-        printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
+        synchronized (lock) {
+            printDebug("Card placed!");
+            printDebug("You currently have " + data.getCardPoints() + " points and you will score " + data.getGoalPoints() + " points from the goals!");
+            printColorDebug(TUIColors.CYAN, "This is your board:");
+            displayBoard(data.getBoard(), null, data.getSymbols());
+            printColorDebug(TUIColors.CYAN, "Resource deck:");
+            data.getResourceDeck().stream().filter(x -> !x.isFlipped()).forEach(x -> printDebug(String.format("Card id: %s", x.getId())));
+            printDebug("Covered: " + data.getResourceDeck().get(2).getColor());
+            printColorDebug(TUIColors.CYAN, "Gold deck:");
+            data.getGoldDeck().stream().filter(x -> !x.isFlipped()).forEach(x -> printDebug(String.format("Card id: %s", x.getId())));
+            printDebug("Covered: " + data.getGoldDeck().get(2).getColor());
+            printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
+        }
     }
 
     @Override
     public void placeCardFailure() {
-        printColorDebug(TUIColors.RED, "You don't have the requirements to place the card!");
+        synchronized (lock) {
+            printColorDebug(TUIColors.RED, "You don't have the requirements to place the card!");
+        }
     }
 
     @Override
     public void drawCardSuccess() {
-        printDebug("Card drawn!");
-        printColorDebug(TUIColors.CYAN, "This is your updated hand:");
-        data.getHand().forEach(x->this.printDebug(String.format("Card id: %s", x.getId())));
-        printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
+        synchronized (lock) {
+            printDebug("Card drawn!");
+            printColorDebug(TUIColors.CYAN, "This is your updated hand:");
+            data.getHand().forEach(x -> this.printDebug(String.format("Card id: %s", x.getId())));
+            printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
+        }
     }
 
     @Override
     public void turnEnded(GameStateInfo gameStateInfo) {
-        printDebug(gameStateInfo.getLastPlayer() + " has ended his turn.");
-        printColorDebug(TUIColors.CYAN, "This is his current board:");
-        displayBoard(gameStateInfo.getBoards().get(gameStateInfo.getLastPlayer()), null, null);
-        printDebug("He currently has " + gameStateInfo.getLeaderboard().get(gameStateInfo.getLastPlayer()) + " points");
-        printColorDebug(TUIColors.CYAN,"These are the first two cards of the resource deck:");
-        gameStateInfo.getResourceDeck().stream().filter(x -> !x.isFlipped()).forEach(x->printDebug(String.format("Card id: %s", x.getId())));
-        printDebug("Covered: " + gameStateInfo.getResourceDeck().get(2).getColor());
-        printColorDebug(TUIColors.CYAN,"These are the first two cards of the gold deck:");
-        gameStateInfo.getGoldDeck().stream().filter(x -> !x.isFlipped()).forEach(x->printDebug(String.format("Card id: %s", x.getId())));
-        printDebug("Covered: " + gameStateInfo.getGoldDeck().get(2).getColor());
-        printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
-        vRule();
-        printLeaderboard(data.getSortedLeaderboard());
-        vRule();
+        synchronized (lock) {
+            printDebug(gameStateInfo.getLastPlayer() + " has ended his turn.");
+            printColorDebug(TUIColors.CYAN, "This is his current board:");
+            displayBoard(gameStateInfo.getBoards().get(gameStateInfo.getLastPlayer()), null, null);
+            printDebug("He currently has " + gameStateInfo.getLeaderboard().get(gameStateInfo.getLastPlayer()) + " points");
+            printColorDebug(TUIColors.CYAN, "These are the first two cards of the resource deck:");
+            gameStateInfo.getResourceDeck().stream().filter(x -> !x.isFlipped()).forEach(x -> printDebug(String.format("Card id: %s", x.getId())));
+            printDebug("Covered: " + gameStateInfo.getResourceDeck().get(2).getColor());
+            printColorDebug(TUIColors.CYAN, "These are the first two cards of the gold deck:");
+            gameStateInfo.getGoldDeck().stream().filter(x -> !x.isFlipped()).forEach(x -> printDebug(String.format("Card id: %s", x.getId())));
+            printDebug("Covered: " + gameStateInfo.getGoldDeck().get(2).getColor());
+            printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description");
+            vRule();
+            printLeaderboard(data.getSortedLeaderboard());
+            vRule();
+        }
     }
 
     @Override
     public void gameEnded() {
-        printDebug("Game ended!");
-        String[] messages = {
-                "You won!",
-                "You won 2nd place!",
-                "You won 3rd place!",
-                "You arrived last, better luck next time!"
-        };
-        ArrayList<String> orderedUsernames = new ArrayList<>(data.getSortedLeaderboard().keySet());
-        printColorDebug(TUIColors.YELLOW, messages[orderedUsernames.indexOf(data.getUsername())]);
-        printLeaderboard(data.getSortedLeaderboard());
+        synchronized (lock) {
+            printDebug("Game ended!");
+            String[] messages = {
+                    "You won!",
+                    "You won 2nd place!",
+                    "You won 3rd place!",
+                    "You arrived last, better luck next time!"
+            };
+            ArrayList<String> orderedUsernames = new ArrayList<>(data.getSortedLeaderboard().keySet());
+            printColorDebug(TUIColors.YELLOW, messages[orderedUsernames.indexOf(data.getUsername())]);
+            printLeaderboard(data.getSortedLeaderboard());
+        }
     }
 
     @Override
     public void goodbye() {
-        printColorDebug(TUIColors.BLUE, "See you next time!");
+        synchronized (lock) {
+            printColorDebug(TUIColors.BLUE, "See you next time!");
+        }
     }
 
     @Override
@@ -573,8 +640,29 @@ public class TUI extends UIManager {
         int pos = 1;
         for (Map.Entry<String, Integer> e: leaderboard.entrySet()) {
             int points = e.getValue();
-            this.printDebug(String.format("\t%d^  %s%s%s - %d %s", pos, TUIColors.valueOf(data.getPlayerColors().get(e.getKey()).toString()), e.getKey(), TUIColors.reset(), points, points == 1 ? "point" : "points"));
+            this.printDebug(String.format("\t%d^  %s - %d %s", pos, colorPlayerName(e.getKey()), points, points == 1 ? "point" : "points"));
             pos++;
+        }
+    }
+
+    @Override
+    public void showChat() {
+        if (chatHandler == null) {
+            printColorDebug(TUIColors.RED, "Chat not available, you need to join a lobby first!");
+        } else {
+            vRule();
+            data.getLastMessages().forEach(this::printChatMessage);
+            vRule();
+        }
+    }
+
+    @Override
+    public void sendMessage(String raw) {
+        try {
+            chatHandler.sendChatMessage(raw);
+            printColorDebug(TUIColors.YELLOW, "Message sent!");
+        } catch (NullPointerException e) {
+            printColorDebug(TUIColors.RED, "Chat not available, you need to join a lobby first!");
         }
     }
 
@@ -595,5 +683,21 @@ public class TUI extends UIManager {
 
     private void vRule() {
         printDebug("-------------------------------------------------------------");
+    }
+
+    private String colorPlayerName(String username) {
+        try {
+            return TUIColors.valueOf(data.getPlayerColors().get(username).toString()) + username + TUIColors.reset();
+        } catch (NullPointerException e) { // not in game, still in lobby
+            return username;
+        }
+    }
+
+    private void printChatMessage(ChatMessageData msg) {
+        if (msg.getRecipient() == null) {
+            printDebug(String.format("[%s@everyone]: %s", colorPlayerName(msg.getSender()), msg.getContent()));
+        } else {
+            printDebug(String.format("[%s@%s]: %s", colorPlayerName(msg.getSender()), colorPlayerName(msg.getRecipient()), msg.getContent()));
+        }
     }
 }

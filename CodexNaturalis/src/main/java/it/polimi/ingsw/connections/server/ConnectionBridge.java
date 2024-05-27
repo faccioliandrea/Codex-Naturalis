@@ -1,5 +1,7 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.chat.ChatMessageData;
+import it.polimi.ingsw.chat.ServerChatHandler;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
@@ -15,14 +17,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ConnectionBridge {
-
     private final ServerController controller;
+    private ServerChatHandler chatHandler;
+
     private HashMap<String, ClientConnection> connections;
 
     public ConnectionBridge(ServerController controller) {
 
         this.controller = controller;
         connections = new HashMap<>();
+    }
+
+    public void setChatHandler(ServerChatHandler chatHandler) {
+        this.chatHandler = chatHandler;
     }
 
     /**
@@ -88,8 +95,6 @@ public class ConnectionBridge {
             return idList;
         }
     }
-
-    // TODO: return the lobbyId
 
     public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) {
         AddPlayerToLobbyresponse result = controller.addPlayerToLobby(username, lobbyId);
@@ -261,7 +266,7 @@ public class ConnectionBridge {
     }
 
     public void createGame(String username) {
-        controller.createGame(controller.getLobbyController().getLobbies().get(controller.getUserToLobby().get(username)).getUsers());
+        controller.createGame(controller.getLobbyController().getLobbies().get(controller.getUserToLobby().get(username)));
     }
 
     // Server -> Client communications
@@ -368,6 +373,22 @@ public class ConnectionBridge {
 
     public HashMap<String, ClientConnection> getConnections() {
         return connections;
+    }
+
+    public void recvChatMessage(ChatMessageData msg) {
+        this.controller.distributeMessage(msg);
+    }
+
+    public void sendChatMessage(ChatMessageData msg, String receiver) {
+        if (connections.get(receiver) instanceof SocketClientConnection) {
+            try {
+                ((SocketClientConnection) connections.get(receiver)).sendChatMessage(msg);
+            } catch (IOException e) {
+                connections.get(receiver).setOffline();
+            }
+        } else {
+            // TODO: handle RMI
+        }
     }
 }
 

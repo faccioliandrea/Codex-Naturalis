@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.data;
 
 
+import it.polimi.ingsw.chat.MessagesQueue;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
@@ -32,6 +33,7 @@ public class UIData implements Observer {
     private int goalPoints = 0;
     private boolean gameAborted = false;
     private Map<String, PlayerColor> playerColors;
+    private MessagesQueue lastMessages = new MessagesQueue(5);
 
 
     public String getUsername() {
@@ -202,6 +204,14 @@ public class UIData implements Observer {
         return this.goals.get(2);
     }
 
+    public MessagesQueue getLastMessages() {
+        return lastMessages;
+    }
+
+    public void setLastMessages(MessagesQueue lastMessages) {
+        this.lastMessages = lastMessages;
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         this.username = ((ClientGameData)o).getUsername();
@@ -223,6 +233,7 @@ public class UIData implements Observer {
         this.leaderboard = ((ClientGameData)o).getLeaderboard();
         this.gameAborted = ((ClientGameData)o).isGameAborted();
         this.playerColors = ((ClientGameData)o).getPlayerColors();
+        this.lastMessages = ((ClientGameData)o).getLastMessages();
     }
 
     public LinkedHashMap<String, Integer> getSortedLeaderboard() {

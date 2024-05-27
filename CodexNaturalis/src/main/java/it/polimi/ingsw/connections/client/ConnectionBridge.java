@@ -1,11 +1,14 @@
 package it.polimi.ingsw.connections.client;
 
+import it.polimi.ingsw.chat.ChatMessageData;
+import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.connections.server.RMIServerConnectionInterface;
 import it.polimi.ingsw.controller.client.ClientController;
+
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import java.util.HashMap;
 
 public class ConnectionBridge {
     private final ClientController controller;
+    private ClientChatHandler chatHandler;
 
     private ServerConnection serverConnection;
 
@@ -20,6 +24,10 @@ public class ConnectionBridge {
 
     public ConnectionBridge(ClientController controller) {
         this.controller = controller;
+    }
+
+    public void setChatHandler(ClientChatHandler chatHandler) {
+        this.chatHandler = chatHandler;
     }
 
     public void loginRequest() {
@@ -295,6 +303,22 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void sendChatMessage(ChatMessageData msg) {
+        if (serverConnection instanceof SocketServerConnection) {
+            try {
+                ((SocketServerConnection) serverConnection).sendChatMessage(msg);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // TODO: handle RMI
+        }
+    }
+
+    public void recvChatMessage(ChatMessageData msg) {
+        chatHandler.recvChatMessage(msg);
     }
 
     public void WaitingOthersStartingChoiceMessage() {

@@ -1,21 +1,28 @@
 package it.polimi.ingsw.controller.server;
 
+import it.polimi.ingsw.chat.ServerChatHandler;
+import it.polimi.ingsw.connections.server.ConnectionBridge;
+
 import java.util.ArrayList;
 
 /**
  * Class that represents a lobby
  */
 public class Lobby {
+    private String id;
     private int numPlayers;
     private ArrayList<String> users;
+    private ServerChatHandler chatHandler;
 
     /**
      * Default constructor
      * @param numPlayers the number of players in the lobby
      */
-    public Lobby(int numPlayers) {
+    public Lobby(String id, int numPlayers, ConnectionBridge bridge) {
+        this.id = id;
         this.numPlayers = numPlayers;
-        users = new ArrayList<String >();
+        users = new ArrayList<>();
+        chatHandler = new ServerChatHandler(bridge, users);
     }
 
     /**
@@ -50,5 +57,13 @@ public class Lobby {
 
     public void removePlayer(String username) {
         users.remove(username);
+    }
+
+    public ServerChatHandler getChatHandler() {
+        return chatHandler;
+    }
+
+    public String getId() {
+        return id;
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
@@ -209,5 +210,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new NoOtherPlayerConnectedMessage());
     }
 
-
+    public void sendChatMessage(ChatMessageData msg) throws IOException {
+        this.outputStream.sendMessage(new ServerToClientChatMessage(msg));
+    }
 }

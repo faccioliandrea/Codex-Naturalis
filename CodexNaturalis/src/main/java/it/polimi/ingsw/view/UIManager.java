@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
@@ -12,6 +13,7 @@ import java.util.regex.Pattern;
 
 public abstract class UIManager {
     protected UIData data = new UIData();
+    protected ClientChatHandler chatHandler;
 
     private static int boardMinX = 0;
     private static int boardMaxY = 0;
@@ -48,6 +50,8 @@ public abstract class UIManager {
     public abstract void gameEnded();
     public abstract void goodbye();
     public abstract void showErrorMessage(String message);
+    public abstract void showChat();
+    public abstract void sendMessage(String raw);
     public abstract void noOtherPlayerConnected() ;
     public abstract void connectingToServer();
 
@@ -95,5 +99,11 @@ public abstract class UIManager {
     }
 
 
+    public void setData(UIData data) {
+        this.data = data;
+    }
 
+    public void setChatHandler(ClientChatHandler chatHandler) {
+        this.chatHandler = chatHandler;
+    }
 }

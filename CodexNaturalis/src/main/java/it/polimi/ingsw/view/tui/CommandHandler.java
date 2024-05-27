@@ -29,7 +29,10 @@ public class CommandHandler implements Runnable {
         this.manPages.put("board", this.buildManPage("board", "Displays the current state of the board", "player", "displays the specified player's board"));
 
         this.commands.put("chat", this::showChat);
-        this.manPages.put("chat", this.buildManPage("chat", "Opens chat", null, null));
+        this.manPages.put("chat", this.buildManPage("chat", "Displays last 5 chat messages", null, null));
+
+        this.commands.put("msg", this::sendMessage);
+        this.manPages.put("msg", this.buildManPage("msg", "Write a new message", "message", "write a message in the chat, use @user to send it to a specific person"));
 
         this.commands.put("lead", this::showLeaderboard);
         this.manPages.put("lead", this.buildManPage("lead", "Displays the leaderboard", null, null));
@@ -41,12 +44,16 @@ public class CommandHandler implements Runnable {
         this.manPages.put("goals", this.buildManPage("goals", "Displays all 3 goals info", null,  null));
 
         this.commands.put("hand", this::showHand);
-        this.manPages.put("hand", this.buildManPage("hand", "Displays cards in hand", null,  null));
+        this.manPages.put("hand", this.buildManPage("hand", "Displays cards in the hand", null,  null));
 
     }
 
     private void showChat(String arg) {
-        ui.printColorDebug(TUIColors.YELLOW, "CHAT");
+        ui.showChat();
+    }
+
+    private void sendMessage(String arg) {
+        ui.sendMessage(arg);
     }
 
     private String buildManPage(String commandName, String commandDoc, String argName, String argDoc) {
@@ -61,7 +68,7 @@ public class CommandHandler implements Runnable {
     public void run() {
         while (!interrupted) {
             try {
-                String[] in = commandQueue.take().split(" ");
+                String[] in = commandQueue.take().split(" ", 2);
                 Consumer<String> c = commands.get(in[0]);
                 if (c == null) {
                     this.commandNotFound(in[0]);

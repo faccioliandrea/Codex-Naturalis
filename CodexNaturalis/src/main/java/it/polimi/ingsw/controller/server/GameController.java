@@ -40,10 +40,10 @@ public class GameController {
             users.add(user);
     }*/
 
-    protected void createGame(String gameId, ArrayList<String> users) throws DeckInitializationException, InvalidNumberOfPlayersException {
+    protected void createGame(String gameId, Lobby lobby) throws DeckInitializationException, InvalidNumberOfPlayersException {
         //for(String user : users)
         //    addPlayer(user);
-        games.put(gameId, new Game(gameId, users));
+        games.put(gameId, new Game(gameId, lobby));
     }
 
 
