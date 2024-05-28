@@ -1,4 +1,5 @@
 package it.polimi.ingsw.connections.client;
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
@@ -130,5 +131,8 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
     public void ping() throws RemoteException {
     }
 
-
+    @Override
+    public void recvChatMessage(ChatMessageData msg) throws RemoteException {
+        connectionBridge.recvChatMessage(msg);
+    }
 }

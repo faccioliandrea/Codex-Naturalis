@@ -210,6 +210,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         this.outputStream.sendMessage(new NoOtherPlayerConnectedMessage());
     }
 
+    @Override
     public void sendChatMessage(ChatMessageData msg) throws IOException {
         this.outputStream.sendMessage(new ServerToClientChatMessage(msg));
     }

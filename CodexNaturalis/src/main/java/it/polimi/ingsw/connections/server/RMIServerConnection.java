@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.data.CardInfo;
@@ -179,6 +180,11 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
     @Override
     public ConnectionStatus getStatus() throws RemoteException {
         return this.connectionStatus;
+    }
+
+    @Override
+    public void sendChatMessage(ChatMessageData msg) throws RemoteException {
+        connectionBridge.recvChatMessage(msg);
     }
 
     /**

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
@@ -32,4 +33,5 @@ public interface ClientConnection {
     void playerReconnected(String username)throws IOException;
 
     void reconnectionState(GameStateInfo gameStateInfo)throws IOException;
+    void sendChatMessage(ChatMessageData msg) throws IOException;
 }

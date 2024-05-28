@@ -22,7 +22,7 @@ public class ClientChatHandler implements Runnable{
         this.bridge = bridge;
         this.username = username;
         this.updater = updater;
-        mention_pattern = Pattern.compile("@\\w+");
+        mention_pattern = Pattern.compile("@\\S+");
     }
 
     private void sendChatMessage(ChatMessageData msg) {

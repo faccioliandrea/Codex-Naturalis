@@ -313,7 +313,11 @@ public class ConnectionBridge {
                 throw new RuntimeException(e);
             }
         } else {
-            // TODO: handle RMI
+            try{
+                ((RMIServerConnectionInterface) serverConnection).sendChatMessage(msg);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

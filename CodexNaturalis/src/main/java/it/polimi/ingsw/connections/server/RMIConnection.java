@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.data.GameStateInfo;
@@ -94,6 +95,11 @@ public class RMIConnection implements ClientConnection{
     @Override
     public void reconnectionState(GameStateInfo gameStateInfo)throws RemoteException {
         rmiClientConnection.reconnectionState(gameStateInfo);
+    }
+
+    @Override
+    public void sendChatMessage(ChatMessageData msg) throws RemoteException {
+        rmiClientConnection.recvChatMessage(msg);
     }
 
     public void ping() throws RemoteException {

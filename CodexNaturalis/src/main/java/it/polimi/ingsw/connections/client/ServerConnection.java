@@ -9,5 +9,4 @@ public interface  ServerConnection {
     public void threadExceptionCallback(String e) throws IOException;
     public void close() throws IOException;
     public ConnectionStatus getStatus() throws IOException;
-
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.client.ServerConnection;
@@ -33,6 +34,7 @@ public interface RMIServerConnectionInterface extends Remote, ServerConnection {
     void threadExceptionCallback(String exceptionMessage) throws IOException;
     void close() throws IOException;
     ConnectionStatus getStatus() throws IOException;
+    void sendChatMessage(ChatMessageData msg) throws RemoteException;
 
     void createGame(String username) throws RemoteException;
 

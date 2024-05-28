@@ -1,4 +1,5 @@
 package it.polimi.ingsw.connections.client;
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.data.TurnInfo;
@@ -35,4 +36,6 @@ public interface RMIClientConnectionInterface extends Remote {
     void reconnectionState(GameStateInfo gameStateInfo)throws RemoteException;
 
     void ping()throws RemoteException;
+
+    void recvChatMessage(ChatMessageData msg) throws RemoteException;
 }

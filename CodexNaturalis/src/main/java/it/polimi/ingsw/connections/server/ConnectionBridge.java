@@ -18,7 +18,6 @@ import java.util.HashMap;
 
 public class ConnectionBridge {
     private final ServerController controller;
-    private ServerChatHandler chatHandler;
 
     private HashMap<String, ClientConnection> connections;
 
@@ -26,10 +25,6 @@ public class ConnectionBridge {
 
         this.controller = controller;
         connections = new HashMap<>();
-    }
-
-    public void setChatHandler(ServerChatHandler chatHandler) {
-        this.chatHandler = chatHandler;
     }
 
     /**
@@ -380,14 +375,10 @@ public class ConnectionBridge {
     }
 
     public void sendChatMessage(ChatMessageData msg, String receiver) {
-        if (connections.get(receiver) instanceof SocketClientConnection) {
-            try {
-                ((SocketClientConnection) connections.get(receiver)).sendChatMessage(msg);
-            } catch (IOException e) {
-                connections.get(receiver).setOffline();
-            }
-        } else {
-            // TODO: handle RMI
+        try {
+            connections.get(receiver).sendChatMessage(msg);
+        } catch (IOException e) {
+            connections.get(receiver).setOffline();
         }
     }
 }
