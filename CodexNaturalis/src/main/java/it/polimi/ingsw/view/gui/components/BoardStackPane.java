@@ -95,7 +95,7 @@ public class BoardStackPane extends StackPane {
         });
 
         stackPane.layoutBoundsProperty().addListener((ObservableValue<? extends Bounds> observable, Bounds oldBounds, Bounds bounds) -> {
-            boardGridPane.setClip(new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
+            //boardGridPane.setClip(new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
             stackPane.setClip(new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()));
         });
     }
@@ -110,10 +110,19 @@ public class BoardStackPane extends StackPane {
         this.columnCount = UIManager.boardGridColumns(cards, padding);
         this.rowCount = UIManager.boardGridRows(cards, padding);
         boardGridPane.getChildren().clear();
-        boardGridPane.setPrefHeight(screen.getVisualBounds().getHeight() * widthPercentage);
-        double cellHeight = boardGridPane.getPrefHeight() / rowCount;
-        boardGridPane.setPrefWidth(cellHeight * columnCount * 3 / 2);
-        double cellWidth = boardGridPane.getPrefWidth() / columnCount;
+        boardGridPane.setPrefWidth(screen.getVisualBounds().getWidth() * 0.5);
+        boardGridPane.setPrefHeight(screen.getVisualBounds().getWidth() * 0.5 * 2/3);
+        double cellWidth;
+        double cellHeight;
+        if(rowCount>columnCount){
+             cellHeight = boardGridPane.getPrefHeight() / (rowCount);
+             cellWidth = cellHeight*3/2;
+
+        }else{
+             cellWidth = boardGridPane.getPrefWidth() / (columnCount);
+             cellHeight = cellWidth*2/3;
+        }
+
         boardGridPane.getColumnConstraints().clear();
         for (int i = 0; i < columnCount; i++) {
             ColumnConstraints columnConstraint = new ColumnConstraints();
@@ -137,8 +146,16 @@ public class BoardStackPane extends StackPane {
     }
 
     private void addCardsToBoard(ArrayList<CardInfo> cards, boolean padding) {
-        double cellHeight = boardGridPane.getPrefHeight() / rowCount;
-        double cellWidth = boardGridPane.getPrefWidth() / columnCount;
+        double cellHeight;
+        double cellWidth;
+        if(rowCount>columnCount){
+            cellHeight = boardGridPane.getPrefHeight() / (rowCount);
+            cellWidth = cellHeight*3/2;
+
+        }else{
+            cellWidth = boardGridPane.getPrefWidth() / (columnCount);
+            cellHeight = cellWidth*2/3;
+        }
         for (CardInfo card : cards) {
             ImageView img = GUIUtility.createImageView(GUIUtility.getCardPath(card), cellHeight, cellWidth);
             Point translatedCoord = UIManager.toMatrixCoord(card.getCoord(), padding);
@@ -152,8 +169,16 @@ public class BoardStackPane extends StackPane {
      * @param availablePositions the available positions
      */
     public void addAvailablePositionsToBoard(ArrayList<Point> availablePositions) {
-        double cellHeight = boardGridPane.getPrefHeight() / rowCount;
-        double cellWidth = boardGridPane.getPrefWidth() / columnCount;
+        double cellHeight;
+        double cellWidth;
+        if(rowCount>columnCount){
+            cellHeight = boardGridPane.getPrefHeight() / (rowCount);
+            cellWidth = cellHeight*3/2;
+
+        }else{
+            cellWidth = boardGridPane.getPrefWidth() / (columnCount);
+            cellHeight = cellWidth*2/3;
+        }
         for (Point position : availablePositions) {
             Rectangle rectangle = createAvailablePositionRectangle(cellHeight, cellWidth);
             rectangle.setOnMouseClicked(e -> {

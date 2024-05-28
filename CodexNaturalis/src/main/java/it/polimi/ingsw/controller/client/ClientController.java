@@ -167,9 +167,7 @@ public class ClientController {
 
     public void gameState(GameStateInfo gameStateInfo){
         this.gameData.fromGameStateInfo(gameStateInfo);
-        //this.gameData.setLeaderboard(gameStateInfo.getLeaderboard());
-        //this.gameData.putEntry(this.gameData.getBoards(), gameStateInfo.getUsername(), gameStateInfo.getBoard());
-        if(!username.equals(gameStateInfo.getLastPlayer()) && gameStateInfo.getCurrentTurn()!=0){
+        if(!username.equals(gameStateInfo.getLastPlayer()) && gameStateInfo.getLastPlayer()!=null){
             ui.turnEnded(gameStateInfo);
         }
     }

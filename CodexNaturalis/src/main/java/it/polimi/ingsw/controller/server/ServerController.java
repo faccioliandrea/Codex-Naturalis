@@ -112,7 +112,7 @@ public class ServerController {
                         connectionBridge.gameState(username.getUsername(), new GameStateInfo(
                                 username.getUsername(),
                                 gameController.getCurrentPlayer(userToGame.get(user)),
-                                user,
+                                null,
                                 gameController.getGamePlayers(userToGame.get(user)).stream().collect(Collectors.toMap(Player::getUsername, Player::getPlayerColor, (x, y) -> x, HashMap::new)),
                                 gameController.getHand(userToGame.get(username.getUsername()), username.getUsername()),
                                 rd,
