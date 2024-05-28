@@ -314,4 +314,9 @@ public class GUI extends UIManager {
     public void sendMessage(String raw) {
 
     }
+
+    @Override
+    public void messageReceived() {
+
+    }
 }

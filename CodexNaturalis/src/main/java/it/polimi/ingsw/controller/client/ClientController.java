@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller.client;
 
 
+import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.chat.MessagesQueue;
 import it.polimi.ingsw.connections.ConnectionStatus;
@@ -230,7 +231,11 @@ public class ClientController {
     private void chatHandlerSetup() {
         this.chatHandler = new ClientChatHandler(connectionBridge, username, this::updateChat);
         ui.setChatHandler(this.chatHandler);
-        connectionBridge.setChatHandler(this.chatHandler);
         new Thread(this.chatHandler).start();
+    }
+
+    public void recvChatMessage(ChatMessageData msg) {
+        chatHandler.recvChatMessage(msg);
+        ui.messageReceived();
     }
 }

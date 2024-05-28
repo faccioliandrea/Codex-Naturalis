@@ -1,7 +1,6 @@
 package it.polimi.ingsw.connections.client;
 
 import it.polimi.ingsw.chat.ChatMessageData;
-import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
@@ -16,7 +15,6 @@ import java.util.HashMap;
 
 public class ConnectionBridge {
     private final ClientController controller;
-    private ClientChatHandler chatHandler;
 
     private ServerConnection serverConnection;
 
@@ -24,10 +22,6 @@ public class ConnectionBridge {
 
     public ConnectionBridge(ClientController controller) {
         this.controller = controller;
-    }
-
-    public void setChatHandler(ClientChatHandler chatHandler) {
-        this.chatHandler = chatHandler;
     }
 
     public void loginRequest() {
@@ -322,7 +316,7 @@ public class ConnectionBridge {
     }
 
     public void recvChatMessage(ChatMessageData msg) {
-        chatHandler.recvChatMessage(msg);
+        controller.recvChatMessage(msg);
     }
 
     public void WaitingOthersStartingChoiceMessage() {

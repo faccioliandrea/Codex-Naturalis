@@ -52,6 +52,7 @@ public abstract class UIManager {
     public abstract void showErrorMessage(String message);
     public abstract void showChat();
     public abstract void sendMessage(String raw);
+    public abstract void messageReceived();
     public abstract void noOtherPlayerConnected() ;
     public abstract void connectingToServer();
 

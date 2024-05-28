@@ -666,6 +666,11 @@ public class TUI extends UIManager {
         }
     }
 
+    @Override
+    public void messageReceived() {
+        printColorDebug(TUIColors.YELLOW, "New message received! Type :chat to open the chat.");
+    }
+
     protected void printHand() {
         try {
             data.getHand().forEach(this::printCardInfo);
