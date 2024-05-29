@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+
+<fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.VBox" prefWidth="200.0" prefHeight="300.0" spacing="15">
+    <Label text="Chat" styleClass="midTitle"/>
+    <VBox fx:id="chatVBox" spacing="15.0" prefHeight="200.0" minHeight="200.0"/>
+    <HBox spacing="10">
+        <TextField fx:id="messageTextField" focusTraversable="false" />
+        <Button fx:id="sendButton" focusTraversable="false" disable="true" text=">" prefWidth="30.0" />
+    </HBox>
+</fx:root>

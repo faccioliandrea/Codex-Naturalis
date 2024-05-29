@@ -2,9 +2,9 @@ package it.polimi.ingsw.view.gui.controller;
 
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
-import it.polimi.ingsw.view.data.UIData;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.components.BoardStackPane;
+import it.polimi.ingsw.view.gui.components.ChatVBox;
 import it.polimi.ingsw.view.gui.components.FadingLabel;
 import it.polimi.ingsw.view.gui.components.LeaderboxVBox;
 import it.polimi.ingsw.view.gui.utility.GUIConstants;
@@ -35,7 +35,7 @@ public class MainController implements Initializable {
     @FXML
     private HBox goldHBox;
     @FXML
-    private Group leaderboardGroup;
+    private VBox leaderboardAndChatVBox;
     @FXML
     private Label turnInfoLabel;
     @FXML
@@ -45,20 +45,22 @@ public class MainController implements Initializable {
 
     private BoardStackPane boardGridPane;
     private LeaderboxVBox leaderboxVBox;
+    private ChatVBox chatVBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         boardGridPane = new BoardStackPane(GUIConstants.mainBoardWidthPercentage);
         leaderboxVBox = new LeaderboxVBox();
-        leaderboardGroup.getChildren().clear();
-        leaderboardGroup.getChildren().add(leaderboxVBox);
+        chatVBox = new ChatVBox();
+        leaderboardAndChatVBox.getChildren().clear();
+        leaderboardAndChatVBox.getChildren().addAll(leaderboxVBox, chatVBox);
         boardGroup.getChildren().clear();
         boardGroup.getChildren().add(boardGridPane);
     }
 
-    private void setupHand(UIData data) {
+    private void setupHand() {
         handHBox.getChildren().clear();
-        for (CardInfo card : data.getHand()) {
+        for (CardInfo card : GUI.getInstance().getData().getHand()) {
             ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
             imageView.setOnMouseClicked(e -> {
                 if (e.getButton().equals(MouseButton.PRIMARY)) {
@@ -77,23 +79,23 @@ public class MainController implements Initializable {
         }
     }
 
-    private void setupGoals(UIData data) {
+    private void setupGoals() {
         goalsHBox.getChildren().clear();
-        for (GoalInfo goal : data.getGoals()) {
+        for (GoalInfo goal : GUI.getInstance().getData().getGoals()) {
             ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(goal), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
             goalsHBox.getChildren().add(imageView);
         }
     }
 
-    private void setupResources(UIData data, boolean selectable) {
+    private void setupResources(boolean selectable) {
         resourcesHBox.getChildren().clear();
-        for (CardInfo card : data.getResourceDeck()) {
+        for (CardInfo card : GUI.getInstance().getData().getResourceDeck()) {
             ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
             if (selectable) {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {
                         try {
-                            GUI.getQueue().put(10 + data.getResourceDeck().indexOf(card));
+                            GUI.getQueue().put(10 + GUI.getInstance().getData().getResourceDeck().indexOf(card));
                             drawEnded();
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);
@@ -105,15 +107,15 @@ public class MainController implements Initializable {
         }
     }
 
-    private void setupGold(UIData data, boolean selectable) {
+    private void setupGold(boolean selectable) {
         goldHBox.getChildren().clear();
-        for (CardInfo card : data.getGoldDeck()) {
+        for (CardInfo card : GUI.getInstance().getData().getGoldDeck()) {
             ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
             if (selectable) {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {
                         try {
-                            GUI.getQueue().put(20 + data.getGoldDeck().indexOf(card));
+                            GUI.getQueue().put(20 + GUI.getInstance().getData().getGoldDeck().indexOf(card));
                             drawEnded();
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);
@@ -125,27 +127,27 @@ public class MainController implements Initializable {
         }
     }
 
-    private void setupBoard(UIData data, boolean padding) {
-        boardGridPane.setupBoard(data.getBoard(), padding);
+    private void setupBoard(boolean padding) {
+        boardGridPane.setupBoard(GUI.getInstance().getData().getBoard(), padding);
     }
 
-    public void updateLeaderboard(UIData data) {
-        leaderboxVBox.leaderboardSetup(data, true);
+    public void updateLeaderboard() {
+        leaderboxVBox.leaderboardSetup(true);
     }
 
-    public void askForPlayCard(UIData data) {
-        setupHand(data);
-        setupBoard(data, true);
+    public void askForPlayCard() {
+        setupHand();
+        setupBoard(true);
         handHBox.setEffect(GUIUtility.highlightShadow());
-        boardGridPane.addAvailablePositionsToBoard(data.getAvailablePositions());
+        boardGridPane.addAvailablePositionsToBoard(GUI.getInstance().getData().getAvailablePositions());
         if (selectedCard != null) {
             boardGridPane.setAvailablePositionDisabled(false);
         }
     }
 
-    public void askForDrawCard(UIData data) {
-        setupResources(data, true);
-        setupGold(data, true);
+    public void askForDrawCard() {
+        setupResources(true);
+        setupGold(true);
         resourcesHBox.setEffect(GUIUtility.highlightShadow());
         goldHBox.setEffect(GUIUtility.highlightShadow());
     }
@@ -157,13 +159,13 @@ public class MainController implements Initializable {
         goldHBox.setEffect(null);
     }
 
-    public void updateData(UIData data) {
-        setupHand(data);
-        setupGoals(data);
-        setupBoard(data, false);
-        updateLeaderboard(data);
-        setupResources(data, false);
-        setupGold(data, false);
+    public void updateData() {
+        setupHand();
+        setupGoals();
+        setupBoard(false);
+        updateLeaderboard();
+        setupResources(false);
+        setupGold(false);
     }
 
     public CardInfo cardSelected() {
@@ -183,5 +185,9 @@ public class MainController implements Initializable {
     public void setInfoTitle(String title) {
         FadingLabel label = new FadingLabel(title);
         infoVBox.getChildren().add(label);
+    }
+
+    public void updateChat() {
+        chatVBox.updateMessages();
     }
 }

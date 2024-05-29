@@ -26,7 +26,7 @@ public class GUI extends UIManager {
 
     public GUI() {
         new Thread(() ->
-                Application.launch(GUIApp.class)
+            Application.launch(GUIApp.class)
         ).start();
         instance = this;
     }
@@ -104,8 +104,8 @@ public class GUI extends UIManager {
     @Override
     public CardInfo askForPlayCard() {
         Platform.runLater(() -> {
-            mainController.updateData(data);
-            mainController.askForPlayCard(data);
+            mainController.updateData();
+            mainController.askForPlayCard();
             mainController.setTitle("Select a card to play and a position to place it in");
         });
         CardInfo selected;
@@ -124,8 +124,8 @@ public class GUI extends UIManager {
     @Override
     public int askForDrawCard() {
         Platform.runLater(() -> {
-            mainController.updateData(data);
-            mainController.askForDrawCard(data);
+            mainController.updateData();
+            mainController.askForDrawCard();
             mainController.setTitle("Select a card to draw from the resource or gold deck");
         });
         try {
@@ -205,7 +205,7 @@ public class GUI extends UIManager {
         // TODO: Implement
         GUIApp.changeScene("main", mainController);
         Platform.runLater(() -> {
-            mainController.updateData(data);
+            mainController.updateData();
             mainController.setTitle(data.getCurrentPlayer() + "'s turn");
         });
     }
@@ -236,14 +236,13 @@ public class GUI extends UIManager {
         // TODO: Implement
         GUIApp.changeScene("main", mainController);
         Platform.runLater(() -> {
-            mainController.updateData(data);
+            mainController.updateData();
             mainController.setTitle("It's " + currentPlayer + "'s turn!");
         });
     }
 
     @Override
     public void yourTurn(boolean isLastTurn) {
-        GUIApp.changeScene("main", mainController);
         if (isLastTurn) {
             GUIApp.showAlert("This is your last turn", Alert.AlertType.INFORMATION);
         }
@@ -251,8 +250,7 @@ public class GUI extends UIManager {
 
     @Override
     public void placeCardSuccess() {
-        Platform.runLater(() ->
-                mainController.updateData(data)
+        Platform.runLater(mainController::updateData
         );
     }
 
@@ -263,8 +261,7 @@ public class GUI extends UIManager {
 
     @Override
     public void drawCardSuccess() {
-        Platform.runLater(() ->
-                mainController.updateData(data)
+        Platform.runLater(mainController::updateData
         );
     }
 
@@ -272,7 +269,7 @@ public class GUI extends UIManager {
     public void turnEnded(GameStateInfo gameStateInfo) {
         // TODO: Implement
         Platform.runLater(() -> {
-            mainController.updateData(data);
+            mainController.updateData();
             mainController.setTitle("Turn ended. Now wait for your opponent(s) to finish their turn");
         });
     }
@@ -280,8 +277,7 @@ public class GUI extends UIManager {
     @Override
     public void gameEnded() {
         GUIApp.changeScene("game-end", gameEndController);
-        Platform.runLater(() ->
-            gameEndController.setLeaderboard(data)
+        Platform.runLater(gameEndController::setLeaderboard
         );
     }
 
@@ -308,16 +304,14 @@ public class GUI extends UIManager {
 
     @Override
     public void showChat() {
-
     }
 
     @Override
     public void sendMessage(String raw) {
-
     }
 
     @Override
     public void messageReceived() {
-
+        Platform.runLater(mainController::updateChat);
     }
 }

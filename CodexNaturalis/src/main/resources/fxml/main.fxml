@@ -27,11 +27,10 @@
         </VBox>
     </top>
     <bottom>
-        <HBox prefHeight="100.0" BorderPane.alignment="CENTER" alignment="CENTER" fx:id="handHBox" spacing="10.0">
-        </HBox>
+        <HBox prefHeight="100.0" BorderPane.alignment="CENTER" alignment="CENTER" fx:id="handHBox" spacing="10.0" />
     </bottom>
     <right>
-        <Group fx:id="leaderboardGroup"/>
+        <VBox fx:id="leaderboardAndChatVBox" spacing="30.0"/>
     </right>
     <center>
         <Group fx:id="boardGroup"/>

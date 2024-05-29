@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui.controller;
 
-import it.polimi.ingsw.view.data.UIData;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.components.LeaderboxVBox;
 import javafx.fxml.FXML;
@@ -23,10 +22,10 @@ public class GameEndController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
-    public void setLeaderboard(UIData data) {
+    public void setLeaderboard() {
         LeaderboxVBox leaderboxVBox = new LeaderboxVBox();
         leaderboardGroup.getChildren().add(leaderboxVBox);
-        leaderboxVBox.leaderboardSetup(data, false);
+        leaderboxVBox.leaderboardSetup(false);
     }
 
     public void askNewGame() {

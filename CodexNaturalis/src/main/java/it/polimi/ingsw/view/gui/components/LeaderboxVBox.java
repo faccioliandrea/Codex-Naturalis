@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.gui.components;
 
-import it.polimi.ingsw.view.data.UIData;
+import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.GUIApp;
 import it.polimi.ingsw.view.gui.controller.OpponentBoardController;
 import javafx.fxml.FXML;
@@ -33,12 +33,11 @@ public class LeaderboxVBox extends VBox {
     /**
      * Sets up the leaderboard
      *
-     * @param data data for UI
      */
-    public void leaderboardSetup(UIData data, boolean interactable) {
+    public void leaderboardSetup(boolean interactable) {
         leaderboardVBox.getChildren().clear();
         int pos = 1;
-        for (Map.Entry<String, Integer> e : data.getSortedLeaderboard().entrySet()) {
+        for (Map.Entry<String, Integer> e : GUI.getInstance().getData().getSortedLeaderboard().entrySet()) {
             int points = e.getValue();
             HBox leaderboardHBox = new HBox();
             leaderboardHBox.setSpacing(2);
@@ -47,10 +46,10 @@ public class LeaderboxVBox extends VBox {
             Label usernameLabel = new Label(username);
             // TODO: Add colors
             // Color.valueOf("BLACK");
-            if (!Objects.equals(username, data.getUsername()) && !data.getBoards().get(username).isEmpty() && interactable) {
+            if (!Objects.equals(username, GUI.getInstance().getData().getUsername()) && !GUI.getInstance().getData().getBoards().get(username).isEmpty() && interactable) {
                 usernameLabel.hoverProperty().addListener((obs, oldVal, newValue) -> {
                     if (newValue) {
-                        OpponentBoardController controller = new OpponentBoardController(username, data.getBoards().get(username));
+                        OpponentBoardController controller = new OpponentBoardController(username, GUI.getInstance().getData().getBoards().get(username));
                         GUIApp.showOpponentBoard(controller);
                     }
                 });

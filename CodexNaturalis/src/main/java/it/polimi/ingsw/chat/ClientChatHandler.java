@@ -5,11 +5,10 @@ import it.polimi.ingsw.controller.client.ClientController;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ClientChatHandler implements Runnable{
+public class ClientChatHandler implements Runnable {
     private static ClientChatHandler instance;
     private static String username;
 
@@ -45,6 +44,10 @@ public class ClientChatHandler implements Runnable{
         } else {
             return new ChatMessageData(sender, null, raw.trim());
         }
+    }
+
+    public static boolean isSameUserMessage(String raw) {
+        return prepareMessage(raw, username).getRecipient().equals(username);
     }
 
     public static void sendChatMessage(String raw) {
