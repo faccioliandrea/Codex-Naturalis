@@ -14,25 +14,27 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class ClientController {
+    private static ClientController instance;
     private UIManager ui;
     private String username;
-    private ConnectionBridge connectionBridge;
     private ClientChatHandler chatHandler;
 
     private TurnInfo currentTurnInfo = new TurnInfo();
     private ClientGameData gameData = new ClientGameData();
 
-    public ClientController(UIManager ui) {
-        this.ui = ui;
-        connectionBridge = new ConnectionBridge(this);
+    private ClientController() { }
 
-        this.ui.showCommands();
-        this.gameData.addObserver(this.ui.getData());
+    public static synchronized ClientController getInstance() {
+        if (instance == null) {
+            instance = new ClientController();
+        }
+        return instance;
     }
 
-
-    private void updateChat(MessagesQueue q) {
-        gameData.setLastMessages(q);
+    public void init() {
+        this.ui = UIManager.getInstance();
+        this.ui.showCommands();
+        this.gameData.addObserver(this.ui.getData());
     }
 
     public String loginRequest() {
@@ -42,22 +44,22 @@ public class ClientController {
 
     public void invalidUsername(){
         ui.invalidUsername(this.username);
-        connectionBridge.loginRequest();
+        ConnectionBridge.getInstance().loginRequest();
     }
 
     public void validUsername() {
         ui.welcome(this.username);
-        connectionBridge.lobbyRequest();
+        ConnectionBridge.getInstance().lobbyRequest();
     }
 
     public void lobbyRequest() {
-        connectionBridge.lobbyRequest();
+        ConnectionBridge.getInstance().lobbyRequest();
     }
 
     public void lobbyDoesNotExist() {
         ui.noLobbies();
         int n = ui.askForPlayerNum();
-        connectionBridge.createLobbyRequest(n);
+        ConnectionBridge.getInstance().createLobbyRequest(n);
     }
 
     public void lobbyExists(ArrayList<String> lobbies) {
@@ -65,9 +67,9 @@ public class ClientController {
         if(id.isEmpty()) {
             // TODO: handle in GUI
             int n = ui.askForPlayerNum();
-            connectionBridge.createLobbyRequest(n);
+            ConnectionBridge.getInstance().createLobbyRequest(n);
         } else
-            connectionBridge.joinLobbyRequest(id);
+            ConnectionBridge.getInstance().joinLobbyRequest(id);
     }
 
     public void joinLobbySuccess(boolean isLastPlayer) {
@@ -75,7 +77,7 @@ public class ClientController {
 
         if (isLastPlayer) {
             ui.joinedLobbyLast();
-            connectionBridge.createGame();
+            ConnectionBridge.getInstance().createGame();
         } else {
             ui.joinedLobby();
         }
@@ -103,7 +105,7 @@ public class ClientController {
         ui.gameStarted(starterData);
 
         int chosenGoal = ui.askForPrivateGoal();
-        connectionBridge.choosePrivateGoalRequest(chosenGoal);
+        ConnectionBridge.getInstance().choosePrivateGoalRequest(chosenGoal);
 
         this.gameData.addToList(this.gameData.getGoals(), starterData.getPrivateGoals().get(chosenGoal));
     }
@@ -111,7 +113,7 @@ public class ClientController {
     public void privateGoalChosen(){
         if(!this.gameData.isGameAborted()){
             boolean flipped = ui.askForStarterCardSide();
-            connectionBridge.chooseStarterCardSideRequest(flipped);
+            ConnectionBridge.getInstance().chooseStarterCardSideRequest(flipped);
         }
     }
 
@@ -129,7 +131,7 @@ public class ClientController {
         ui.yourTurn(turnInfo.isLastTurn());
 
         CardInfo playedCard = ui.askForPlayCard();
-        connectionBridge.placeCardRequest(playedCard);
+        ConnectionBridge.getInstance().placeCardRequest(playedCard);
     }
 
     public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo) {
@@ -144,26 +146,26 @@ public class ClientController {
         if(!gameData.getResourceDeck().isEmpty() || !gameData.getGoldDeck().isEmpty()){
             int choice = ui.askForDrawCard();
             if(choice / 10 == 1){
-                connectionBridge.drawResourceRequest(choice%10);
+                ConnectionBridge.getInstance().drawResourceRequest(choice%10);
             } else {
-                connectionBridge.drawGoldRequest(choice%10);
+                ConnectionBridge.getInstance().drawGoldRequest(choice%10);
             }
         } else {
-            connectionBridge.endTurn();
+            ConnectionBridge.getInstance().endTurn();
         }
     }
 
     public void placeCardFailure(){
         ui.placeCardFailure();
         CardInfo playedCard = ui.askForPlayCard();
-        connectionBridge.placeCardRequest(playedCard);
+        ConnectionBridge.getInstance().placeCardRequest(playedCard);
     }
 
     public void drawSuccess(ArrayList<CardInfo> hand){
         hand.forEach(x -> x.setFlipped(false));
         this.gameData.setHand(hand);
         ui.drawCardSuccess();
-        connectionBridge.endTurn();
+        ConnectionBridge.getInstance().endTurn();
     }
 
     public void gameState(GameStateInfo gameStateInfo){
@@ -206,7 +208,7 @@ public class ClientController {
         if(this.gameData.getCurrentPlayer().equals(this.gameData.getUsername())){
             ui.yourTurn(this.gameData.isLastTurn());
             CardInfo playedCard = ui.askForPlayCard();
-            connectionBridge.placeCardRequest(playedCard);
+            ConnectionBridge.getInstance().placeCardRequest(playedCard);
         } else {
             ui.otherPlayerTurn(this.gameData.getCurrentPlayer());
         }
@@ -217,7 +219,7 @@ public class ClientController {
     }
 
     public ConnectionBridge getConnectionBridge() {
-        return connectionBridge;
+        return ConnectionBridge.getInstance();
     }
 
     public TurnInfo getCurrentTurnInfo() {
@@ -229,13 +231,15 @@ public class ClientController {
     }
 
     private void chatHandlerSetup() {
-        this.chatHandler = new ClientChatHandler(connectionBridge, username, this::updateChat);
-        ui.setChatHandler(this.chatHandler);
-        new Thread(this.chatHandler).start();
+        new Thread(ClientChatHandler.getInstance()).start();
     }
 
     public void recvChatMessage(ChatMessageData msg) {
-        chatHandler.recvChatMessage(msg);
+        ClientChatHandler.recvChatMessage(msg);
         ui.messageReceived();
+    }
+
+    public ClientGameData getData() {
+        return gameData;
     }
 }

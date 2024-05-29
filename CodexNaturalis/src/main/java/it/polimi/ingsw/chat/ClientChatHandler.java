@@ -1,6 +1,7 @@
 package it.polimi.ingsw.chat;
 
 import it.polimi.ingsw.connections.client.ConnectionBridge;
+import it.polimi.ingsw.controller.client.ClientController;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -9,29 +10,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ClientChatHandler implements Runnable{
-    private final ConnectionBridge bridge;
-    private final String username;
+    private static ClientChatHandler instance;
+    private static String username;
 
-    private final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
-    private final MessagesQueue msgsQueue = new MessagesQueue(5);
-    private final Consumer<MessagesQueue> updater;
-    private final Pattern mention_pattern;
+    private static final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+    private static final MessagesQueue msgsQueue = new MessagesQueue(5);
+    private static final Pattern mention_pattern = Pattern.compile("@\\S+");
+    private static boolean running = false;
 
 
-    public ClientChatHandler(ConnectionBridge bridge, String username, Consumer<MessagesQueue> updater) {
-        this.bridge = bridge;
-        this.username = username;
-        this.updater = updater;
-        mention_pattern = Pattern.compile("@\\S+");
+    private ClientChatHandler() {
+        username = ClientController.getInstance().getUsername();
     }
 
-    private void sendChatMessage(ChatMessageData msg) {
+    public static synchronized ClientChatHandler getInstance() {
+        if (instance == null) {
+            instance = new ClientChatHandler();
+        }
+        return instance;
+    }
+
+    private static void sendChatMessage(ChatMessageData msg) {
         msgsQueue.add(msg);
-        updater.accept(msgsQueue);
-        bridge.sendChatMessage(msg);
+        ClientController.getInstance().getData().setLastMessages(msgsQueue);
+        ConnectionBridge.getInstance().sendChatMessage(msg);
     }
 
-    private ChatMessageData prepareMessage(String raw, String sender) {
+    private static ChatMessageData prepareMessage(String raw, String sender) {
         Matcher matcher = mention_pattern.matcher(raw);
         if (matcher.find()) {
             String recipient = matcher.group().substring(1);
@@ -42,22 +47,22 @@ public class ClientChatHandler implements Runnable{
         }
     }
 
-    public void sendChatMessage(String raw) {
+    public static void sendChatMessage(String raw) {
         sendChatMessage(prepareMessage(raw, username));
     }
 
-    public void recvChatMessage(ChatMessageData msg) {
+    public static void recvChatMessage(ChatMessageData msg) {
         msgsQueue.add(msg);
-        this.updater.accept(this.msgsQueue);
+        ClientController.getInstance().getData().setLastMessages(msgsQueue);
     }
 
-    public MessagesQueue getMsgsQueue() {
+    public static MessagesQueue getMsgsQueue() {
         return msgsQueue;
     }
 
     @Override
     public void run() {
-        boolean running = true;
+        running = true;
         while (running) {
             try {
                 String msg = queue.take();
@@ -67,5 +72,9 @@ public class ClientChatHandler implements Runnable{
             }
         }
 
+    }
+
+    public static boolean isRunning() {
+        return running;
     }
 }

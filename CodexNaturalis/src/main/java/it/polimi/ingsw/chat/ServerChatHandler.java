@@ -6,24 +6,22 @@ import it.polimi.ingsw.connections.server.ConnectionBridge;
 import java.util.List;
 
 public class ServerChatHandler {
-    private ConnectionBridge bridge;
-    private List<String> users;
+    private final List<String> users;
 
-    public ServerChatHandler(ConnectionBridge bridge, List<String> users) {
-        this.bridge = bridge;
+    public ServerChatHandler(List<String> users) {
         this.users = users;
     }
 
     public void distributeMessage(ChatMessageData msg) {
-        if (bridge.getConnections().get(msg.getRecipient())==null) {
+        if (ConnectionBridge.getInstance().getConnections().get(msg.getRecipient())==null) {
             msg.setRecipient(null);
         }
         if (msg.getRecipient() != null) {
-            bridge.sendChatMessage(msg, msg.getRecipient());
+            ConnectionBridge.getInstance().sendChatMessage(msg, msg.getRecipient());
         } else {
             for (String u: this.users) {
-                if (bridge.getConnections().get(u).getStatus().equals(ConnectionStatus.ONLINE) && !u.equals(msg.getSender()))
-                    bridge.sendChatMessage(msg, u);
+                if (ConnectionBridge.getInstance().getConnections().get(u).getStatus().equals(ConnectionStatus.ONLINE) && !u.equals(msg.getSender()))
+                    ConnectionBridge.getInstance().sendChatMessage(msg, u);
             }
         }
     }

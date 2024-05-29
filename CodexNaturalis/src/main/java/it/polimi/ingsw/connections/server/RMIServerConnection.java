@@ -19,18 +19,14 @@ import java.util.ArrayList;
  * This class is the RMI server connection class
  */
 public class RMIServerConnection extends UnicastRemoteObject implements RMIServerConnectionInterface {
-    private final ConnectionBridge connectionBridge;
     private ConnectionStatus connectionStatus = ConnectionStatus.INITIALIZING;
     private final Object lock = new Object();
 
     /**
      * Constructor for the RMI server connection
-     * @param connectionBridge the connection bridge
      * @throws RemoteException if the connection fails
      */
-    public RMIServerConnection(ConnectionBridge connectionBridge) throws RemoteException {
-        this.connectionBridge = connectionBridge;
-    }
+    public RMIServerConnection() throws RemoteException { }
 
     /**
      * Method to handle the login request
@@ -52,13 +48,13 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
                     }
                 } catch (RemoteException | InterruptedException e) {
                     connectionStatus = ConnectionStatus.OFFLINE;
-                    connectionBridge.onClientDisconnect(rmiConnection);
+                    ConnectionBridge.getInstance().onClientDisconnect(rmiConnection);
                     break;
                 }
             }
         }).start();
 
-        return connectionBridge.addConnection(rmiConnection, username);
+        return ConnectionBridge.getInstance().addConnection(rmiConnection, username);
     }
 
     /**
@@ -69,7 +65,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public ArrayList<String> getLobby(String username) throws RemoteException {
-        return connectionBridge.getLobbies(username);
+        return ConnectionBridge.getInstance().getLobbies(username);
     }
 
     /**
@@ -81,7 +77,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) throws RemoteException {
-        return connectionBridge.addPlayerToLobby(username, lobbyId);
+        return ConnectionBridge.getInstance().addPlayerToLobby(username, lobbyId);
     }
 
     /**
@@ -92,7 +88,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public void choosePrivateGoal(String username, int index) throws RemoteException {
-        connectionBridge.choosePrivateGoal(username, index);
+        ConnectionBridge.getInstance().choosePrivateGoal(username, index);
     }
 
     /**
@@ -104,7 +100,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public ChooseStarterCardSideResponse chooseStarterCardSide(String username, boolean flipped) throws RemoteException {
-        return connectionBridge.chooseStarterCardSide(username, flipped);
+        return ConnectionBridge.getInstance().chooseStarterCardSide(username, flipped);
     }
 
     /**
@@ -118,7 +114,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public PlaceCardSuccessInfo placeCard(String username, String cardId, Point position, boolean flipped) throws RemoteException {
-        return connectionBridge.placeCard(username, cardId, position, flipped);
+        return ConnectionBridge.getInstance().placeCard(username, cardId, position, flipped);
     }
 
     /**
@@ -130,7 +126,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public ArrayList<CardInfo> drawResource(String username, int index) throws RemoteException {
-        return connectionBridge.drawResource(username, index);
+        return ConnectionBridge.getInstance().drawResource(username, index);
     }
 
     /**
@@ -142,7 +138,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public ArrayList<CardInfo> drawGold(String username, int index) throws RemoteException {
-        return connectionBridge.drawGold(username, index);
+        return ConnectionBridge.getInstance().drawGold(username, index);
     }
 
     /**
@@ -152,7 +148,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public void endTurn(String username) throws RemoteException {
-        connectionBridge.endTurn(username);
+        ConnectionBridge.getInstance().endTurn(username);
     }
 
     /**
@@ -164,7 +160,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public String createLobbyAndJoin(String username, int numPlayers) throws RemoteException {
-        return connectionBridge.createLobby(username, numPlayers);
+        return ConnectionBridge.getInstance().createLobby(username, numPlayers);
     }
 
     @Override
@@ -184,7 +180,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
 
     @Override
     public void sendChatMessage(ChatMessageData msg) throws RemoteException {
-        connectionBridge.recvChatMessage(msg);
+        ConnectionBridge.getInstance().recvChatMessage(msg);
     }
 
     /**
@@ -194,6 +190,6 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      */
     @Override
     public void createGame(String username) throws RemoteException {
-        connectionBridge.createGame(username);
+        ConnectionBridge.getInstance().createGame(username);
     }
 }

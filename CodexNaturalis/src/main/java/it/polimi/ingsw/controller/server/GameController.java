@@ -22,27 +22,23 @@ import java.util.List;
 import java.util.Map;
 
 public class GameController {
-    //private ArrayList<String> users;
-    private HashMap<String, Game> games;
+    private static GameController instance;
+    private final HashMap<String, Game> games = new HashMap<>();
 
-    public GameController(){
-        //users = new ArrayList<>();
-        games = new HashMap<>();
+    private GameController() { }
+
+    public static synchronized GameController getInstance() {
+        if (instance == null) {
+            instance = new GameController();
+        }
+        return instance;
     }
 
     protected HashMap<String, Game> getGames() {
         return games;
     }
 
-
-   /* private void addPlayer(String user){
-        if(!users.contains(user))
-            users.add(user);
-    }*/
-
     protected void createGame(String gameId, Lobby lobby) throws DeckInitializationException, InvalidNumberOfPlayersException {
-        //for(String user : users)
-        //    addPlayer(user);
         games.put(gameId, new Game(gameId, lobby));
     }
 

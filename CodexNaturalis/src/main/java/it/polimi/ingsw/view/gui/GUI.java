@@ -28,6 +28,7 @@ public class GUI extends UIManager {
         new Thread(() ->
                 Application.launch(GUIApp.class)
         ).start();
+        instance = this;
     }
 
     public static BlockingQueue<Object> getQueue() {

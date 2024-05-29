@@ -5,6 +5,8 @@ import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.view.data.UIData;
+import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.tui.TUI;
 
 import java.awt.*;
 import java.util.*;
@@ -12,8 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class UIManager {
+    protected static UIManager instance;
     protected UIData data = new UIData();
-    protected ClientChatHandler chatHandler;
 
     private static int boardMinX = 0;
     private static int boardMaxY = 0;
@@ -104,7 +106,7 @@ public abstract class UIManager {
         this.data = data;
     }
 
-    public void setChatHandler(ClientChatHandler chatHandler) {
-        this.chatHandler = chatHandler;
+    public static synchronized UIManager getInstance() {
+        return instance;
     }
 }

@@ -9,20 +9,20 @@ import java.util.ArrayList;
  * Class that represents a lobby
  */
 public class Lobby {
-    private String id;
-    private int numPlayers;
-    private ArrayList<String> users;
-    private ServerChatHandler chatHandler;
+    private final String id;
+    private final int numPlayers;
+    private final ArrayList<String> users;
+    private final ServerChatHandler chatHandler;
 
     /**
      * Default constructor
      * @param numPlayers the number of players in the lobby
      */
-    public Lobby(String id, int numPlayers, ConnectionBridge bridge) {
+    public Lobby(String id, int numPlayers) {
         this.id = id;
         this.numPlayers = numPlayers;
         users = new ArrayList<>();
-        chatHandler = new ServerChatHandler(bridge, users);
+        chatHandler = new ServerChatHandler(users);
     }
 
     /**

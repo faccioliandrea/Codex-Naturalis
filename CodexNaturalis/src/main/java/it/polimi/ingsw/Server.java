@@ -19,7 +19,7 @@ public class Server
 
     private static final String name = "Codex";
 
-    private static final ServerController serverController = new ServerController();
+    private static final ServerController serverController = ServerController.getInstance();
 
     public static void main( String[] args )
     {
@@ -32,7 +32,7 @@ public class Server
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("Received connection from " + clientSocket.getRemoteSocketAddress());
 
-                    SocketClientConnection clientConnection = new SocketClientConnection(serverSocket, clientSocket, serverController.getConnectionBridge());
+                    SocketClientConnection clientConnection = new SocketClientConnection(serverSocket, clientSocket);
                     new Thread(clientConnection).start();
                 }
 
@@ -43,7 +43,7 @@ public class Server
 
         try {
             System.setProperty("java.rmi.server.hostname", InetAddress.getLocalHost().getHostAddress());
-            RMIServerConnectionInterface obj = new RMIServerConnection(serverController.getConnectionBridge());
+            RMIServerConnectionInterface obj = new RMIServerConnection();
             Registry registry = LocateRegistry.createRegistry(localPortRMI);
             registry.rebind(name, obj);
 

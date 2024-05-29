@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.tui;
 
+import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.view.UIManager;
@@ -19,6 +20,7 @@ public class TUI extends UIManager {
     public TUI() {
         new Thread(new InputHandler(commandQueue, inputQueue)).start();
         new Thread(new CommandHandler(commandQueue, this)).start();
+        instance = this;
     }
 
     @Override
@@ -647,7 +649,7 @@ public class TUI extends UIManager {
 
     @Override
     public void showChat() {
-        if (chatHandler == null) {
+        if (!ClientChatHandler.isRunning()) {
             printColorDebug(TUIColors.RED, "Chat not available, you need to join a lobby first!");
         } else {
             vRule();
@@ -659,7 +661,7 @@ public class TUI extends UIManager {
     @Override
     public void sendMessage(String raw) {
         try {
-            chatHandler.sendChatMessage(raw);
+            ClientChatHandler.sendChatMessage(raw);
             printColorDebug(TUIColors.YELLOW, "Message sent!");
         } catch (NullPointerException e) {
             printColorDebug(TUIColors.RED, "Chat not available, you need to join a lobby first!");

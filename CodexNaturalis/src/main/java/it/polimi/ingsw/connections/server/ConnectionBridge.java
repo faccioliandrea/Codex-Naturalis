@@ -17,14 +17,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ConnectionBridge {
-    private final ServerController controller;
+    private static ConnectionBridge instance;
 
-    private HashMap<String, ClientConnection> connections;
+    private final HashMap<String, ClientConnection> connections = new HashMap<>();
 
-    public ConnectionBridge(ServerController controller) {
+    private ConnectionBridge() { }
 
-        this.controller = controller;
-        connections = new HashMap<>();
+    public static synchronized ConnectionBridge getInstance() {
+        if (instance == null) {
+            instance = new ConnectionBridge();
+        }
+        return instance;
     }
 
     /**
@@ -38,7 +41,7 @@ public class ConnectionBridge {
             connections.replace(username, connection);
 
             System.out.printf("%s Reconnected%n", username);
-            return controller.playerReconnected(username);
+            return ServerController.getInstance().playerReconnected(username);
 
         }
         else if(connections.containsKey(username)) {
@@ -68,7 +71,7 @@ public class ConnectionBridge {
 
     // Client -> Server methods
     public ArrayList<String> getLobbies(String username) {
-        ArrayList<String> idList = controller.getLobbies(username);
+        ArrayList<String> idList = ServerController.getInstance().getLobbies(username);
 
         if (connections.get(username) instanceof SocketClientConnection) {
 
@@ -92,7 +95,7 @@ public class ConnectionBridge {
     }
 
     public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) {
-        AddPlayerToLobbyresponse result = controller.addPlayerToLobby(username, lobbyId);
+        AddPlayerToLobbyresponse result = ServerController.getInstance().addPlayerToLobby(username, lobbyId);
         if (connections.get(username) instanceof SocketClientConnection) {
             switch (result) {
                 case LOBBY_NOT_FOUND:
@@ -104,14 +107,14 @@ public class ConnectionBridge {
                     }
                     break;
                 case PLAYER_ADDED:
-                    for (String u : controller.getUserToLobby().keySet()) {
-                        if (controller.getUserToLobby().get(u).equals(lobbyId) && u.equals(username) ) {
+                    for (String u : ServerController.getInstance().getUserToLobby().keySet()) {
+                        if (ServerController.getInstance().getUserToLobby().get(u).equals(lobbyId) && u.equals(username) ) {
                             try {
-                                ((SocketClientConnection) connections.get(u)).joinLobbySuccess(controller.getLobbyController().getLobbies().get(lobbyId).isFull());
+                                ((SocketClientConnection) connections.get(u)).joinLobbySuccess(ServerController.getInstance().getLobbyController().getLobbies().get(lobbyId).isFull());
                             } catch (IOException e) {
                                 connections.get(username).setOffline();
                             }
-                        } else if (controller.getUserToLobby().get(u).equals(lobbyId)) {
+                        } else if (ServerController.getInstance().getUserToLobby().get(u).equals(lobbyId)) {
                             playerJoinedLobby(connections.get(u), username);
                         }
                     }
@@ -127,10 +130,10 @@ public class ConnectionBridge {
             return AddPlayerToLobbyresponse.PLAYER_ADDED;
         } else {
             if(result.equals(AddPlayerToLobbyresponse.PLAYER_ADDED)) {
-                if (controller.getLobbyController().getLobbies().get(lobbyId).isFull())
+                if (ServerController.getInstance().getLobbyController().getLobbies().get(lobbyId).isFull())
                     result = AddPlayerToLobbyresponse.PlAYER_ADDED_LAST;
-                for (String u : controller.getUserToLobby().keySet()) {
-                    if (controller.getUserToLobby().get(u).equals(lobbyId) && !u.equals(username)) {
+                for (String u : ServerController.getInstance().getUserToLobby().keySet()) {
+                    if (ServerController.getInstance().getUserToLobby().get(u).equals(lobbyId) && !u.equals(username)) {
                         playerJoinedLobby(connections.get(u), username);
                     }
                 }
@@ -148,7 +151,7 @@ public class ConnectionBridge {
     }
 
     public void choosePrivateGoal(String username, int index) {
-        controller.choosePrivateGoal(username, index);
+        ServerController.getInstance().choosePrivateGoal(username, index);
         if (connections.get(username) instanceof SocketClientConnection) {
             try {
                 ((SocketClientConnection) connections.get(username)).privateGoalChosen();
@@ -159,7 +162,7 @@ public class ConnectionBridge {
     }
 
     public ChooseStarterCardSideResponse chooseStarterCardSide(String username, boolean flipped) {
-        ChooseStarterCardSideResponse result = controller.chooseStarterCardSide(username, flipped);
+        ChooseStarterCardSideResponse result = ServerController.getInstance().chooseStarterCardSide(username, flipped);
         if (connections.get(username) instanceof SocketClientConnection  ) {
             if (result.equals(ChooseStarterCardSideResponse.WAIT_FOR_OTHER_PLAYER)) {
                 try {
@@ -168,14 +171,14 @@ public class ConnectionBridge {
                     connections.get(username).setOffline();
                 }
             } else if (result.equals(ChooseStarterCardSideResponse.SUCCESS)){
-                String currentPlayer = controller.getGameController().getCurrentPlayer(controller.getUserToGame().get(username));
-                controller.initTurn(currentPlayer);
+                String currentPlayer = ServerController.getInstance().getGameController().getCurrentPlayer(ServerController.getInstance().getUserToGame().get(username));
+                ServerController.getInstance().initTurn(currentPlayer);
             }
             return result;
         } else {
             if (result.equals(ChooseStarterCardSideResponse.SUCCESS)) {
-                String currentPlayer = controller.getGameController().getCurrentPlayer(controller.getUserToGame().get(username));
-                controller.initTurn(currentPlayer);
+                String currentPlayer = ServerController.getInstance().getGameController().getCurrentPlayer(ServerController.getInstance().getUserToGame().get(username));
+                ServerController.getInstance().initTurn(currentPlayer);
             }
             return result;
         }
@@ -184,7 +187,7 @@ public class ConnectionBridge {
 
     public PlaceCardSuccessInfo placeCard(String username, String cardId, Point position, boolean flipped) {
         try {
-            PlaceCardSuccessInfo placeCardSuccessInfo = controller.placeCard(username, cardId, position, flipped);
+            PlaceCardSuccessInfo placeCardSuccessInfo = ServerController.getInstance().placeCard(username, cardId, position, flipped);
 
             if (connections.get(username) instanceof SocketClientConnection ) {
                 if (placeCardSuccessInfo != null) {
@@ -210,7 +213,7 @@ public class ConnectionBridge {
     }
 
     public ArrayList<CardInfo> drawResource(String username, int index) {
-        ArrayList<CardInfo> result = controller.drawResource(username, index);
+        ArrayList<CardInfo> result = ServerController.getInstance().drawResource(username, index);
         if (connections.get(username) instanceof SocketClientConnection ) {
             if (result != null) {
                 try {
@@ -224,7 +227,7 @@ public class ConnectionBridge {
     }
 
     public ArrayList<CardInfo> drawGold(String username, int index) {
-        ArrayList<CardInfo> result = controller.drawGold(username, index);
+        ArrayList<CardInfo> result = ServerController.getInstance().drawGold(username, index);
         if (connections.get(username) instanceof SocketClientConnection ) {
             if (result != null) {
                 try {
@@ -240,7 +243,7 @@ public class ConnectionBridge {
 
 
     public String createLobby(String username, int numPlayers) {
-        String lobbyId = controller.createLobby(username, numPlayers);
+        String lobbyId = ServerController.getInstance().createLobby(username, numPlayers);
         if (connections.get(username) instanceof SocketClientConnection ){
             if (lobbyId!=null) {
                 try {
@@ -256,12 +259,12 @@ public class ConnectionBridge {
 
 
     public void endTurn(String username) {
-        controller.endTurn(username);
+        ServerController.getInstance().endTurn(username);
 
     }
 
     public void createGame(String username) {
-        controller.createGame(controller.getLobbyController().getLobbies().get(controller.getUserToLobby().get(username)));
+        ServerController.getInstance().createGame(ServerController.getInstance().getLobbyController().getLobbies().get(ServerController.getInstance().getUserToLobby().get(username)));
     }
 
     // Server -> Client communications
@@ -330,7 +333,7 @@ public class ConnectionBridge {
         c.setOffline();
         System.out.println(String.format("Client %s disconnected", c.getRemoteAddr()));
         String username = connections.keySet().stream().filter(u -> connections.get(u).equals(c)).findFirst().orElse(null);
-        controller.playerDisconnected(username);
+        ServerController.getInstance().playerDisconnected(username);
     }
 
     public void playerDisconnected(String username, String receiver, boolean gameStarted){
@@ -371,7 +374,7 @@ public class ConnectionBridge {
     }
 
     public void recvChatMessage(ChatMessageData msg) {
-        this.controller.distributeMessage(msg);
+        ServerController.getInstance().distributeMessage(msg);
     }
 
     public void sendChatMessage(ChatMessageData msg, String receiver) {

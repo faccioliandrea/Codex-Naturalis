@@ -9,19 +9,21 @@ import java.util.HashMap;
  * This class is the controller for the lobby
  */
 public class LobbyController {
-    private ArrayList<String> users;
+    private static LobbyController instance;
+    private final ArrayList<String> users = new ArrayList<>();
 
-    private HashMap<String, Lobby> lobbies;
-
-    private ConnectionBridge bridge;
+    private final HashMap<String, Lobby> lobbies = new HashMap<>();
 
     /**
      * Default constructor
      */
-    public LobbyController(ConnectionBridge bridge) {
-        this.users = new ArrayList<String>();
-        this.lobbies = new HashMap<String, Lobby>();
-        this.bridge = bridge;
+    private LobbyController() { }
+
+    public static synchronized LobbyController getInstance() {
+        if (instance == null) {
+            instance = new LobbyController();
+        }
+        return instance;
     }
 
     /**
@@ -50,7 +52,7 @@ public class LobbyController {
      */
     public void createNewLobby(String lobbyId, int numPlayers) {
 
-        lobbies.put(lobbyId, new Lobby(lobbyId, numPlayers, bridge));
+        lobbies.put(lobbyId, new Lobby(lobbyId, numPlayers));
     }
 
     public void removeLobby(String lobbyId){lobbies.remove(lobbyId);}

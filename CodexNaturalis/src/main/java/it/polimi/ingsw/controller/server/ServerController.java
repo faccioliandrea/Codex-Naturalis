@@ -28,28 +28,27 @@ import java.util.stream.Collectors;
  * Class that manages the server
  */
 public class ServerController {
+    private static ServerController instance;
 
-    private GameController gameController;
-    private LobbyController lobbyController;
-    private HashMap<String, String> userToLobby;
-    private HashMap<String, String> userToGame;
-    private ConnectionBridge connectionBridge;
+    private final GameController gameController = GameController.getInstance();
+    private final LobbyController lobbyController = LobbyController.getInstance();
+    private final ConnectionBridge connectionBridge = ConnectionBridge.getInstance();
+    private final HashMap<String, String> userToLobby = new HashMap<>();
+    private final HashMap<String, String> userToGame = new HashMap<>();
+    private final Map<String, TimerTask> onePlayer = new HashMap<>();
     private ExecutorService executorService;
-    private Map<String, TimerTask> onePlayer = new HashMap<>();
 
-
-
+    public static synchronized ServerController getInstance() {
+        if (instance == null) {
+            instance = new ServerController();
+        }
+        return instance;
+    }
 
     /**
      * Default constructor
      */
-    public ServerController() {
-        userToLobby = new HashMap<>();
-        userToGame = new HashMap<>();
-        connectionBridge = new ConnectionBridge(this);
-        lobbyController = new LobbyController(connectionBridge);
-        gameController = new GameController();
-    }
+    private ServerController() { }
 
 
     /**

@@ -20,7 +20,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class SocketClientConnection implements ClientConnection, Runnable {
-    private final ConnectionBridge connectionBridge;
     private SocketAddress remoteAddr;
     private Socket clientSocket;
     private ServerSocket serverSocket;
@@ -31,10 +30,9 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
     private ConnectionStatus connectionStatus;
 
-    public SocketClientConnection(ServerSocket serverSocket, Socket clientSocket, ConnectionBridge connectionBridge) {
+    public SocketClientConnection(ServerSocket serverSocket, Socket clientSocket) {
         synchronized (this) {
             this.connectionStatus = ConnectionStatus.INITIALIZING;
-            this.connectionBridge = connectionBridge;
             this.serverSocket = serverSocket;
             this.clientSocket = clientSocket;
 
@@ -80,13 +78,11 @@ public class SocketClientConnection implements ClientConnection, Runnable {
             while (this.connectionStatus == ConnectionStatus.ONLINE) {
                 ClientToServerMessage msg = (ClientToServerMessage) queue.take();
                 if (msg instanceof LoginRequestMessage) {
-                    connectionBridge.addConnection(this, ((LoginRequestMessage) msg).getUsername());
+                    ConnectionBridge.getInstance().addConnection(this, ((LoginRequestMessage) msg).getUsername());
                 } else {
-                    msg.execute(connectionBridge);
+                    msg.execute(ConnectionBridge.getInstance());
                 }
             }
-
-            System.err.println("all thread started");
         } catch (IOException | InterruptedException e) {
             this.connectionStatus = ConnectionStatus.OFFLINE;
         }
@@ -105,7 +101,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
     public void threadExceptionCallback(String e) {
         this.connectionStatus = ConnectionStatus.OFFLINE;
-        this.connectionBridge.onClientDisconnect(this);
+        ConnectionBridge.getInstance().onClientDisconnect(this);
     }
 
     // messages

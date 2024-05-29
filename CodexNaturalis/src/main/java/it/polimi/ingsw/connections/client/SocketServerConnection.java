@@ -16,16 +16,14 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class SocketServerConnection implements ServerConnection, Runnable {
-    private final ConnectionBridge connectionBridge;
     private InputStreamRunnable inputStream;
     private OutputStreamRunnable outputStream;
     private Socket socket;
     private final BlockingQueue<Message> queue = new LinkedBlockingQueue<>();
     private ConnectionStatus connectionStatus;
 
-    public SocketServerConnection(ConnectionBridge connectionBridge, Socket socket) {
+    public SocketServerConnection(Socket socket) {
         synchronized (this) {
-            this.connectionBridge = connectionBridge;
             this.socket = socket;
 
             this.connectionStatus = ConnectionStatus.INITIALIZING;
@@ -46,7 +44,7 @@ public class SocketServerConnection implements ServerConnection, Runnable {
 
             while (this.connectionStatus == ConnectionStatus.ONLINE) {
                 ServerToClientMessage msg = (ServerToClientMessage) queue.take();
-                new Thread(() -> msg.execute(connectionBridge)).start();
+                new Thread(() -> msg.execute(ConnectionBridge.getInstance())).start();
             }
         } catch (IOException | InterruptedException e ) {
             this.connectionStatus = ConnectionStatus.OFFLINE;

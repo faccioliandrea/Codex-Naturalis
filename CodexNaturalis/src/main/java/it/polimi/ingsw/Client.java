@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.client.RMIClientConnection;
 import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.server.RMIServerConnectionInterface;
@@ -76,8 +77,7 @@ public class Client {
             ui = new TUI();
         }
 
-        ClientController matchController;
-        matchController = new ClientController(ui);
+        ClientController.getInstance().init();
 
         if(chosenConnection.equals("Socket")) {
             address = ui.askForServerAddr(DEFAULT_ADDRESS);
@@ -88,10 +88,10 @@ public class Client {
                     try {
                         socket = new Socket(address, port);
                         connected = true;
-                        SocketServerConnection conn = new SocketServerConnection(matchController.getConnectionBridge(), socket);
-                        matchController.getConnectionBridge().setServerConnection(conn);
+                        SocketServerConnection conn = new SocketServerConnection(socket);
+                        ConnectionBridge.getInstance().setServerConnection(conn);
                         new Thread(conn).start();
-                        matchController.getConnectionBridge().loginRequest();
+                        ConnectionBridge.getInstance().loginRequest();
                     } catch (IOException e) {
                         ui.connectingToServer();
                     }
@@ -106,10 +106,9 @@ public class Client {
                 Registry registry = LocateRegistry.getRegistry(address);
                 RMIServerConnectionInterface obj = (RMIServerConnectionInterface) registry.lookup(REMOTE_NAME);
                 RMIClientConnectionInterface client = new RMIClientConnection();
-                client.setBridge(matchController.getConnectionBridge());
-                matchController.getConnectionBridge().setRmiClientConnectionInterface(client);
-                matchController.getConnectionBridge().setServerConnection(obj);
-                matchController.getConnectionBridge().loginRequest();
+                ConnectionBridge.getInstance().setRmiClientConnectionInterface(client);
+                ConnectionBridge.getInstance().setServerConnection(obj);
+                ConnectionBridge.getInstance().loginRequest();
             } catch (ConnectException e) {
                 ui.connectingToServer();
             } catch (Exception e) {

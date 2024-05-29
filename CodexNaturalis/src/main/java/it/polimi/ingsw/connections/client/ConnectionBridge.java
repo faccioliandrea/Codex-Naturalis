@@ -14,18 +14,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ConnectionBridge {
-    private final ClientController controller;
-
+    private static ConnectionBridge instance;
     private ServerConnection serverConnection;
-
     private RMIClientConnectionInterface clientConnection;
 
-    public ConnectionBridge(ClientController controller) {
-        this.controller = controller;
+    private ConnectionBridge() { }
+
+    public static synchronized ConnectionBridge getInstance() {
+        if (instance == null) {
+            instance = new ConnectionBridge();
+        }
+        return instance;
     }
 
     public void loginRequest() {
-        String username = controller.loginRequest();
+        String username = ClientController.getInstance().loginRequest();
 
         if (serverConnection instanceof SocketServerConnection) {
 
@@ -57,24 +60,24 @@ public class ConnectionBridge {
 
     public void invalidUsername() {
 
-        controller.invalidUsername();
+        ClientController.getInstance().invalidUsername();
     }
 
     public void validUsername() {
-        controller.validUsername();
+        ClientController.getInstance().validUsername();
     }
 
     public void lobbyRequest() {
 
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).getLobby(controller.getUsername());
+                ((SocketServerConnection) serverConnection).getLobby(ClientController.getInstance().getUsername());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                ArrayList<String> lobbies = ((RMIServerConnectionInterface) serverConnection).getLobby(controller.getUsername());
+                ArrayList<String> lobbies = ((RMIServerConnectionInterface) serverConnection).getLobby(ClientController.getInstance().getUsername());
                 if(lobbies.isEmpty())
                     lobbyDoesNotExists();
                 else
@@ -89,13 +92,13 @@ public class ConnectionBridge {
     public void joinLobbyRequest(String lobbyId) {
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).joinLobby(controller.getUsername(), lobbyId);
+                ((SocketServerConnection) serverConnection).joinLobby(ClientController.getInstance().getUsername(), lobbyId);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                AddPlayerToLobbyresponse result = ((RMIServerConnectionInterface) serverConnection).addPlayerToLobby(controller.getUsername(), lobbyId);
+                AddPlayerToLobbyresponse result = ((RMIServerConnectionInterface) serverConnection).addPlayerToLobby(ClientController.getInstance().getUsername(), lobbyId);
                 if(result.equals(AddPlayerToLobbyresponse.LOBBY_NOT_FOUND))
                     lobbyDoesNotExists();
                 else if(result.equals(AddPlayerToLobbyresponse.PLAYER_ADDED))
@@ -112,35 +115,35 @@ public class ConnectionBridge {
     }
 
     public void lobbyDoesNotExists() {
-        controller.lobbyDoesNotExist();
+        ClientController.getInstance().lobbyDoesNotExist();
     }
 
     public void lobbyExists(ArrayList<String> lobbies) {
-        controller.lobbyExists(lobbies);
+        ClientController.getInstance().lobbyExists(lobbies);
     }
 
     public void joinLobbySuccess(boolean isLastPlayer) {
-        controller.joinLobbySuccess(isLastPlayer);
+        ClientController.getInstance().joinLobbySuccess(isLastPlayer);
     }
 
     public void lobbyFull() {
-        controller.lobbyFull();
+        ClientController.getInstance().lobbyFull();
     }
 
     public void playerJoinedLobby(String username) {
-        controller.playerJoinedLobby(username);
+        ClientController.getInstance().playerJoinedLobby(username);
     }
 
     public void createLobbyRequest(int numPlayers) {
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).createLobbyAndJoin(controller.getUsername(), numPlayers);
+                ((SocketServerConnection) serverConnection).createLobbyAndJoin(ClientController.getInstance().getUsername(), numPlayers);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                String lobbyid = ((RMIServerConnectionInterface) serverConnection).createLobbyAndJoin(controller.getUsername(), numPlayers);
+                String lobbyid = ((RMIServerConnectionInterface) serverConnection).createLobbyAndJoin(ClientController.getInstance().getUsername(), numPlayers);
                 lobbyCreated(lobbyid);
                 joinLobbyRequest(lobbyid);
             } catch (RemoteException e) {
@@ -150,27 +153,27 @@ public class ConnectionBridge {
     }
 
     public void lobbyCreated(String lobbyId) {
-        this.controller.lobbyCreated(lobbyId);
+        ClientController.getInstance().lobbyCreated(lobbyId);
     }
 
     public void gameStarted(StarterData starterData) {
-        controller.gameStarted(starterData);
+        ClientController.getInstance().gameStarted(starterData);
     }
 
     public void initTurn(TurnInfo turnInfo) {
-        controller.initTurn(turnInfo);
+        ClientController.getInstance().initTurn(turnInfo);
     }
 
     public void createGame() {
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).createGame(controller.getUsername());
+                ((SocketServerConnection) serverConnection).createGame(ClientController.getInstance().getUsername());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                ((RMIServerConnectionInterface) serverConnection).createGame(controller.getUsername());
+                ((RMIServerConnectionInterface) serverConnection).createGame(ClientController.getInstance().getUsername());
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -181,13 +184,13 @@ public class ConnectionBridge {
     public void placeCardRequest(CardInfo card) {
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).placeCard(controller.getUsername(), card.getId(), card.getCoord(), card.isFlipped());
+                ((SocketServerConnection) serverConnection).placeCard(ClientController.getInstance().getUsername(), card.getId(), card.getCoord(), card.isFlipped());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                PlaceCardSuccessInfo cardSuccessInfo =  ((RMIServerConnectionInterface) serverConnection).placeCard(controller.getUsername(), card.getId(), card.getCoord(), card.isFlipped());
+                PlaceCardSuccessInfo cardSuccessInfo =  ((RMIServerConnectionInterface) serverConnection).placeCard(ClientController.getInstance().getUsername(), card.getId(), card.getCoord(), card.isFlipped());
                 if(cardSuccessInfo != null)
                     placeCardSuccess(cardSuccessInfo);
                 else
@@ -199,24 +202,24 @@ public class ConnectionBridge {
     }
 
     public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo) {
-        controller.placeCardSuccess(placeCardSuccessInfo);
+        ClientController.getInstance().placeCardSuccess(placeCardSuccessInfo);
     }
 
     public void placeCardFailure() {
-        controller.placeCardFailure();
+        ClientController.getInstance().placeCardFailure();
     }
 
     public void drawResourceRequest(int index) {
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).drawResource(controller.getUsername(), index);
+                ((SocketServerConnection) serverConnection).drawResource(ClientController.getInstance().getUsername(), index);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                ArrayList<CardInfo> cardInfos =  ((RMIServerConnectionInterface) serverConnection).drawResource(controller.getUsername(), index);
-                controller.drawSuccess(cardInfos);
+                ArrayList<CardInfo> cardInfos =  ((RMIServerConnectionInterface) serverConnection).drawResource(ClientController.getInstance().getUsername(), index);
+                ClientController.getInstance().drawSuccess(cardInfos);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -226,14 +229,14 @@ public class ConnectionBridge {
     public void drawGoldRequest(int index) {
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).drawGold(controller.getUsername(), index);
+                ((SocketServerConnection) serverConnection).drawGold(ClientController.getInstance().getUsername(), index);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                ArrayList<CardInfo> cardInfos =  ((RMIServerConnectionInterface) serverConnection).drawGold(controller.getUsername(), index);
-                controller.drawSuccess(cardInfos);
+                ArrayList<CardInfo> cardInfos =  ((RMIServerConnectionInterface) serverConnection).drawGold(ClientController.getInstance().getUsername(), index);
+                ClientController.getInstance().drawSuccess(cardInfos);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -241,19 +244,19 @@ public class ConnectionBridge {
     }
 
     public void drawSuccess(ArrayList<CardInfo> hand) {
-        controller.drawSuccess(hand);
+        ClientController.getInstance().drawSuccess(hand);
     }
 
     public void endTurn() {
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).endTurn(controller.getUsername());
+                ((SocketServerConnection) serverConnection).endTurn(ClientController.getInstance().getUsername());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                ((RMIServerConnectionInterface) serverConnection).endTurn(controller.getUsername());
+                ((RMIServerConnectionInterface) serverConnection).endTurn(ClientController.getInstance().getUsername());
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
@@ -261,19 +264,19 @@ public class ConnectionBridge {
     }
 
     public void gameState(GameStateInfo gameStateInfo) {
-        controller.gameState(gameStateInfo);
+        ClientController.getInstance().gameState(gameStateInfo);
     }
 
     public void choosePrivateGoalRequest(int index){
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).choosePrivateGoal(controller.getUsername(), index);
+                ((SocketServerConnection) serverConnection).choosePrivateGoal(ClientController.getInstance().getUsername(), index);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try {
-                ((RMIServerConnectionInterface) serverConnection).choosePrivateGoal(controller.getUsername(), index);
+                ((RMIServerConnectionInterface) serverConnection).choosePrivateGoal(ClientController.getInstance().getUsername(), index);
                 privateGoalChosen();
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
@@ -284,13 +287,13 @@ public class ConnectionBridge {
     public void chooseStarterCardSideRequest(boolean flipped){
         if (serverConnection instanceof SocketServerConnection) {
             try {
-                ((SocketServerConnection) serverConnection).chooseStarterCardSide(controller.getUsername(), flipped);
+                ((SocketServerConnection) serverConnection).chooseStarterCardSide(ClientController.getInstance().getUsername(), flipped);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
             try{
-                ChooseStarterCardSideResponse result = ((RMIServerConnectionInterface) serverConnection).chooseStarterCardSide(controller.getUsername(), flipped);
+                ChooseStarterCardSideResponse result = ((RMIServerConnectionInterface) serverConnection).chooseStarterCardSide(ClientController.getInstance().getUsername(), flipped);
                 if(result.equals(ChooseStarterCardSideResponse.WAIT_FOR_OTHER_PLAYER))
                     WaitingOthersStartingChoiceMessage();
             } catch (RemoteException e) {
@@ -316,23 +319,23 @@ public class ConnectionBridge {
     }
 
     public void recvChatMessage(ChatMessageData msg) {
-        controller.recvChatMessage(msg);
+        ClientController.getInstance().recvChatMessage(msg);
     }
 
     public void WaitingOthersStartingChoiceMessage() {
-        controller.waitingOthersStartingChoice();
+        ClientController.getInstance().waitingOthersStartingChoice();
     }
 
     public void OtherPlayerTurnMessage(String currentPlayer) {
-        controller.otherPlayerTurnMessage(currentPlayer);
+        ClientController.getInstance().otherPlayerTurnMessage(currentPlayer);
     }
 
     public void privateGoalChosen(){
-        controller.privateGoalChosen();
+        ClientController.getInstance().privateGoalChosen();
     }
 
     public void gameEnd(HashMap<String, Integer> leaderboard){
-        controller.gameEnd(leaderboard);
+        ClientController.getInstance().gameEnd(leaderboard);
     }
 
     public void setServerConnection(ServerConnection serverConnection) {
@@ -344,15 +347,15 @@ public class ConnectionBridge {
     }
 
     public void playerDisconnected(String username, boolean gameStarted){
-        controller.playerDisconnected(username, gameStarted);}
+        ClientController.getInstance().playerDisconnected(username, gameStarted);}
 
-    public void playerReconnected(String username) {controller.playerReconnected(username);}
+    public void playerReconnected(String username) {ClientController.getInstance().playerReconnected(username);}
 
     public void reconnectionState(GameStateInfo gameStateInfo) {
-        controller.reconnectionState(gameStateInfo);
+        ClientController.getInstance().reconnectionState(gameStateInfo);
     }
 
     public void noOtherPlayerConnected() {
-        controller.noOtherPlayerConnected();
+        ClientController.getInstance().noOtherPlayerConnected();
     }
 }
