@@ -47,7 +47,8 @@ public class ClientChatHandler implements Runnable {
     }
 
     public static boolean isSameUserMessage(String raw) {
-        return prepareMessage(raw, username).getRecipient().equals(username);
+        String messageRecipient =  prepareMessage(raw, username).getRecipient();
+        return messageRecipient != null && messageRecipient.equals(username);
     }
 
     public static void sendChatMessage(String raw) {

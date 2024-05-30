@@ -243,6 +243,7 @@ public class GUI extends UIManager {
 
     @Override
     public void yourTurn(boolean isLastTurn) {
+        GUIApp.changeScene("main", mainController);
         if (isLastTurn) {
             GUIApp.showAlert("This is your last turn", Alert.AlertType.INFORMATION);
         }
