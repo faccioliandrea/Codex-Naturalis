@@ -136,7 +136,7 @@ public class ServerController {
                     }
                 }
                 connectionBridge.initTurn(user, turnInfo);
-            } else {
+            } else if(gameController.getGamePlayers(userToGame.get(user)).stream().filter(x -> connectionBridge.checkUserConnected(x.getUsername())).count()>1){
                 gameController.endTurn(userToGame.get(user));
                 gameController.getGames().get(userToGame.get(user)).getGameModel().setTotalTurns(gameController.getGames().get(userToGame.get(user)).getGameModel().getTotalTurns()+1);
                 initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
@@ -337,49 +337,60 @@ public class ServerController {
      */
     public void playerDisconnected(String username){
         if(userToGame.containsKey(username)) {
-            if(gameController.getUserBoardByUsername(userToGame.get(username), username).isEmpty() && !gameController.getHand(userToGame.get(username), username).isEmpty()){
-                if(gameController.getPrivateGoals(userToGame.get(username), username).size()==2) {
-                    gameController.choosePrivateGoal(userToGame.get(username), username, 0);
-                }
-                gameController.chooseStarterCardSide(userToGame.get(username), username, false);
-            } else if( gameController.getCurrentPlayer(userToGame.get(username)).equals(username)){
-                if(gameController.getHand(userToGame.get(username), username).size()!=3){
-                    //disconnection during the turn before draw -> draw a resource and end the turn
-                    gameController.drawResource(userToGame.get(username), 0);
-                }
-                if(gameController.getGamePlayers(userToGame.get(username)).stream().anyMatch(x -> connectionBridge.checkUserConnected(x.getUsername()))){
-                    endTurn(username);
-                }
-
-            }
-
             if(gameController.getGamePlayers(userToGame.get(username)).stream().noneMatch(x -> connectionBridge.checkUserConnected(x.getUsername()))){
-                System.out.println("0 player connected, game will finish in 1 minute.");
+                System.out.println("0 player connected, game destroyed.");
                 if(onePlayer.containsKey(userToGame.get(username))){
                     onePlayer.get(userToGame.get(username)).cancel();
                     onePlayer.remove(userToGame.get(username));
                 }
                 destroyGame(userToGame.get(username));
-            } else if(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).count()==1){
-                System.out.println("Only 1 player connected, game will finish in 1 minute.");
-                connectionBridge.noOtherPlayerConnected(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst().get().getUsername());
-                Timer timer = new Timer();
-                TimerTask task1 = new TimerTask() {
-                    @Override
-                    public void run() {
-                        endGame(userToGame.get(username), gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst().get().getUsername());
+            } else{
+                if(gameController.getUserBoardByUsername(userToGame.get(username), username).isEmpty() && !gameController.getHand(userToGame.get(username), username).isEmpty()){
+                    if(gameController.getPrivateGoals(userToGame.get(username), username).size()==2) {
+                        gameController.choosePrivateGoal(userToGame.get(username), username, 0);
                     }
-                };
-                onePlayer.put(userToGame.get(username), task1);
-                timer.schedule(task1, 60 * 1000);
-            } else {
-                for (String u : userToGame.keySet()) {
-                    if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
-                        connectionBridge.playerDisconnected(username, u, true);
+                    gameController.chooseStarterCardSide(userToGame.get(username), username, false);
+                } else if( gameController.getCurrentPlayer(userToGame.get(username)).equals(username)){
+                    if(gameController.getHand(userToGame.get(username), username).size()!=3){
+                        //disconnection during the turn before draw -> draw a resource and end the turn
+                        gameController.drawResource(userToGame.get(username), 0);
+                    }
+
+                    if(gameController.getGamePlayers(userToGame.get(username)).stream().anyMatch(x -> connectionBridge.checkUserConnected(x.getUsername()))){
+                        endTurn(username);
                     }
                 }
 
+                if(gameController.getGamePlayers(userToGame.get(username)).stream().noneMatch(x -> connectionBridge.checkUserConnected(x.getUsername()))){
+                    System.out.println("0 player connected, game destroyed.");
+                    if(onePlayer.containsKey(userToGame.get(username))){
+                        onePlayer.get(userToGame.get(username)).cancel();
+                        onePlayer.remove(userToGame.get(username));
+                    }
+                    destroyGame(userToGame.get(username));
+                } else if(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).count()==1){
+                    System.out.println("Only 1 player connected, game will finish in 1 minute.");
+                    connectionBridge.noOtherPlayerConnected(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst().get().getUsername());
+                    Timer timer = new Timer();
+                    TimerTask task1 = new TimerTask() {
+                        @Override
+                        public void run() {
+                            endGame(userToGame.get(username), gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst().get().getUsername());
+                        }
+                    };
+                    onePlayer.put(userToGame.get(username), task1);
+                    timer.schedule(task1, 60 * 1000);
+                } else {
+                    for (String u : userToGame.keySet()) {
+                        if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
+                            connectionBridge.playerDisconnected(username, u, true);
+                        }
+                    }
+                }
             }
+
+
+
 
         } else if (userToLobby.containsKey(username)) {
             for (String u : userToLobby.keySet()) {

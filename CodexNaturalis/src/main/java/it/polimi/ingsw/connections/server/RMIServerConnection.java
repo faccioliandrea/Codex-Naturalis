@@ -47,8 +47,11 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
                         lock.wait(3000);
                     }
                 } catch (RemoteException | InterruptedException e) {
-                    connectionStatus = ConnectionStatus.OFFLINE;
-                    ConnectionBridge.getInstance().onClientDisconnect(rmiConnection);
+                    new Thread(()->{
+                        connectionStatus = ConnectionStatus.OFFLINE;
+                        ConnectionBridge.getInstance().onClientDisconnect(rmiConnection);
+                    }).start();
+
                     break;
                 }
             }

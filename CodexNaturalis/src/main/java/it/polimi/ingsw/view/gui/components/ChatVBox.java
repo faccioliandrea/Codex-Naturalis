@@ -34,11 +34,11 @@ public class ChatVBox extends VBox {
     private void setupEvents() {
         messageTextField.setOnKeyPressed(e -> {
             String msg = messageTextField.getText();
-            if (e.getCode() == KeyCode.ENTER && !msg.isEmpty() && !msg.isBlank()) {
+            if (e.getCode() == KeyCode.ENTER && !msg.trim().isEmpty()) {
                 sendMessage(msg);
             }
         });
-        messageTextField.textProperty().addListener((observable, oldValue, newValue) -> sendButton.setDisable(newValue.isEmpty() || newValue.isBlank()));
+        messageTextField.textProperty().addListener((observable, oldValue, newValue) -> sendButton.setDisable(newValue.trim().isEmpty()));
         sendButton.setOnAction(e -> sendMessage(messageTextField.getText()));
     }
 
