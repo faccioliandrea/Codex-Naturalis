@@ -195,4 +195,9 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
     public void createGame(String username) throws RemoteException {
         ConnectionBridge.getInstance().createGame(username);
     }
+
+    @Override
+    public void ping() throws RemoteException {
+
+    }
 }

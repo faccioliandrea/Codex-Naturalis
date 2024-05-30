@@ -42,6 +42,10 @@ public class ConnectionBridge {
         }
     }
 
+    public void  rmiPing() throws RemoteException {
+        ((RMIServerConnectionInterface) serverConnection).ping();
+    }
+
     private void rmiLoginRequest(String username) {
         try {
             LogInResponse login = ((RMIServerConnectionInterface) serverConnection).loginRequest(username, clientConnection);
@@ -195,8 +199,8 @@ public class ConnectionBridge {
                     placeCardSuccess(cardSuccessInfo);
                 else
                     placeCardFailure();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -220,8 +224,8 @@ public class ConnectionBridge {
             try {
                 ArrayList<CardInfo> cardInfos =  ((RMIServerConnectionInterface) serverConnection).drawResource(ClientController.getInstance().getUsername(), index);
                 ClientController.getInstance().drawSuccess(cardInfos);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -237,8 +241,8 @@ public class ConnectionBridge {
             try {
                 ArrayList<CardInfo> cardInfos =  ((RMIServerConnectionInterface) serverConnection).drawGold(ClientController.getInstance().getUsername(), index);
                 ClientController.getInstance().drawSuccess(cardInfos);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -257,8 +261,8 @@ public class ConnectionBridge {
         } else {
             try {
                 ((RMIServerConnectionInterface) serverConnection).endTurn(ClientController.getInstance().getUsername());
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -278,8 +282,8 @@ public class ConnectionBridge {
             try {
                 ((RMIServerConnectionInterface) serverConnection).choosePrivateGoal(ClientController.getInstance().getUsername(), index);
                 privateGoalChosen();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -296,8 +300,8 @@ public class ConnectionBridge {
                 ChooseStarterCardSideResponse result = ((RMIServerConnectionInterface) serverConnection).chooseStarterCardSide(ClientController.getInstance().getUsername(), flipped);
                 if(result.equals(ChooseStarterCardSideResponse.WAIT_FOR_OTHER_PLAYER))
                     WaitingOthersStartingChoiceMessage();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -312,8 +316,8 @@ public class ConnectionBridge {
         } else {
             try{
                 ((RMIServerConnectionInterface) serverConnection).sendChatMessage(msg);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -357,5 +361,9 @@ public class ConnectionBridge {
 
     public void noOtherPlayerConnected() {
         ClientController.getInstance().noOtherPlayerConnected();
+    }
+
+    public void serverNotFound() {
+        ClientController.getInstance().serverNotFound();
     }
 }

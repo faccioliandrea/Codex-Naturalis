@@ -304,6 +304,11 @@ public class GUI extends UIManager {
     }
 
     @Override
+    public void serverOfflineMessage() {
+        GUIApp.showAlert("Unfortunately the Server is no longer available.\nPlease choose another Server to play.", Alert.AlertType.ERROR);
+    }
+
+    @Override
     public void showChat() {
     }
 

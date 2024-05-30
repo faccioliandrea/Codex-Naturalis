@@ -3,7 +3,6 @@ package it.polimi.ingsw.controller.client;
 
 import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.chat.ClientChatHandler;
-import it.polimi.ingsw.chat.MessagesQueue;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.*;
@@ -241,5 +240,9 @@ public class ClientController {
 
     public ClientGameData getData() {
         return gameData;
+    }
+
+    public void serverNotFound() {
+        ui.serverNotFound();
     }
 }

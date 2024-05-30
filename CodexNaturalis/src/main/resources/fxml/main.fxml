@@ -3,21 +3,27 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-    <left>
-        <VBox BorderPane.alignment="CENTER" spacing="10">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:id="mainBorderPane">
+    <left >
+        <VBox BorderPane.alignment="CENTER" spacing="10" fx:id="decksVBox" >
             <VBox>
-                <Label text="Goals" styleClass="midTitle"/>
-                <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="goalsHBox" spacing="5.0"/>
+                <Label text="Private Goal" styleClass="midTitle, codexFont"/>
+                <HBox alignment="CENTER_LEFT" fx:id="privateGoalHBox" spacing="5.0"/>
             </VBox>
             <VBox>
-                <Label text="Resource deck" styleClass="midTitle"/>
-                <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="resourcesHBox" spacing="5.0"/>
+                <Label text="Shared Goals" styleClass="midTitle, codexFont"/>
+                <HBox alignment="CENTER_LEFT" fx:id="goalsHBox" spacing="25.0"/>
             </VBox>
-            <VBox>
-                <Label text="Gold deck" styleClass="midTitle"/>
-                <HBox prefHeight="100.0" prefWidth="200.0" alignment="CENTER_LEFT" fx:id="goldHBox" spacing="5.0"/>
-            </VBox>
+            <HBox spacing="15">
+                <VBox>
+                    <Label text="Resource deck" styleClass="midTitle, codexFont"/>
+                    <VBox alignment="CENTER_LEFT" fx:id="resourcesHBox" spacing="5.0"/>
+                </VBox>
+                <VBox>
+                    <Label text="Gold deck" styleClass="midTitle, codexFont"/>
+                    <VBox alignment="CENTER_LEFT" fx:id="goldHBox" spacing="5.0"/>
+                </VBox>
+            </HBox>
         </VBox>
     </left>
     <top>

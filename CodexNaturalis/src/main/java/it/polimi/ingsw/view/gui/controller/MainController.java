@@ -11,13 +11,14 @@ import it.polimi.ingsw.view.gui.utility.GUIConstants;
 import it.polimi.ingsw.view.gui.utility.GUIUtility;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.net.URL;
@@ -30,16 +31,21 @@ public class MainController implements Initializable {
     private HBox handHBox;
     @FXML
     private HBox goalsHBox;
+    @FXML HBox privateGoalHBox;
     @FXML
-    private HBox resourcesHBox;
+    private VBox resourcesHBox;
     @FXML
-    private HBox goldHBox;
+    private VBox goldHBox;
     @FXML
     private VBox leaderboardAndChatVBox;
     @FXML
     private Label turnInfoLabel;
     @FXML
     private VBox infoVBox;
+    @FXML
+    private BorderPane mainBorderPane;
+    @FXML
+    private VBox decksVBox;
 
     private Pair<CardInfo, ImageView> selectedCard;
 
@@ -51,7 +57,9 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         boardGridPane = new BoardStackPane(GUIConstants.mainBoardWidthPercentage);
         leaderboxVBox = new LeaderboxVBox();
+        leaderboxVBox.setBackground(new Background(new BackgroundFill(Color.web("#ffffffB0"), new CornerRadii(18), new Insets(-7))));
         chatVBox = new ChatVBox();
+        chatVBox.setBackground(new Background(new BackgroundFill(Color.web("#ffffffB0"), new CornerRadii(18), new Insets(-7))));
         leaderboardAndChatVBox.getChildren().clear();
         leaderboardAndChatVBox.getChildren().addAll(leaderboxVBox, chatVBox);
         boardGroup.getChildren().clear();
@@ -81,10 +89,13 @@ public class MainController implements Initializable {
 
     private void setupGoals() {
         goalsHBox.getChildren().clear();
-        for (GoalInfo goal : GUI.getInstance().getData().getGoals()) {
+        for (GoalInfo goal : GUI.getInstance().getData().getGoals().subList(0,2)) {
             ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(goal), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
             goalsHBox.getChildren().add(imageView);
         }
+        privateGoalHBox.getChildren().clear();
+        ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(GUI.getInstance().getData().getGoals().get(2)), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
+        privateGoalHBox.getChildren().add(imageView);
     }
 
     private void setupResources(boolean selectable) {

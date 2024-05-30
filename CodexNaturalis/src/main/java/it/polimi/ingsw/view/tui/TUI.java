@@ -525,6 +525,10 @@ public class TUI extends UIManager {
     public void noOtherPlayerConnected() {
         printColorDebug(TUIColors.RED, "No other player connected. The game will end in 1 minute");
     }
+    @Override
+    public void serverOfflineMessage() {
+        printColorDebug(TUIColors.RED, "Unfortunately the Server is no longer available. Please choose another Server to play.");
+    }
 
     public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {
         boolean padding = availablePos != null && !availablePos.isEmpty();

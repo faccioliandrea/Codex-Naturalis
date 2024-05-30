@@ -72,7 +72,9 @@ public class SocketServerConnection implements ServerConnection, Runnable {
         try {
             this.close();
         } catch (IOException ex) {
-            throw new RuntimeException(ex); // FIXME: Server offline (close application)
+
+            ConnectionBridge.getInstance().serverNotFound();
+            //throw new RuntimeException(ex); // FIXME: Server offline (close application)
         }
     }
 

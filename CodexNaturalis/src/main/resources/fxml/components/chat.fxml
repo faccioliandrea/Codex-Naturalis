@@ -8,7 +8,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
 <fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.VBox" prefWidth="200.0" prefHeight="300.0" spacing="15">
-    <Label text="Chat" styleClass="midTitle"/>
+    <Label text="Chat" styleClass="midTitle, codexFont"/>
     <ScrollPane prefHeight="200.0" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" pannable="true" style="-fx-background-color:transparent;">
         <VBox fx:id="chatVBox" spacing="15.0" >
         <padding>

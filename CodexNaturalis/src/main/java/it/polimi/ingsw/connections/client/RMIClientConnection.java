@@ -12,6 +12,7 @@ import java.util.HashMap;
  */
 public class RMIClientConnection extends UnicastRemoteObject implements RMIClientConnectionInterface {
     private ConnectionBridge connectionBridge = ConnectionBridge.getInstance();
+    private final Object lock = new Object();
 
     /**
      * Constructor for the RMI client connection
@@ -37,6 +38,20 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
     @Override
     public void setBridge(ConnectionBridge connectionBridge) {
         this.connectionBridge = connectionBridge;
+        new Thread(()->{
+
+            while (true){
+                try {
+                    connectionBridge.rmiPing();
+                    synchronized (lock){
+                        lock.wait(3000);
+                    }
+                } catch (RemoteException | InterruptedException e) {
+                    connectionBridge.serverNotFound();
+                    break;
+                }
+            }
+        }).start();
     }
 
     /**

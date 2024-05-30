@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -35,6 +36,7 @@ public class GUIApp extends Application {
      */
     @Override
     public void start(final Stage stage) {
+        System.setProperty("prism.lcdtext", "false");
         GUIApp.stage = stage;
         GUIApp.opponentStage = new Stage();
         opponentStage.initModality(Modality.APPLICATION_MODAL);
@@ -48,6 +50,9 @@ public class GUIApp extends Application {
         stage.setTitle("Codex Naturalis");
         stage.setMaximized(true);
         stage.setResizable(false);
+        Font font = Font.loadFont(GUIApp.class.getResourceAsStream("/fonts/UnifrakturMaguntia-Regular.ttf"), 20);
+        Font font2 = Font.loadFont(GUIApp.class.getResourceAsStream("/fonts/Exo2-Regular.ttf"), 20);
+
         changeScene("join-menu", new JoinMenuController());
         stage.setOnCloseRequest(e -> {
             Platform.exit();

@@ -1,13 +1,9 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.view.data.UIData;
-import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.tui.TUI;
-
 import java.awt.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -57,6 +53,7 @@ public abstract class UIManager {
     public abstract void messageReceived();
     public abstract void noOtherPlayerConnected() ;
     public abstract void connectingToServer();
+    public abstract void serverOfflineMessage();
 
 
 
@@ -108,5 +105,9 @@ public abstract class UIManager {
 
     public static synchronized UIManager getInstance() {
         return instance;
+    }
+
+    public void serverNotFound() {
+        serverOfflineMessage();
     }
 }

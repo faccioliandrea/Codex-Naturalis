@@ -38,4 +38,5 @@ public interface RMIServerConnectionInterface extends Remote, ServerConnection {
 
     void createGame(String username) throws RemoteException;
 
+    void ping() throws RemoteException;
 }

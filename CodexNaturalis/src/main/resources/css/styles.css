@@ -1,5 +1,14 @@
+.root {
+    -fx-font-family: "Exo 2";
+    -fx-font-smoothing-type: gray;
+}
 .mainTitle {
     -fx-font-size: 30;
+}
+
+.codexFont{
+    -fx-font-family: "UnifrakturMaguntia";
+    -fx-text-fill: rgb(118, 100, 31);
 }
 
 .bigTitle {
@@ -18,4 +27,34 @@
     -fx-border-insets: 20;
     -fx-border-color: black;
     -fx-border-width: 3;
+}
+
+#mainBorderPane {
+    -fx-background-image: url("/img/codex_senza_quadrato.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
+    }
+
+#stackPane{
+    -fx-background-image: url("/img/codex_SOLO_RETTANGOLO.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
+}
+
+#decksVBox{
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-radius: 18;
+    -fx-background-insets: -7;
+}
+
+#turnInfoLabel {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 12;
+    -fx-background-insets: -7;
+}
+
+#messageTextField{
+    -fx-background-color: rgba(234, 225, 184,0.9);
 }

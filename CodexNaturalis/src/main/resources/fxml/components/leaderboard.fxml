@@ -3,8 +3,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" type="javafx.scene.layout.VBox">
-    <VBox alignment="TOP_CENTER" spacing="20" prefWidth="200.0">
-        <Label text="Leaderboard" styleClass="midTitle">
+    <VBox spacing="20" prefWidth="200.0">
+        <Label text="Leaderboard" styleClass="midTitle, codexFont">
         </Label>
         <VBox fx:id="leaderboardVBox" alignment="TOP_CENTER" spacing="10"/>
     </VBox>
