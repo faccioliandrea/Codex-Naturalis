@@ -5,16 +5,18 @@
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:id="mainBorderPane">
     <left >
-        <VBox BorderPane.alignment="CENTER" spacing="10" fx:id="decksVBox" >
-            <VBox>
-                <Label text="Private Goal" styleClass="midTitle, codexFont"/>
-                <HBox alignment="CENTER_LEFT" fx:id="privateGoalHBox" spacing="5.0"/>
+        <VBox BorderPane.alignment="CENTER" spacing="30" >
+            <VBox spacing="10" fx:id="goalsVBox">
+                <VBox>
+                    <Label text="Private Goal" styleClass="midTitle, codexFont"/>
+                    <HBox alignment="CENTER_LEFT" fx:id="privateGoalHBox" spacing="5.0"/>
+                </VBox>
+                <VBox>
+                    <Label text="Shared Goals" styleClass="midTitle, codexFont"/>
+                    <HBox alignment="CENTER_LEFT" fx:id="goalsHBox" spacing="25.0"/>
+                </VBox>
             </VBox>
-            <VBox>
-                <Label text="Shared Goals" styleClass="midTitle, codexFont"/>
-                <HBox alignment="CENTER_LEFT" fx:id="goalsHBox" spacing="25.0"/>
-            </VBox>
-            <HBox spacing="15">
+            <HBox spacing="15" fx:id="decksHBox">
                 <VBox>
                     <Label text="Resource deck" styleClass="midTitle, codexFont"/>
                     <VBox alignment="CENTER_LEFT" fx:id="resourcesHBox" spacing="5.0"/>
@@ -27,13 +29,17 @@
         </VBox>
     </left>
     <top>
-        <VBox alignment="CENTER" BorderPane.alignment="CENTER" spacing="10">
-            <Label fx:id="turnInfoLabel" styleClass="mainTitle" wrapText="true" />
-            <VBox fx:id="infoVBox" alignment="CENTER" spacing="2"/>
-        </VBox>
+        <HBox alignment="CENTER" BorderPane.alignment="CENTER" >
+            <VBox alignment="CENTER" spacing="10" fx:id="turnInfoContainer">
+                <Label fx:id="turnInfoLabel" styleClass="mainTitle" wrapText="true" />
+                <VBox fx:id="infoVBox" alignment="CENTER" spacing="2"/>
+            </VBox>
+        </HBox>
     </top>
     <bottom>
-        <HBox prefHeight="100.0" BorderPane.alignment="CENTER" alignment="CENTER" fx:id="handHBox" spacing="10.0" />
+        <HBox BorderPane.alignment="CENTER" alignment="CENTER">
+            <HBox prefHeight="100.0" alignment="CENTER" fx:id="handHBox" spacing="10.0" />
+        </HBox>
     </bottom>
     <right>
         <VBox fx:id="leaderboardAndChatVBox" spacing="30.0"/>

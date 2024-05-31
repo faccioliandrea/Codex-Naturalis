@@ -31,7 +31,8 @@ public class MainController implements Initializable {
     private HBox handHBox;
     @FXML
     private HBox goalsHBox;
-    @FXML HBox privateGoalHBox;
+    @FXML
+    private HBox privateGoalHBox;
     @FXML
     private VBox resourcesHBox;
     @FXML
@@ -43,9 +44,7 @@ public class MainController implements Initializable {
     @FXML
     private VBox infoVBox;
     @FXML
-    private BorderPane mainBorderPane;
-    @FXML
-    private VBox decksVBox;
+    private HBox decksHBox;
 
     private Pair<CardInfo, ImageView> selectedCard;
 
@@ -159,15 +158,13 @@ public class MainController implements Initializable {
     public void askForDrawCard() {
         setupResources(true);
         setupGold(true);
-        resourcesHBox.setEffect(GUIUtility.highlightShadow());
-        goldHBox.setEffect(GUIUtility.highlightShadow());
+        decksHBox.setEffect(GUIUtility.highlightShadow());
     }
 
     private void drawEnded() {
         resourcesHBox.getChildren().forEach(x -> x.setDisable(true));
         goldHBox.getChildren().forEach(x -> x.setDisable(true));
-        resourcesHBox.setEffect(null);
-        goldHBox.setEffect(null);
+        decksHBox.setEffect(null);
     }
 
     public void updateData() {

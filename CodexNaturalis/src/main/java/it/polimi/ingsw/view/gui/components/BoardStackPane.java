@@ -29,7 +29,7 @@ public class BoardStackPane extends StackPane {
     @FXML
     private Screen screen;
     @FXML
-    private StackPane stackPane;
+    private StackPane innerStackPane;
     @FXML
     private Group innerGroup;
 
@@ -41,7 +41,7 @@ public class BoardStackPane extends StackPane {
     private int columnCount;
     private int rowCount;
 
-    private final double widthPercentage;
+    private final double finalHeight;
 
     /**
      * Constructor for the BoardGridPane
@@ -49,12 +49,12 @@ public class BoardStackPane extends StackPane {
      * @param widthPercentage the height percentage in respect to screen size of the component
      */
     public BoardStackPane(double widthPercentage) {
-        this.widthPercentage = widthPercentage;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/components/board.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
+            this.finalHeight = Math.min(screen.getVisualBounds().getWidth() * widthPercentage * 2/3, screen.getVisualBounds().getHeight() - 400);
             createZoomPane();
         } catch (IOException exception) {
             throw new RuntimeException(exception);
@@ -70,7 +70,7 @@ public class BoardStackPane extends StackPane {
 
     private void createZoomPane() {
         final double SCALE_DELTA = 1.01;
-        stackPane.setOnScroll(event -> {
+        innerStackPane.setOnScroll(event -> {
             event.consume();
 
             if (event.getDeltaY() == 0) {
@@ -85,8 +85,8 @@ public class BoardStackPane extends StackPane {
             innerGroup.setScaleX(innerGroup.getScaleX() * scaleFactor);
             innerGroup.setScaleY(innerGroup.getScaleY() * scaleFactor);
         });
-        stackPane.setOnMousePressed(event -> dragStartTime = System.currentTimeMillis());
-        stackPane.setOnMouseDragged(event -> {
+        innerStackPane.setOnMousePressed(event -> dragStartTime = System.currentTimeMillis());
+        innerStackPane.setOnMouseDragged(event -> {
             long elapsedTime = System.currentTimeMillis() - dragStartTime;
             if (elapsedTime / 1000.0  > GUIConstants.dragThreshold) {
                 innerGroup.setTranslateX(event.getX() - innerGroup.getLayoutBounds().getMaxX() / 2);
@@ -94,9 +94,11 @@ public class BoardStackPane extends StackPane {
             }
         });
 
-        stackPane.layoutBoundsProperty().addListener((ObservableValue<? extends Bounds> observable, Bounds oldBounds, Bounds bounds) ->
-            stackPane.setClip(new Rectangle(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight()))
-        );
+        innerStackPane.layoutBoundsProperty().addListener((ObservableValue<? extends Bounds> observable, Bounds oldBounds, Bounds bounds) -> {
+            double offsetX = finalHeight * 3/2 * GUIConstants.boardBorderWidthPercentage;
+            double offsetY = finalHeight * GUIConstants.boardBorderHeightPercentage;
+            innerStackPane.setClip(new Rectangle(bounds.getMinX() + offsetX, bounds.getMinY() + offsetY, bounds.getWidth() - offsetX * 2, bounds.getHeight() - offsetY * 2));
+        });
     }
 
     /**
@@ -109,8 +111,8 @@ public class BoardStackPane extends StackPane {
         this.columnCount = UIManager.boardGridColumns(cards, padding);
         this.rowCount = UIManager.boardGridRows(cards, padding);
         boardGridPane.getChildren().clear();
-        boardGridPane.setPrefWidth(screen.getVisualBounds().getWidth() * 0.5);
-        boardGridPane.setPrefHeight(screen.getVisualBounds().getWidth() * 0.5 * 2/3);
+        boardGridPane.setPrefWidth(finalHeight * 3/2);
+        boardGridPane.setPrefHeight(finalHeight);
         double cellWidth;
         double cellHeight;
         if(rowCount>columnCount){

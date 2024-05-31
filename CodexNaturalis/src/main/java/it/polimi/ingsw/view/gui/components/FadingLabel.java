@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.gui.components;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class FadingLabel extends Label {
@@ -19,7 +20,12 @@ public class FadingLabel extends Label {
         fadeIn.setAutoReverse(false);
         pause.setOnFinished(e -> fadeIn.playFromStart());
         setGraphic(label);
-        fadeIn.setOnFinished(e -> setGraphic(null));
+        fadeIn.setOnFinished(e -> {
+            setGraphic(null);
+            if (this.getParent() != null) {
+                ((VBox) this.getParent()).getChildren().remove(this);
+            }
+        });
         pause.playFromStart();
     }
 }

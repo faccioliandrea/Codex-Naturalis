@@ -5,6 +5,7 @@ import it.polimi.ingsw.view.gui.GUI;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -18,6 +19,8 @@ public class ChatVBox extends VBox {
     private TextField messageTextField;
     @FXML
     private VBox chatVBox;
+    @FXML
+    private ScrollPane chatScrollPane;
 
     public ChatVBox() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/components/chat.fxml"));
@@ -26,6 +29,7 @@ public class ChatVBox extends VBox {
         try {
             fxmlLoader.load();
             setupEvents();
+            chatScrollPane.vvalueProperty().bind(chatVBox.heightProperty());
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }

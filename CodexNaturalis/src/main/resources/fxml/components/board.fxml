@@ -4,11 +4,19 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.stage.Screen?>
+
+<?import javafx.scene.effect.DropShadow?>
 <fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.StackPane" fx:id="stackPane">
     <fx:define>
         <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>
+    <StackPane fx:id="innerStackPane">
         <Group fx:id="innerGroup">
-            <GridPane alignment="CENTER" fx:id="boardGridPane" />
+            <GridPane alignment="CENTER" fx:id="boardGridPane" >
+            </GridPane>
         </Group>
+    </StackPane>
+    <effect>
+        <DropShadow radius="20" />
+    </effect>
 </fx:root>

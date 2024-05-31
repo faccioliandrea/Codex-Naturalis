@@ -1,7 +1,6 @@
 package it.polimi.ingsw.connections.server;
 
 import it.polimi.ingsw.chat.ChatMessageData;
-import it.polimi.ingsw.chat.ServerChatHandler;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
@@ -44,7 +43,7 @@ public class ConnectionBridge {
             return ServerController.getInstance().playerReconnected(username);
 
         }
-        else if(connections.containsKey(username)) {
+        else if(connections.containsKey(username) || username.trim().isEmpty()) {
             if (connection instanceof SocketClientConnection)
                 invalidUsername(connection);
             return LogInResponse.INVALID_USERNAME;
@@ -331,7 +330,7 @@ public class ConnectionBridge {
 
     public void onClientDisconnect(ClientConnection c){
         c.setOffline();
-        System.out.println(String.format("Client %s disconnected", c.getRemoteAddr()));
+        System.out.printf("Client %s disconnected%n", c.getRemoteAddr());
         String username = connections.keySet().stream().filter(u -> connections.get(u).equals(c)).findFirst().orElse(null);
         ServerController.getInstance().playerDisconnected(username);
     }
