@@ -50,8 +50,8 @@ public class GUIApp extends Application {
         stage.setTitle("Codex Naturalis");
         stage.setMaximized(true);
         stage.setResizable(false);
-        Font font = Font.loadFont(GUIApp.class.getResourceAsStream("/fonts/UnifrakturMaguntia-Regular.ttf"), 20);
-        Font font2 = Font.loadFont(GUIApp.class.getResourceAsStream("/fonts/Exo2-Regular.ttf"), 20);
+        Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/UnifrakturMaguntia-Regular.ttf"), 20);
+        Font font2 = Font.loadFont(getClass().getResourceAsStream("/fonts/Exo2-Regular.ttf"), 20);
 
         changeScene("join-menu", new JoinMenuController());
         stage.setOnCloseRequest(e -> {

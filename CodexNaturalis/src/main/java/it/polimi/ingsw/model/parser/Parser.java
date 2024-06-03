@@ -13,9 +13,9 @@ import it.polimi.ingsw.model.enumeration.LDirection;
 import it.polimi.ingsw.model.goals.*;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Parser {
 
@@ -50,8 +50,11 @@ public class Parser {
     }
 
     public ResourceCard[] initResourceCards() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
-        FileReader jsonReader = new FileReader(Constants.JSON_ROOT_PATH + Constants.RESOURCE_CARD_FILENAME);
-        JsonObject jsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
+        InputStream jsonStream = getClass().getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.RESOURCE_CARD_FILENAME);
+        if (jsonStream == null) {
+            throw new FileNotFoundException("Resource not found: " + Constants.JSON_ROOT_PATH + Constants.RESOURCE_CARD_FILENAME);
+        }
+        JsonObject jsonObject = new Gson().fromJson(new InputStreamReader(jsonStream), JsonObject.class);
         JsonArray jsonCardArray = jsonObject.getAsJsonArray("cards");
         ResourceCard[] resourceCards = new ResourceCard[40];
         for(int index = 0; index < resourceCards.length; index++) {
@@ -67,8 +70,11 @@ public class Parser {
     }
 
     public GoldCard[] initGoldCards() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
-        FileReader jsonReader = new FileReader(Constants.JSON_ROOT_PATH + Constants.GOLD_CARD_FILENAME);
-        JsonObject jsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
+        InputStream jsonStream = getClass().getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.GOLD_CARD_FILENAME);
+        if (jsonStream == null) {
+            throw new FileNotFoundException("Resource not found: " + Constants.JSON_ROOT_PATH + Constants.GOLD_CARD_FILENAME);
+        }
+        JsonObject jsonObject = new Gson().fromJson(new InputStreamReader(jsonStream), JsonObject.class);
         JsonArray jsonCardArray = jsonObject.getAsJsonArray("cards");
         GoldCard[] goldCards = new GoldCard[40];
         for(int index = 0; index < goldCards.length; index++) {
@@ -111,8 +117,11 @@ public class Parser {
     }
 
     public StarterCard[] initStarterCards() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
-        FileReader jsonReader = new FileReader(Constants.JSON_ROOT_PATH + Constants.STARTER_CARD_FILENAME);
-        JsonObject jsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
+        InputStream jsonStream = Parser.class.getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.STARTER_CARD_FILENAME);
+        if (jsonStream == null) {
+            throw new FileNotFoundException("Resource not found: " + Constants.JSON_ROOT_PATH + Constants.STARTER_CARD_FILENAME);
+        }
+        JsonObject jsonObject = new Gson().fromJson(new InputStreamReader(jsonStream), JsonObject.class);
         JsonArray jsonCardArray = jsonObject.getAsJsonArray("cards");
         StarterCard[] starterCards = new StarterCard[6];
         for(int index = 0; index < starterCards.length; index++) {
@@ -135,8 +144,11 @@ public class Parser {
 
     private PatternGoalDiagonal[] getDiagonalGoals() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
         PatternGoalDiagonal[] diagonalGoals = new PatternGoalDiagonal[4];
-        FileReader jsonReader = new FileReader(Constants.JSON_ROOT_PATH + Constants.GOAL_DIAGONAL_FILENAME);
-        JsonObject jsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
+        InputStream jsonStream = getClass().getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.GOAL_DIAGONAL_FILENAME);
+        if (jsonStream == null) {
+            throw new FileNotFoundException("Resource not found: " + Constants.JSON_ROOT_PATH + Constants.GOAL_DIAGONAL_FILENAME);
+        }
+        JsonObject jsonObject = new Gson().fromJson(new InputStreamReader(jsonStream), JsonObject.class);
         JsonArray jsonCardArray = jsonObject.getAsJsonArray("cards");
         for(int index = 0; index < diagonalGoals.length; index++) {
             JsonObject jsonCard = jsonCardArray.get(index).getAsJsonObject();
@@ -151,8 +163,11 @@ public class Parser {
 
     private PatternGoalL[] getLGoals() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
         PatternGoalL[] LGoals = new PatternGoalL[4];
-        FileReader jsonReader = new FileReader(Constants.JSON_ROOT_PATH + Constants.GOAL_L_FILENAME);
-        JsonObject jsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
+        InputStream jsonStream = getClass().getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.GOAL_L_FILENAME);
+        if (jsonStream == null) {
+            throw new FileNotFoundException("Resource not found: " + Constants.JSON_ROOT_PATH + Constants.GOAL_L_FILENAME);
+        }
+        JsonObject jsonObject = new Gson().fromJson(new InputStreamReader(jsonStream), JsonObject.class);
         JsonArray jsonCardArray = jsonObject.getAsJsonArray("cards");
         for(int index = 0; index < LGoals.length; index++) {
             JsonObject jsonCard = jsonCardArray.get(index).getAsJsonObject();
@@ -168,14 +183,17 @@ public class Parser {
 
     private SymbolGoal[] getSymbolGoals() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
         SymbolGoal[] symbolGoals = new SymbolGoal[8];
-        FileReader jsonReader = new FileReader(Constants.JSON_ROOT_PATH + Constants.GOAL_SYMBOL_FILENAME);
-        JsonObject jsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
+        InputStream jsonStream = getClass().getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.GOAL_SYMBOL_FILENAME);
+        if (jsonStream == null) {
+            throw new FileNotFoundException("Resource not found: " + Constants.JSON_ROOT_PATH + Constants.GOAL_SYMBOL_FILENAME);
+        }
+        JsonObject jsonObject = new Gson().fromJson(new InputStreamReader(jsonStream), JsonObject.class);
         JsonArray jsonCardArray = jsonObject.getAsJsonArray("cards");
         for(int index = 0; index < symbolGoals.length; index++) {
             JsonObject jsonCard = jsonCardArray.get(index).getAsJsonObject();
             String id = jsonCard.get("id").getAsString();
             int points = jsonCard.get("points").getAsInt();
-            ArrayList<GoalRequirement> requirements = new ArrayList<GoalRequirement>();
+            ArrayList<GoalRequirement> requirements = new ArrayList<>();
             JsonArray requirementsJson = jsonCard.getAsJsonArray("goalRequirements");
             for(JsonElement requirementJsonElem: requirementsJson) {
                 JsonObject requirementJson = requirementJsonElem.getAsJsonObject();

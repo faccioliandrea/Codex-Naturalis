@@ -77,9 +77,8 @@ public class ServerController {
 
 
         } catch (DeckInitializationException e) {
-            // TODO: sendServerError
-            // for(String username : users)
-                // connections.get(username).sendNotification("Deck initialization error!");
+            System.err.println("Error in initializing the decks");
+            System.exit(0);
         } catch (InvalidNumberOfPlayersException e) {
             // TODO: sendServerError
             // for (String username : users)
