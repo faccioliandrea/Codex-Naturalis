@@ -25,10 +25,10 @@ public class GUI extends UIManager {
     private final GameSetupController gameSetupController = new GameSetupController();
 
     public GUI() {
+        instance = this;
         new Thread(() ->
             Application.launch(GUIApp.class)
         ).start();
-        instance = this;
     }
 
     public static BlockingQueue<Object> getQueue() {

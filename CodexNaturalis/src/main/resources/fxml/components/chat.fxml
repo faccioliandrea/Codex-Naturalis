@@ -7,7 +7,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
 
-<fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.VBox" prefWidth="200.0" prefHeight="300.0" spacing="15">
+<fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.VBox" prefWidth="200.0" prefHeight="300.0" spacing="15"  id="chat">
     <Label text="Chat" styleClass="midTitle, codexFont"/>
     <ScrollPane prefHeight="200.0" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" pannable="true" style="-fx-background-color:transparent;" fx:id="chatScrollPane">
         <VBox fx:id="chatVBox" spacing="15.0" >
@@ -17,7 +17,7 @@
         </VBox>
     </ScrollPane>
     <HBox spacing="10">
-        <TextField fx:id="messageTextField" focusTraversable="false" />
+        <TextField fx:id="messageTextField" focusTraversable="false" prefWidth="500" />
         <Button fx:id="sendButton" focusTraversable="false" disable="true" text=">" prefWidth="30.0" />
     </HBox>
 </fx:root>

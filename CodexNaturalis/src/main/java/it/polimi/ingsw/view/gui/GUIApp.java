@@ -52,6 +52,7 @@ public class GUIApp extends Application {
         stage.setResizable(false);
         Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/UnifrakturMaguntia-Regular.ttf"), 20);
         Font font2 = Font.loadFont(getClass().getResourceAsStream("/fonts/Exo2-Regular.ttf"), 20);
+        Font font3 = Font.loadFont(getClass().getResourceAsStream("/fonts/Exo2-Bold.ttf"), 20);
 
         changeScene("join-menu", new JoinMenuController());
         stage.setOnCloseRequest(e -> {

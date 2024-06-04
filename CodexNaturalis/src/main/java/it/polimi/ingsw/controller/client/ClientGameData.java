@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.enumeration.PlayerColor;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClientGameData extends Observable {
     private String username;
@@ -33,7 +34,7 @@ public class ClientGameData extends Observable {
     private Map<CardSymbol, Integer> symbols;
     private boolean gameAborted = false;
     private Map<String, PlayerColor> playerColors;
-    private MessagesQueue lastMessages = new MessagesQueue(5);
+    private MessagesQueue lastMessages = new MessagesQueue();
 
 
     public String getUsername() {
@@ -147,7 +148,7 @@ public class ClientGameData extends Observable {
     }
 
     public synchronized void setGoals(ArrayList<GoalInfo> goals) {
-        this.goals = goals;
+        this.goals = (ArrayList<GoalInfo>) goals.stream().distinct().collect(Collectors.toList());
         setChanged();
         notifyObservers();
     }

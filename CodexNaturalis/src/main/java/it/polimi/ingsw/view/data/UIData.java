@@ -33,7 +33,7 @@ public class UIData implements Observer {
     private int goalPoints = 0;
     private boolean gameAborted = false;
     private Map<String, PlayerColor> playerColors;
-    private MessagesQueue lastMessages = new MessagesQueue(5);
+    private MessagesQueue lastMessages = new MessagesQueue();
 
 
     public String getUsername() {
@@ -206,6 +206,10 @@ public class UIData implements Observer {
 
     public MessagesQueue getLastMessages() {
         return lastMessages;
+    }
+
+    public MessagesQueue getLastMessages(int limit) {
+        return new MessagesQueue(lastMessages, limit);
     }
 
     public void setLastMessages(MessagesQueue lastMessages) {

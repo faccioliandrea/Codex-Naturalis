@@ -2,9 +2,12 @@ package it.polimi.ingsw.view.gui.utility;
 
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.Objects;
@@ -26,6 +29,7 @@ public final class GUIUtility {
         imageView.setFitHeight(cellHeight);
         imageView.setFitWidth(cellWidth);
         imageView.setPreserveRatio(true);
+        imageView.setId("card");
         return imageView;
     }
 
@@ -48,9 +52,13 @@ public final class GUIUtility {
     }
 
     public static DropShadow highlightShadow() {
-        DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.web("#ffff00"));
-        shadow.setSpread(8.0);
-        return shadow;
+        DropShadow glow = new DropShadow(BlurType.ONE_PASS_BOX, Color.CYAN, 50, 0 , 0, 0);
+        glow.setInput(new InnerShadow(BlurType.THREE_PASS_BOX, Color.CYAN, 20, 0,0,0));
+
+        return glow;
+    }
+
+    public static Border highlightBorder() {
+        return new Border(new BorderStroke(Color.CYAN, BorderStrokeStyle.SOLID, new CornerRadii(18), new BorderWidths(5)));
     }
 }

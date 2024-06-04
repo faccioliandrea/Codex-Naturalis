@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.util.Pair;
 
 import java.net.URL;
@@ -42,15 +43,21 @@ public class MainController implements Initializable {
     @FXML
     private Label turnInfoLabel;
     @FXML
+    private VBox turnInfoContainer;
+    @FXML
     private VBox infoVBox;
     @FXML
     private HBox decksHBox;
+    @FXML
+    private Screen screen;
 
     private Pair<CardInfo, ImageView> selectedCard;
 
     private BoardStackPane boardGridPane;
     private LeaderboxVBox leaderboxVBox;
     private ChatVBox chatVBox;
+
+    private double screenWidth;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,12 +70,14 @@ public class MainController implements Initializable {
         leaderboardAndChatVBox.getChildren().addAll(leaderboxVBox, chatVBox);
         boardGroup.getChildren().clear();
         boardGroup.getChildren().add(boardGridPane);
+
+        screenWidth = screen.getVisualBounds().getWidth();
     }
 
     private void setupHand() {
         handHBox.getChildren().clear();
         for (CardInfo card : GUI.getInstance().getData().getHand()) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
+            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.BigCardToScreenWidthRatio);
             imageView.setOnMouseClicked(e -> {
                 if (e.getButton().equals(MouseButton.PRIMARY)) {
                     if (selectedCard != null && selectedCard.getKey() != card) {
@@ -89,18 +98,18 @@ public class MainController implements Initializable {
     private void setupGoals() {
         goalsHBox.getChildren().clear();
         for (GoalInfo goal : GUI.getInstance().getData().getGoals().subList(0,2)) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(goal), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
+            ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(goal), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
             goalsHBox.getChildren().add(imageView);
         }
         privateGoalHBox.getChildren().clear();
-        ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(GUI.getInstance().getData().getGoals().get(2)), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
+        ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(GUI.getInstance().getData().getGoals().get(2)), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
         privateGoalHBox.getChildren().add(imageView);
     }
 
     private void setupResources(boolean selectable) {
         resourcesHBox.getChildren().clear();
         for (CardInfo card : GUI.getInstance().getData().getResourceDeck()) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
+            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
             if (selectable) {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {
@@ -120,7 +129,7 @@ public class MainController implements Initializable {
     private void setupGold(boolean selectable) {
         goldHBox.getChildren().clear();
         for (CardInfo card : GUI.getInstance().getData().getGoldDeck()) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), GUIConstants.defaultCardDimension, GUIConstants.defaultCardDimension);
+            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
             if (selectable) {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {

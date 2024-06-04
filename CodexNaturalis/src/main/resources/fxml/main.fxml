@@ -3,9 +3,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
+<?import javafx.stage.Screen?>
+
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:id="mainBorderPane">
+    <fx:define>
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
+    </fx:define>
     <left >
-        <VBox BorderPane.alignment="CENTER" spacing="30" >
+        <VBox BorderPane.alignment="CENTER" spacing="50">
             <VBox spacing="10" fx:id="goalsVBox">
                 <VBox>
                     <Label text="Private Goal" styleClass="midTitle, codexFont"/>
@@ -42,7 +47,7 @@
         </HBox>
     </bottom>
     <right>
-        <VBox fx:id="leaderboardAndChatVBox" spacing="30.0"/>
+        <VBox fx:id="leaderboardAndChatVBox" spacing="50.0"/>
     </right>
     <center>
         <Group fx:id="boardGroup"/>

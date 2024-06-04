@@ -95,8 +95,8 @@ public class BoardStackPane extends StackPane {
         });
 
         innerStackPane.layoutBoundsProperty().addListener((ObservableValue<? extends Bounds> observable, Bounds oldBounds, Bounds bounds) -> {
-            double offsetX = finalHeight * 3/2 * GUIConstants.boardBorderWidthPercentage;
-            double offsetY = finalHeight * GUIConstants.boardBorderHeightPercentage;
+            double offsetX = GUIConstants.borderThickness;
+            double offsetY = GUIConstants.borderThickness;
             innerStackPane.setClip(new Rectangle(bounds.getMinX() + offsetX, bounds.getMinY() + offsetY, bounds.getWidth() - offsetX * 2, bounds.getHeight() - offsetY * 2));
         });
     }
@@ -159,6 +159,7 @@ public class BoardStackPane extends StackPane {
         }
         for (CardInfo card : cards) {
             ImageView img = GUIUtility.createImageView(GUIUtility.getCardPath(card), cellHeight, cellWidth);
+            img.setId("playedCard");
             Point translatedCoord = UIManager.toMatrixCoord(card.getCoord(), padding);
             boardGridPane.add(img, translatedCoord.x, translatedCoord.y);
         }

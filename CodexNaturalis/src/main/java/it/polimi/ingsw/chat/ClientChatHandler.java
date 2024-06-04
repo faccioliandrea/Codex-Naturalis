@@ -13,7 +13,7 @@ public class ClientChatHandler implements Runnable {
     private static String username;
 
     private static final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
-    private static final MessagesQueue msgsQueue = new MessagesQueue(5);
+    private static final MessagesQueue msgsQueue = new MessagesQueue();
     private static final Pattern mention_pattern = Pattern.compile("@\\S+");
     private static boolean running = false;
 

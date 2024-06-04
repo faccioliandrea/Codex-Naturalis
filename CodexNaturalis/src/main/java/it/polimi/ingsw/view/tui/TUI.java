@@ -17,10 +17,12 @@ public class TUI extends UIManager {
     private final BlockingQueue<String> commandQueue = new LinkedBlockingQueue<>();
     private final Object lock = new Object();
 
+    private static final int CHAT_HISTORY_LENGTH = 10;
+
     public TUI() {
-        new Thread(new InputHandler(commandQueue, inputQueue)).start();
-        new Thread(new CommandHandler(commandQueue, this)).start();
         instance = this;
+        new Thread(new InputHandler(commandQueue, inputQueue)).start();
+        new Thread(new CommandHandler(commandQueue)).start();
     }
 
     @Override
@@ -99,16 +101,16 @@ public class TUI extends UIManager {
             String lobbyId;
             do {
                 inputQueue.clear();
-                this.printColorDebug(TUIColors.PURPLE, "Type the lobby id you want to join: ");
+                this.printColorDebug(TUIColors.PURPLE, "Type the lobby id you want to join (leave blank to create a new lobby):");
                 try {
                     lobbyId = inputQueue.take();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                if (!lobbies.contains(lobbyId)) {
+                if (!lobbies.contains(lobbyId) && !lobbyId.isEmpty()) {
                     System.out.println("Please, type a valid lobby id");
                 }
-            } while (!lobbies.contains(lobbyId));
+            } while (!lobbies.contains(lobbyId) && !lobbyId.isEmpty());
             return lobbyId;
         }
     }
@@ -576,6 +578,10 @@ public class TUI extends UIManager {
     }
 
     protected void printCardInfo(String cardId) {
+        if (cardId == null || cardId.isEmpty()) {
+            printColorDebug(TUIColors.RED, "Please specify a card (type :card [cardId])");
+            return;
+        }
         try {
             Optional<CardInfo> card = Stream.of(
                             data.getHand(),
@@ -657,7 +663,7 @@ public class TUI extends UIManager {
             printColorDebug(TUIColors.RED, "Chat not available, you need to join a lobby first!");
         } else {
             vRule();
-            data.getLastMessages().forEach(this::printChatMessage);
+            data.getLastMessages(CHAT_HISTORY_LENGTH).forEach(this::printChatMessage);
             vRule();
         }
     }
@@ -682,6 +688,24 @@ public class TUI extends UIManager {
             data.getHand().forEach(this::printCardInfo);
         } catch (NullPointerException e) {
             printColorDebug(TUIColors.RED, "Hand not available, wait for the game to start");
+        }
+    }
+
+    protected void printPoints() {
+        if (!data.getBoard().isEmpty()) {
+            printDebug(
+                    String.format(
+                            "You currently have %s%d%s points from Cards and %s%d%s points from Goals",
+                            TUIColors.YELLOW,
+                            data.getCardPoints(),
+                            TUIColors.reset(),
+                            TUIColors.YELLOW,
+                            data.getGoalPoints(),
+                            TUIColors.reset()
+                    )
+            );
+        } else {
+            printColorDebug(TUIColors.RED, "Points not available, wait for the game to start");
         }
     }
 
