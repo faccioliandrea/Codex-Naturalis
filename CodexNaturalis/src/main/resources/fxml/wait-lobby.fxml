@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
-    <VBox alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="startBackground">
+    <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0">
         <Label text="Waiting for other players to join..." styleClass="bigTitle">
             <padding>

@@ -97,10 +97,12 @@ public class BoardStackPane extends StackPane {
         innerStackPane.layoutBoundsProperty().addListener((ObservableValue<? extends Bounds> observable, Bounds oldBounds, Bounds bounds) -> {
             double offsetX = GUIConstants.borderThickness;
             double offsetY = GUIConstants.borderThickness;
-            innerStackPane.setClip(new Rectangle(bounds.getMinX() + offsetX, bounds.getMinY() + offsetY, bounds.getWidth() - offsetX * 2, bounds.getHeight() - offsetY * 2));
+            Rectangle r = new Rectangle(bounds.getMinX() + offsetX, bounds.getMinY() + offsetY, bounds.getWidth() - offsetX * 2, bounds.getHeight() - offsetY * 2);
+            r.setArcHeight(25);
+            r.setArcWidth(25);
+            innerStackPane.setClip(r);
         });
     }
-
     /**
      * Sets up the board
      *

@@ -15,7 +15,7 @@ import java.util.HashMap;
 public interface RMIClientConnectionInterface extends Remote {
     void playerJoined(String username) throws RemoteException;
 
-     void setBridge(ConnectionBridge connectionBridge) throws RemoteException;
+     void pingServer() throws RemoteException;
 
     void gameStarted(StarterData starterData) throws RemoteException;
 

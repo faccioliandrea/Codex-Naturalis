@@ -32,12 +32,10 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
     }
 
     /**
-     * Methot that sets the connection bridge
-     * @param connectionBridge the connection bridge
+     * Method to ping the server
      */
     @Override
-    public void setBridge(ConnectionBridge connectionBridge) {
-        this.connectionBridge = connectionBridge;
+    public void pingServer() {
         new Thread(()->{
 
             while (true){

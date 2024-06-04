@@ -39,6 +39,11 @@ public class ConnectionBridge {
             }
         } else {
             rmiLoginRequest(username);
+            try {
+                clientConnection.pingServer();
+            } catch (RemoteException ignored) {
+                //handled by the ping
+            }
         }
     }
 
@@ -87,8 +92,8 @@ public class ConnectionBridge {
                 else
                     lobbyExists(lobbies);
 
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -111,8 +116,8 @@ public class ConnectionBridge {
                     joinLobbySuccess(true);
                 else
                     lobbyFull();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
 
         }
@@ -150,8 +155,8 @@ public class ConnectionBridge {
                 String lobbyid = ((RMIServerConnectionInterface) serverConnection).createLobbyAndJoin(ClientController.getInstance().getUsername(), numPlayers);
                 lobbyCreated(lobbyid);
                 joinLobbyRequest(lobbyid);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } catch (RemoteException ignored) {
+                //handled by the ping
             }
         }
     }
@@ -179,7 +184,7 @@ public class ConnectionBridge {
             try {
                 ((RMIServerConnectionInterface) serverConnection).createGame(ClientController.getInstance().getUsername());
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                //handled by the ping
             }
         }
 

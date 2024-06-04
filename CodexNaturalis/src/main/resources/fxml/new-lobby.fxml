@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml">
+            xmlns:fx="http://javafx.com/fxml" styleClass="startBackground">
     <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" spacing="10.0">
         <Label text="Create a new lobby" styleClass="bigTitle">
@@ -13,12 +13,12 @@
                 <Insets bottom="40.0"/>
             </padding>
         </Label>
-        <HBox alignment="CENTER" spacing="20.0" fx:id="playerButtons">
-            <Button text="2" style="-fx-text-fill: #ffffff00" contentDisplay="GRAPHIC_ONLY" fx:id="twoPlayerButton" prefWidth="80.0" prefHeight="80.0"
+        <HBox alignment="CENTER" spacing="30.0" fx:id="playerButtons">
+            <Button text="2" styleClass="newLobbyButton" contentDisplay="GRAPHIC_ONLY" fx:id="twoPlayerButton" prefWidth="80.0" prefHeight="80.0"
                     alignment="CENTER"/>
-            <Button text="3" style="-fx-text-fill: #ffffff00" contentDisplay="GRAPHIC_ONLY" fx:id="threePlayerButton" prefWidth="80.0"
+            <Button text="3" styleClass="newLobbyButton" contentDisplay="GRAPHIC_ONLY" fx:id="threePlayerButton" prefWidth="80.0"
                     prefHeight="80.0" alignment="CENTER"/>
-            <Button text="4" style="-fx-text-fill: #ffffff00" contentDisplay="GRAPHIC_ONLY" fx:id="fourPlayerButton" prefWidth="80.0"
+            <Button text="4" styleClass="newLobbyButton" contentDisplay="GRAPHIC_ONLY" fx:id="fourPlayerButton" prefWidth="80.0"
                     prefHeight="80.0" alignment="CENTER"/>
         </HBox>
     </VBox>

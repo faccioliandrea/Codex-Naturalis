@@ -69,3 +69,13 @@
 #messageTextField{
     -fx-background-color: white;
 }
+.startBackground{
+    -fx-background-image: url("/img/background.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
+}
+.newLobbyButton{
+    -fx-background-radius: 150;
+    -fx-text-fill: #ffffff00
+}
