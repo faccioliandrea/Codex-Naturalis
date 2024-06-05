@@ -44,7 +44,7 @@ public class GameSetupController implements Initializable {
         goalHBox.setAlignment(Pos.CENTER);
         goalHBox.setSpacing(20.0);
         for (GoalInfo goal : privateGoals) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(goal), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
+            ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getGoalPath(goal), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
             imageView.setOnMouseClicked(e -> {
                 GUI.getQueue().add(privateGoals.indexOf(goal));
                 privateGoalsVBox.setVisible(false);
@@ -63,8 +63,8 @@ public class GameSetupController implements Initializable {
         CardInfo starterCardBottom = new CardInfo(starterCard.getId(), starterCard.getCoord(), starterCard.isFlipped(), starterCard.getDescription(), starterCard.getFrontDescription(), starterCard.getBackDescription(), null);
         starterCardBottom.setFlipped(true);
         starterCardTop.setFlipped(false);
-        ImageView imageViewFront = GUIUtility.createImageView(GUIUtility.getCardPath(starterCardTop), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
-        ImageView imageViewBack = GUIUtility.createImageView(GUIUtility.getCardPath(starterCardBottom), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
+        ImageView imageViewFront = GUIUtility.createCardImageView(GUIUtility.getCardPath(starterCardTop), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
+        ImageView imageViewBack = GUIUtility.createCardImageView(GUIUtility.getCardPath(starterCardBottom), GUIConstants.handCardDimension, GUIConstants.handCardDimension);
         imageViewFront.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 GUI.getQueue().add(starterCardTop.isFlipped());

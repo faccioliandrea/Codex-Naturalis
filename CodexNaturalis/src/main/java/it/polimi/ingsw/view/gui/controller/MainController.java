@@ -35,15 +35,15 @@ public class MainController implements Initializable {
     @FXML
     private HBox privateGoalHBox;
     @FXML
-    private VBox resourcesHBox;
+    private VBox resourcesVBox;
     @FXML
-    private VBox goldHBox;
+    private VBox goldVBox;
     @FXML
     private VBox leaderboardAndChatVBox;
     @FXML
     private Label turnInfoLabel;
     @FXML
-    private VBox turnInfoContainer;
+    private VBox turnInfoVBox;
     @FXML
     private VBox infoVBox;
     @FXML
@@ -72,12 +72,13 @@ public class MainController implements Initializable {
         boardGroup.getChildren().add(boardGridPane);
 
         screenWidth = screen.getVisualBounds().getWidth();
+        leaderboardAndChatVBox.setPrefWidth(screenWidth * GUIConstants.SmallCardToScreenWidthRatio * 2 + 60);
     }
 
     private void setupHand() {
         handHBox.getChildren().clear();
         for (CardInfo card : GUI.getInstance().getData().getHand()) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.BigCardToScreenWidthRatio);
+            ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.BigCardToScreenWidthRatio);
             imageView.setOnMouseClicked(e -> {
                 if (e.getButton().equals(MouseButton.PRIMARY)) {
                     if (selectedCard != null && selectedCard.getKey() != card) {
@@ -98,18 +99,18 @@ public class MainController implements Initializable {
     private void setupGoals() {
         goalsHBox.getChildren().clear();
         for (GoalInfo goal : GUI.getInstance().getData().getGoals().subList(0,2)) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(goal), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
+            ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getGoalPath(goal), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
             goalsHBox.getChildren().add(imageView);
         }
         privateGoalHBox.getChildren().clear();
-        ImageView imageView = GUIUtility.createImageView(GUIUtility.getGoalPath(GUI.getInstance().getData().getGoals().get(2)), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
+        ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getGoalPath(GUI.getInstance().getData().getGoals().get(2)), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
         privateGoalHBox.getChildren().add(imageView);
     }
 
     private void setupResources(boolean selectable) {
-        resourcesHBox.getChildren().clear();
+        resourcesVBox.getChildren().clear();
         for (CardInfo card : GUI.getInstance().getData().getResourceDeck()) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
+            ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
             if (selectable) {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {
@@ -122,14 +123,14 @@ public class MainController implements Initializable {
                     }
                 });
             }
-            resourcesHBox.getChildren().add(imageView);
+            resourcesVBox.getChildren().add(imageView);
         }
     }
 
     private void setupGold(boolean selectable) {
-        goldHBox.getChildren().clear();
+        goldVBox.getChildren().clear();
         for (CardInfo card : GUI.getInstance().getData().getGoldDeck()) {
-            ImageView imageView = GUIUtility.createImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
+            ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
             if (selectable) {
                 imageView.setOnMouseClicked(e -> {
                     if (e.getButton().equals(MouseButton.PRIMARY)) {
@@ -142,7 +143,7 @@ public class MainController implements Initializable {
                     }
                 });
             }
-            goldHBox.getChildren().add(imageView);
+            goldVBox.getChildren().add(imageView);
         }
     }
 
@@ -171,8 +172,8 @@ public class MainController implements Initializable {
     }
 
     private void drawEnded() {
-        resourcesHBox.getChildren().forEach(x -> x.setDisable(true));
-        goldHBox.getChildren().forEach(x -> x.setDisable(true));
+        resourcesVBox.getChildren().forEach(x -> x.setDisable(true));
+        goldVBox.getChildren().forEach(x -> x.setDisable(true));
         decksHBox.setEffect(null);
     }
 

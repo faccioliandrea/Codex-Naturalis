@@ -51,7 +51,7 @@
     -fx-padding: 25;
 }
 
-#decksHBox, #goalsVBox, #handHBox, #turnInfoContainer, #leaderboard, #chat {
+#decksHBox, #goalsVBox, #handHBox, #turnInfoVBox, #leaderboard, #chat {
     -fx-background-color: black, -fx-gold-gradient, black, -fx-gold-gradient, black, -fx-panels-background;
     -fx-background-insets: -20, -19, -15, -14, -10, -8;
     -fx-effect: dropshadow(three-pass-box, black, 10, 0,0,0);
@@ -67,7 +67,9 @@
 }
 
 #messageTextField{
-    -fx-background-color: white;
+    -fx-background-color: #00000080;
+    -fx-text-fill: white;
+    -fx-background-radius: 13
 }
 .startBackground{
     -fx-background-image: url("/img/background.png");
@@ -78,4 +80,18 @@
 .newLobbyButton{
     -fx-background-radius: 150;
     -fx-text-fill: #ffffff00
+}
+
+#chatScrollPane {
+    -fx-background-color: #00000080;
+    -fx-background-radius: 13
+}
+#chatScrollPane > .viewport {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-background-radius: 13
+}
+
+.iconButton:disabled {
+    -fx-opacity: 0.5;
 }

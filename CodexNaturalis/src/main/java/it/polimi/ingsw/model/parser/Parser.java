@@ -83,7 +83,7 @@ public class Parser {
             CardSymbolKingdom centerSymbol = CardSymbolKingdom.valueOf(jsonCard.get("centerSymbol").getAsString());
             int points = jsonCard.get("points").getAsInt();
             Corner[] corners = this.getCorners(jsonCard, "corners");
-            ArrayList<GoldCardRequirement> requirements = new ArrayList<GoldCardRequirement>();
+            ArrayList<GoldCardRequirement> requirements = new ArrayList<>();
             JsonArray requirementsJson = jsonCard.getAsJsonArray("placementRequirements");
             for(JsonElement requirementJsonElem: requirementsJson) {
                 JsonObject requirementJson = requirementJsonElem.getAsJsonObject();

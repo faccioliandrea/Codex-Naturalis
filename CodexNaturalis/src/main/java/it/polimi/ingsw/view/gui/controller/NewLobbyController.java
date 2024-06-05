@@ -1,16 +1,14 @@
 package it.polimi.ingsw.view.gui.controller;
 
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.utility.GUIConstants;
+import it.polimi.ingsw.view.gui.utility.GUIUtility;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class NewLobbyController implements Initializable {
@@ -37,8 +35,7 @@ public class NewLobbyController implements Initializable {
     }
 
     private ImageView createIcon(String iconName) {
-        ImageView view = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(GUIConstants.iconsPath + iconName))));
-        view.setPreserveRatio(true);
+        ImageView view = GUIUtility.createIcon(iconName);
         view.setFitHeight(50.0);
         view.setFitWidth(50.0);
         return view;

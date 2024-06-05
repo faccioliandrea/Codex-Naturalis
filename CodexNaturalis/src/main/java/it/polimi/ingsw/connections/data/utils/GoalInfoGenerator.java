@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.goals.*;
  * Class to generate description for goals
  */
 final public class GoalInfoGenerator {
-    // TODO: Use template in the future
     public static final GoalInfoGenerator generator = new GoalInfoGenerator();
 
     private GoalInfoGenerator() {}

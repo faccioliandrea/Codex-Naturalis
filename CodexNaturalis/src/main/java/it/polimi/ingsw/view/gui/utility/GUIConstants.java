@@ -5,10 +5,7 @@ import javafx.scene.paint.Color;
 public final class GUIConstants {
     public static double mainBoardWidthPercentage = 0.5;
     public static double opponentBoardWidthPercentage = 0.4;
-    public static double boardBorderWidthPercentage = 0.013;
-    public static double boardBorderHeightPercentage = 0.02;
     public static int handCardDimension = 250;
-    public static int defaultCardDimension = 120;
     public static double SmallCardToScreenWidthRatio = .08;
     public static double BigCardToScreenWidthRatio = .12;
     public static double scenePadding = 40;
@@ -19,6 +16,8 @@ public final class GUIConstants {
 
     public static double dragThreshold = 0.1;
 
-    public static Color sentMessageColor = Color.web("#218aff");
-    public static Color receivedMessageColor = Color.web("#d8d8d8");
+    public static Color yellowPlayerColor = Color.rgb(200, 167, 84);
+    public static Color redPlayerColor = Color.rgb(186, 73, 59);
+    public static Color bluePlayerColor = Color.rgb(45, 93, 115);
+    public static Color greenPlayerColor = Color.rgb(68, 106, 65);
 }

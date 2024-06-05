@@ -4,6 +4,7 @@ import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.view.UIManager;
+import it.polimi.ingsw.view.UIMessagesConstants;
 import it.polimi.ingsw.view.gui.controller.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -15,7 +16,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class GUI extends UIManager {
-    // TODO: Pass UIData instead of connections data structures
     final static private BlockingQueue<Object> queue = new LinkedBlockingQueue<>();
 
     private final LobbiesController lobbiesController = new LobbiesController();
@@ -37,6 +37,7 @@ public class GUI extends UIManager {
 
     @Override
     public String askForServerAddr(String defaultAddr) {
+        //GUIApp.changeScene("join-menu", new JoinMenuController());
         try {
             queue.clear();
             return queue.take().toString();
@@ -202,10 +203,10 @@ public class GUI extends UIManager {
 
     @Override
     public void reconnectionState() {
-        // TODO: Implement
         GUIApp.changeScene("main", mainController);
         Platform.runLater(() -> {
             mainController.updateData();
+            mainController.updateChat();
             mainController.setTitle(data.getCurrentPlayer() + "'s turn");
         });
     }
@@ -233,7 +234,6 @@ public class GUI extends UIManager {
 
     @Override
     public void otherPlayerTurn(String currentPlayer) {
-        // TODO: Implement
         GUIApp.changeScene("main", mainController);
         Platform.runLater(() -> {
             mainController.updateData();
@@ -257,7 +257,7 @@ public class GUI extends UIManager {
 
     @Override
     public void placeCardFailure() {
-        GUIApp.showAlert("You don't have the requirements to place the card!", Alert.AlertType.WARNING);
+        GUIApp.showAlert(UIMessagesConstants.placeCardFailure, Alert.AlertType.WARNING);
     }
 
     @Override
@@ -268,7 +268,6 @@ public class GUI extends UIManager {
 
     @Override
     public void turnEnded(GameStateInfo gameStateInfo) {
-        // TODO: Implement
         Platform.runLater(() -> {
             mainController.updateData();
             mainController.setTitle("Turn ended. Now wait for your opponent(s) to finish their turn");
@@ -300,12 +299,13 @@ public class GUI extends UIManager {
 
     @Override
     public void noOtherPlayerConnected() {
-        GUIApp.showAlert("No other player connected. The game will end in 1 minute", Alert.AlertType.WARNING);
+        GUIApp.showAlert(UIMessagesConstants.noOtherPlayerConnected, Alert.AlertType.WARNING);
     }
 
     @Override
     public void serverOfflineMessage() {
-        GUIApp.showAlert("Unfortunately the Server is no longer available.\nPlease choose another Server to play.", Alert.AlertType.ERROR);
+        GUIApp.showAlert(UIMessagesConstants.serverOfflineMessage, Alert.AlertType.ERROR);
+        GUIApp.changeScene("join-menu", new JoinMenuController());
     }
 
     @Override

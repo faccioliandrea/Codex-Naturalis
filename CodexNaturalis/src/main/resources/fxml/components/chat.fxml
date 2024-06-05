@@ -3,21 +3,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 
-<fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.VBox" prefWidth="200.0" prefHeight="300.0" spacing="15"  id="chat">
+<fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.VBox" prefWidth="200.0" prefHeight="200.0" spacing="15" id="chat">
     <Label text="Chat" styleClass="midTitle, codexFont"/>
-    <ScrollPane prefHeight="200.0" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" pannable="true" style="-fx-background-color:transparent;" fx:id="chatScrollPane">
-        <VBox fx:id="chatVBox" spacing="15.0" >
+    <ScrollPane prefHeight="120.0" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" pannable="true" fx:id="chatScrollPane">
+        <VBox fx:id="chatVBox" spacing="5.0" >
         <padding>
             <Insets top="5" right="5" bottom="5" left="5"/>
         </padding>
         </VBox>
     </ScrollPane>
-    <HBox spacing="10">
+    <HBox spacing="10" alignment="CENTER">
         <TextField fx:id="messageTextField" focusTraversable="false" prefWidth="500" />
-        <Button fx:id="sendButton" focusTraversable="false" disable="true" text=">" prefWidth="30.0" />
+        <ImageView fx:id="sendIcon" fitWidth="20.0" preserveRatio="true" styleClass="iconButton" disable="true"/>
+        <padding>
+            <Insets right="2"/>
+        </padding>
     </HBox>
 </fx:root>

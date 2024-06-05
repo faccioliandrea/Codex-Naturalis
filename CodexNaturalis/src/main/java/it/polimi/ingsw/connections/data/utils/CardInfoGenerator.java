@@ -11,7 +11,6 @@ import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
  * Class to generate description for cards
  */
 final public class CardInfoGenerator {
-    // TODO: Use template in the future
     public static final CardInfoGenerator generator = new CardInfoGenerator();
 
     private CardInfoGenerator() {}

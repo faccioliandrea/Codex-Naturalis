@@ -160,7 +160,7 @@ public class BoardStackPane extends StackPane {
             cellHeight = cellWidth*2/3;
         }
         for (CardInfo card : cards) {
-            ImageView img = GUIUtility.createImageView(GUIUtility.getCardPath(card), cellHeight, cellWidth);
+            ImageView img = GUIUtility.createCardImageView(GUIUtility.getCardPath(card), cellHeight, cellWidth);
             img.setId("playedCard");
             Point translatedCoord = UIManager.toMatrixCoord(card.getCoord(), padding);
             boardGridPane.add(img, translatedCoord.x, translatedCoord.y);

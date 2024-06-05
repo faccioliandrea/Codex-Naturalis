@@ -85,6 +85,4 @@ public abstract class Card {
     public void setFlipped(boolean flipped) {
         this.flipped = flipped;
     }
-
-    // TODO: Method to cover an angle
 }

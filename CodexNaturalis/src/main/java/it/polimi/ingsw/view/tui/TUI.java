@@ -5,6 +5,7 @@ import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.view.UIManager;
 import it.polimi.ingsw.chat.ChatMessageData;
+import it.polimi.ingsw.view.UIMessagesConstants;
 
 import java.awt.*;
 import java.util.*;
@@ -455,7 +456,7 @@ public class TUI extends UIManager {
     @Override
     public void placeCardFailure() {
         synchronized (lock) {
-            printColorDebug(TUIColors.RED, "You don't have the requirements to place the card!");
+            printColorDebug(TUIColors.RED, UIMessagesConstants.placeCardFailure);
         }
     }
 
@@ -509,6 +510,7 @@ public class TUI extends UIManager {
     public void goodbye() {
         synchronized (lock) {
             printColorDebug(TUIColors.BLUE, "See you next time!");
+            System.exit(0);
         }
     }
 
@@ -525,11 +527,11 @@ public class TUI extends UIManager {
 
     @Override
     public void noOtherPlayerConnected() {
-        printColorDebug(TUIColors.RED, "No other player connected. The game will end in 1 minute");
+        printColorDebug(TUIColors.RED, UIMessagesConstants.noOtherPlayerConnected);
     }
     @Override
     public void serverOfflineMessage() {
-        printColorDebug(TUIColors.RED, "Unfortunately the Server is no longer available. Please choose another Server to play.");
+        printColorDebug(TUIColors.RED, UIMessagesConstants.serverOfflineMessage);
     }
 
     public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {

@@ -24,18 +24,18 @@
             <HBox spacing="15" fx:id="decksHBox">
                 <VBox>
                     <Label text="Resource deck" styleClass="midTitle, codexFont"/>
-                    <VBox alignment="CENTER_LEFT" fx:id="resourcesHBox" spacing="5.0"/>
+                    <VBox alignment="CENTER_LEFT" fx:id="resourcesVBox" spacing="5.0"/>
                 </VBox>
                 <VBox>
                     <Label text="Gold deck" styleClass="midTitle, codexFont"/>
-                    <VBox alignment="CENTER_LEFT" fx:id="goldHBox" spacing="5.0"/>
+                    <VBox alignment="CENTER_LEFT" fx:id="goldVBox" spacing="5.0"/>
                 </VBox>
             </HBox>
         </VBox>
     </left>
     <top>
         <HBox alignment="CENTER" BorderPane.alignment="CENTER" >
-            <VBox alignment="CENTER" spacing="10" fx:id="turnInfoContainer">
+            <VBox alignment="CENTER" spacing="10" fx:id="turnInfoVBox">
                 <Label fx:id="turnInfoLabel" styleClass="mainTitle" wrapText="true" />
                 <VBox fx:id="infoVBox" alignment="CENTER" spacing="2"/>
             </VBox>

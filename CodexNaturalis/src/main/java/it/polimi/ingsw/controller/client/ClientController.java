@@ -64,7 +64,6 @@ public class ClientController {
     public void lobbyExists(ArrayList<String> lobbies) {
         String id = ui.askForLobbyId(lobbies);
         if(id.isEmpty()) {
-            // TODO: handle in GUI
             int n = ui.askForPlayerNum();
             ConnectionBridge.getInstance().createLobbyRequest(n);
         } else
@@ -185,7 +184,6 @@ public class ClientController {
             this.lobbyRequest();
         } else {
             ui.goodbye();
-            // TODO: quit
         }
     }
 

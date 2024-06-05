@@ -2,19 +2,21 @@ package it.polimi.ingsw.view.gui.components;
 
 import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.utility.GUIUtility;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
 public class ChatVBox extends VBox {
+    // TODO: Fix message to yourself
     @FXML
-    private Button sendButton;
+    private ImageView sendIcon;
     @FXML
     private TextField messageTextField;
     @FXML
@@ -30,6 +32,7 @@ public class ChatVBox extends VBox {
             fxmlLoader.load();
             setupEvents();
             chatScrollPane.vvalueProperty().bind(chatVBox.heightProperty());
+            sendIcon.setImage(GUIUtility.createIcon("send.png").getImage());
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
@@ -42,8 +45,8 @@ public class ChatVBox extends VBox {
                 sendMessage(msg);
             }
         });
-        messageTextField.textProperty().addListener((observable, oldValue, newValue) -> sendButton.setDisable(newValue.trim().isEmpty()));
-        sendButton.setOnAction(e -> sendMessage(messageTextField.getText()));
+        messageTextField.textProperty().addListener((observable, oldValue, newValue) -> sendIcon.setDisable(newValue.trim().isEmpty()));
+        sendIcon.setOnMouseClicked(e -> sendMessage(messageTextField.getText()));
     }
 
     public void updateMessages() {

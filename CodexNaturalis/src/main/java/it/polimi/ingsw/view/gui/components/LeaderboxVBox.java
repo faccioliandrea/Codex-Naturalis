@@ -3,21 +3,24 @@ package it.polimi.ingsw.view.gui.components;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.GUIApp;
 import it.polimi.ingsw.view.gui.controller.OpponentBoardController;
+import it.polimi.ingsw.view.gui.utility.GUIUtility;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.VPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
 public class LeaderboxVBox extends VBox {
+    // TODO: If you click on opponent board on first turn while it's your turn it's not working
     @FXML
-    private VBox leaderboardVBox;
+    private GridPane leaderboardGridPane;
 
     public LeaderboxVBox() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/components/leaderboard.fxml"));
@@ -35,31 +38,38 @@ public class LeaderboxVBox extends VBox {
      *
      */
     public void leaderboardSetup(boolean interactable) {
-        leaderboardVBox.getChildren().clear();
+        leaderboardGridPane.getRowConstraints().clear();
+        leaderboardGridPane.getChildren().clear();
+        for (int i = 0; i < GUI.getInstance().getData().getSortedLeaderboard().entrySet().size(); i++) {
+            RowConstraints rowConstraint = new RowConstraints();
+            rowConstraint.setPrefHeight(25);
+            rowConstraint.setVgrow(Priority.NEVER);
+            rowConstraint.setValignment(VPos.CENTER);
+            leaderboardGridPane.getRowConstraints().add(rowConstraint);
+        }
         int pos = 1;
-        for (Map.Entry<String, Integer> e : GUI.getInstance().getData().getSortedLeaderboard().entrySet()) {
-            int points = e.getValue();
-            HBox leaderboardHBox = new HBox();
-            leaderboardHBox.setSpacing(2);
-            leaderboardHBox.getChildren().add(new Label(String.format("%d.", pos)));
-            String username = e.getKey();
-            Label usernameLabel = new Label(username);
-            // TODO: Add colors
-            // Color.valueOf("BLACK");
+        for (Map.Entry<String, Integer> entry : GUI.getInstance().getData().getSortedLeaderboard().entrySet()) {
+            int points = entry.getValue();
+            String username = entry.getKey();
+            Label usernameLabel = new Label(username + (username.equals(GUI.getInstance().getData().getUsername()) ? " (You)" : ""));
+            Circle playerColor = new Circle(5);
+            playerColor.setFill(GUIUtility.playerColor(username));
             if (!Objects.equals(username, GUI.getInstance().getData().getUsername()) && !GUI.getInstance().getData().getBoards().get(username).isEmpty() && interactable) {
-                usernameLabel.hoverProperty().addListener((obs, oldVal, newValue) -> {
-                    if (newValue) {
-                        OpponentBoardController controller = new OpponentBoardController(username, GUI.getInstance().getData().getBoards().get(username));
-                        GUIApp.showOpponentBoard(controller);
-                    }
+                ImageView leaderboardBtnGraphics = GUIUtility.createIcon("toggle_board.png");
+                leaderboardBtnGraphics.setFitWidth(18);
+                leaderboardBtnGraphics.getStyleClass().add("iconButton");
+                leaderboardBtnGraphics.setOnMouseClicked(event -> {
+                    OpponentBoardController controller = new OpponentBoardController(username, GUI.getInstance().getData().getBoards().get(username));
+                    GUIApp.showOpponentBoard(controller);
                 });
+                leaderboardGridPane.addRow(pos - 1, new Label(String.format("%d.", pos)), playerColor, usernameLabel, new Label(String.valueOf(points)), leaderboardBtnGraphics);
+            } else {
+                Button leaderboardBtn = new Button();
+                leaderboardBtn.setBackground(null);
+                leaderboardBtn.setPrefWidth(18);
+                leaderboardBtn.setDisable(true);
+                leaderboardGridPane.addRow(pos - 1, new Label(String.format("%d.", pos)), playerColor, usernameLabel, new Label(String.valueOf(points)));
             }
-            leaderboardHBox.getChildren().add(usernameLabel);
-            Region spacing = new Region();
-            HBox.setHgrow(spacing, Priority.ALWAYS);
-            leaderboardHBox.getChildren().add(spacing);
-            leaderboardHBox.getChildren().add(new Label(String.valueOf(points)));
-            leaderboardVBox.getChildren().add(leaderboardHBox);
             pos++;
         }
     }

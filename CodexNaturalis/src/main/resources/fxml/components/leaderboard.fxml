@@ -2,11 +2,21 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 
 <fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" type="javafx.scene.layout.VBox">
     <VBox spacing="20" prefWidth="350.0" id="leaderboard">
         <Label text="Leaderboard" styleClass="midTitle, codexFont">
         </Label>
-        <VBox fx:id="leaderboardVBox" alignment="TOP_CENTER" spacing="10"/>
+        <GridPane fx:id="leaderboardGridPane" alignment="TOP_CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" halignment="LEFT" prefWidth="20" />
+                <ColumnConstraints hgrow="NEVER" halignment="LEFT" prefWidth="15" />
+                <ColumnConstraints hgrow="ALWAYS" halignment="LEFT" prefWidth="20" />
+                <ColumnConstraints hgrow="NEVER" halignment="LEFT" prefWidth="20" />
+                <ColumnConstraints hgrow="NEVER" halignment="LEFT" prefWidth="20" />
+            </columnConstraints>
+        </GridPane>
     </VBox>
 </fx:root>
