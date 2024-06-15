@@ -3,6 +3,7 @@
     -fx-font-smoothing-type: gray;
     -fx-gold-gradient: linear-gradient(from 0% 100% to 100% 0%, rgb(155, 126, 68) 0%, rgb(239, 220, 144) 30%, rgb(251, 246, 188) 50%, rgb(239, 220, 144) 70%, rgb(155, 126, 68));
     -fx-panels-background: rgb(234, 225, 184);
+    -fx-chat-color: rgba(0,0,0,.3);
 }
 .mainTitle {
     -fx-font-size: 30;
@@ -10,9 +11,8 @@
 
 .codexFont{
     -fx-font-family: "UnifrakturMaguntia";
-    -fx-text-fill: -fx-gold-gradient;
+    -fx-text-fill: rgb(74, 55, 56);
     -fx-stroke: black;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 5, 0.5, 1, 1);
 }
 
 .bigTitle {
@@ -67,7 +67,7 @@
 }
 
 #messageTextField{
-    -fx-background-color: #00000080;
+    -fx-background-color: -fx-chat-color;
     -fx-text-fill: white;
     -fx-background-radius: 13
 }
@@ -83,7 +83,7 @@
 }
 
 #chatScrollPane {
-    -fx-background-color: #00000080;
+    -fx-background-color: -fx-chat-color;
     -fx-background-radius: 13
 }
 #chatScrollPane > .viewport {

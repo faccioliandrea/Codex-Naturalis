@@ -1,5 +1,8 @@
 package it.polimi.ingsw.view.tui;
 
+/**
+ * Enum that defines colors for the TUI
+ */
 public enum TUIColors {
     BLACK(0),
     RED(1),
@@ -19,14 +22,26 @@ public enum TUIColors {
         this.colorcode = String.format(ansi, 3, code);
     }
 
+    /**
+     * Getter for the color code
+     * @return the color code
+     */
     public String toString() {
         return this.colorcode;
     }
 
+    /**
+     * Getter for the value
+     * @return the value
+     */
     public int getValue() {
         return this.value;
     }
 
+    /**
+     * Method to reset the color
+     * @return the reset color code
+     */
     public static String reset() {
         return "\u001B[0m";
     }

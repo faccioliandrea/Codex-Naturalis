@@ -20,11 +20,15 @@ public class TUI extends UIManager {
 
     private static final int CHAT_HISTORY_LENGTH = 10;
 
+    /**
+     * Constructor
+     */
     public TUI() {
         instance = this;
         new Thread(new InputHandler(commandQueue, inputQueue)).start();
         new Thread(new CommandHandler(commandQueue)).start();
     }
+
 
     @Override
     public String askForServerAddr(String defaultAddr) {
