@@ -7,9 +7,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
 
-<fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.VBox" prefWidth="200.0" prefHeight="200.0" spacing="15" id="chat">
+<fx:root xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" type="javafx.scene.layout.VBox" prefWidth="200.0" spacing="15" id="chat">
     <Label text="Chat" styleClass="midTitle, codexFont"/>
-    <ScrollPane prefHeight="120.0" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" pannable="true" fx:id="chatScrollPane">
+    <ScrollPane prefHeight="200.0" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" pannable="true" fx:id="chatScrollPane">
         <VBox fx:id="chatVBox" spacing="5.0" >
         <padding>
             <Insets top="5" right="5" bottom="5" left="5"/>

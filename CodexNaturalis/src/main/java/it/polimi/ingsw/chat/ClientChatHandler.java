@@ -8,6 +8,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class is the handler for the chat messages on the client side.
+ */
 public class ClientChatHandler implements Runnable {
     private static ClientChatHandler instance;
     private static String username;
@@ -22,6 +25,10 @@ public class ClientChatHandler implements Runnable {
         username = ClientController.getInstance().getUsername();
     }
 
+    /**
+     * Getter for the instance of the ClientChatHandler class.
+     * @return the instance of the ClientChatHandler class
+     */
     public static synchronized ClientChatHandler getInstance() {
         if (instance == null) {
             instance = new ClientChatHandler();
@@ -29,12 +36,22 @@ public class ClientChatHandler implements Runnable {
         return instance;
     }
 
+    /**
+     * Send a message to the server.
+     * @param msg the message to send
+     */
     private static void sendChatMessage(ChatMessageData msg) {
         msgsQueue.add(msg);
         ClientController.getInstance().getData().setLastMessages(msgsQueue);
         ConnectionBridge.getInstance().sendChatMessage(msg);
     }
 
+    /**
+     * Prepare a message to be sent.
+     * @param raw the raw message
+     * @param sender the sender of the message
+     * @return the prepared message
+     */
     private static ChatMessageData prepareMessage(String raw, String sender) {
         Matcher matcher = mention_pattern.matcher(raw);
         if (matcher.find()) {
@@ -46,20 +63,37 @@ public class ClientChatHandler implements Runnable {
         }
     }
 
+    /**
+     * Check if a message is a message to the same user.
+     * @param raw the raw message
+     * @return true if the message is to the same user, false otherwise
+     */
     public static boolean isSameUserMessage(String raw) {
         String messageRecipient =  prepareMessage(raw, username).getRecipient();
         return messageRecipient != null && messageRecipient.equals(username);
     }
 
+    /**
+     * Send a message to the server.
+     * @param raw the raw message
+     */
     public static void sendChatMessage(String raw) {
         sendChatMessage(prepareMessage(raw, username));
     }
 
+    /**
+     * Receive a message from the server.
+     * @param msg the message received
+     */
     public static void recvChatMessage(ChatMessageData msg) {
         msgsQueue.add(msg);
         ClientController.getInstance().getData().setLastMessages(msgsQueue);
     }
 
+    /**
+     * Getter for the messages queue.
+     * @return the messages queue
+     */
     public static MessagesQueue getMsgsQueue() {
         return msgsQueue;
     }
@@ -78,6 +112,10 @@ public class ClientChatHandler implements Runnable {
 
     }
 
+    /**
+     * Getter for the running status of the ClientChatHandler.
+     * @return true if the ClientChatHandler is running, false otherwise
+     */
     public static boolean isRunning() {
         return running;
     }

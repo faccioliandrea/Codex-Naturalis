@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 
+/**
+ * Class that handles the commands from the user
+ */
 public class CommandHandler implements Runnable {
 
     private boolean interrupted = false;

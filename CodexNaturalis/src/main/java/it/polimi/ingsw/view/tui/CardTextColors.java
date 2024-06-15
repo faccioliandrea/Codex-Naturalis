@@ -1,5 +1,8 @@
 package it.polimi.ingsw.view.tui;
 
+/**
+ * Enum that defines the colors of the cards
+ */
 public enum CardTextColors {
     MUSHROOM(TUIColors.RED),
     LEAF(TUIColors.GREEN),
@@ -17,6 +20,10 @@ public enum CardTextColors {
         this.colorcode = String.format(ansi, bg.getValue());
     }
 
+    /**
+     * Getter for the color code
+     * @return the color code
+     */
     public String toString() {
         return this.colorcode;
     }

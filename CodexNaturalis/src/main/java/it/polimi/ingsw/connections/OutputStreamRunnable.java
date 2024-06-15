@@ -1,45 +1,42 @@
 package it.polimi.ingsw.connections;
 
 import java.io.*;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.function.Consumer;
 
-import it.polimi.ingsw.Client;
 import it.polimi.ingsw.connections.messages.Message;
 import it.polimi.ingsw.connections.messages.PingMessage;
-import it.polimi.ingsw.connections.messages.client.ClientToServerMessage;
-import it.polimi.ingsw.connections.messages.server.ServerToClientMessage;
 
+/**
+ * Runnable class that sends messages to the server
+ */
 public class OutputStreamRunnable implements StreamRunnable {
     private final ObjectOutputStream outputStream;
     private boolean isStopped;
     private Consumer<String> callback;
-//    private IOException exception;
 
     final Object lock = new Object();
-//    private TimerTask task = new TimerTask() {
-//        public void run() {
-//            synchronized (lock) {
-//                lock.notifyAll();
-//            }
-//        }
-//    };
-//    Timer timer = new Timer();
 
-
+    /**
+     * Constructor
+     * @param oos: ObjectOutputStream to write to
+     * @param callback: Consumer to call when an exception is thrown
+     */ 
     public OutputStreamRunnable(ObjectOutputStream oos, Consumer<String> callback) throws IOException {
         this.outputStream = oos;
         this.isStopped = false;
         this.callback = callback;
     }
 
+    /**
+     * Constructor
+     * @param os: OutputStream to write to
+     * @param callback: Consumer to call when an exception is thrown
+     */ 
     public OutputStreamRunnable(OutputStream os, Consumer<String> callback) throws IOException {
         this.outputStream = new ObjectOutputStream(os);
         this.isStopped = false;
         this.callback = callback;
     }
-
 
     public void run() {
         try {
@@ -55,12 +52,21 @@ public class OutputStreamRunnable implements StreamRunnable {
         }
     }
 
+    /**
+     * Send a message to the server
+     * @param msg: Message to send
+     * @throws IOException if an error occurs while sending the message
+     */
     public void sendMessage(Message msg) throws IOException {
         synchronized (outputStream) {
             outputStream.writeObject(msg);
         }
     }
 
+    /**
+     * Close the output stream
+     * @throws IOException if an error occurs while closing the stream
+     */ 
     public void close() throws IOException {
         this.isStopped = true;
         synchronized (outputStream) {
@@ -68,6 +74,10 @@ public class OutputStreamRunnable implements StreamRunnable {
         }
     }
 
+    /**
+     * Send a ping message to the server
+     * @throws IOException if an error occurs while sending the message
+     */
     private void ping() throws IOException {
         sendMessage(new PingMessage() );
     }

@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * This class is the implementation of the ClientConnection interface for the Socket connection type.
+ */
 public class SocketClientConnection implements ClientConnection, Runnable {
     private SocketAddress remoteAddr;
     private Socket clientSocket;
@@ -30,6 +33,11 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
     private ConnectionStatus connectionStatus;
 
+    /**
+     * Constructor for the SocketClientConnection class.
+     * @param serverSocket The server socket.
+     * @param clientSocket The client socket to connect to.
+     */
     public SocketClientConnection(ServerSocket serverSocket, Socket clientSocket) {
         synchronized (this) {
             this.connectionStatus = ConnectionStatus.INITIALIZING;
@@ -40,6 +48,10 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         }
     }
 
+    /**
+     * Getter for the IP address of the client
+     * @return the IP address of the client
+     */
     public String getRemoteAddr() {
         return this.remoteAddr.toString();
     }
@@ -54,10 +66,18 @@ public class SocketClientConnection implements ClientConnection, Runnable {
         return this.connectionStatus;
     }
 
+    /**
+     * Getter for the InputStreamRunnable
+     * @return the InputStreamRunnable
+     */
     public InputStreamRunnable getInputStream() {
         return inputStream;
     }
 
+    /**
+     * Getter for the OutputStreamRunnable
+     * @return the OutputStreamRunnable
+     */
     public OutputStreamRunnable getOutputStream() {
         return outputStream;
     }
@@ -100,38 +120,70 @@ public class SocketClientConnection implements ClientConnection, Runnable {
 
 
     public void threadExceptionCallback(String e) {
+        if (this.connectionStatus == ConnectionStatus.OFFLINE) {
+            return;
+        }
         this.connectionStatus = ConnectionStatus.OFFLINE;
         ConnectionBridge.getInstance().onClientDisconnect(this);
     }
 
     // messages
 
+    /**
+     * Notify the client that the username is valid.
+     * @throws IOException if an error occurs while sending the message
+     */
     public void validUsername() throws IOException {
         this.outputStream.sendMessage(new ValidUsernameMessage());
     }
 
+    /**
+     * Notify the client that the username is invalid.
+     * @throws IOException if an error occurs while sending the message
+     */
     public void invalidUsername() throws IOException {
         this.outputStream.sendMessage(new InvalidUsernameMessage());
     }
 
+    /**
+     * Notify the client that the lobby exists.
+     * @param idList the list of lobby IDs
+     * @throws IOException if an error occurs while sending the message
+     */
     public void lobbyExists(ArrayList<String> idList) throws IOException {
         this.outputStream.sendMessage(new LobbyExistsMessage(idList));
     }
 
+    /**
+     * Notify the client that the lobby has been joined successfully.
+     * @param isLastPlayer true if the player is the last one to join the lobby, false otherwise
+     * @throws IOException if an error occurs while sending the message
+     */
     public void joinLobbySuccess(boolean isLastPlayer) throws IOException {
         this.outputStream.sendMessage(new JoinLobbySuccessMessage(isLastPlayer));
     }
 
-
+    /**
+     * Notify the client that the lobby is full.
+     * @throws IOException if an error occurs while sending the message
+     */
     public void lobbyFull() throws IOException {
         this.outputStream.sendMessage(new LobbyFullMessage());
     }
 
-
+    /**
+     * Notify the client that the lobby does not exist.
+     * @throws IOException if an error occurs while sending the message
+     */
     public void lobbyDoesNotExist() throws IOException {
         this.outputStream.sendMessage(new LobbyDoesNotExistMessage());
     }
 
+    /**
+     * Notify the client that the lobby has been created.
+     * @param lobbyId the ID of the lobby
+     * @throws IOException if an error occurs while sending the message
+     */
     public void lobbyCreated(String lobbyId) throws IOException{
         this.outputStream.sendMessage(new LobbyCreatedMessage(lobbyId));
     }
