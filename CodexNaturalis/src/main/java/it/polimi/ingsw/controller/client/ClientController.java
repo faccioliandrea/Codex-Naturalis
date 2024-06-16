@@ -6,6 +6,7 @@ import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.*;
+import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.view.UIManager;
 
 import java.util.ArrayList;
@@ -23,6 +24,10 @@ public class ClientController {
 
     private ClientController() { }
 
+    /**
+     * Singleton instance getter
+     * @return the instance of the ClientController
+     */
     public static synchronized ClientController getInstance() {
         if (instance == null) {
             instance = new ClientController();
@@ -30,6 +35,9 @@ public class ClientController {
         return instance;
     }
 
+    /**
+     * Initializes the controller
+     */
     public void init() {
         this.ui = UIManager.getInstance();
         this.ui.showCommands();
@@ -41,8 +49,8 @@ public class ClientController {
         return username;
     }
 
-    public void invalidUsername(){
-        ui.invalidUsername(this.username);
+    public void invalidUsername(LogInResponse status) {
+        ui.invalidUsername(this.username, status);
         ConnectionBridge.getInstance().loginRequest();
     }
 

@@ -19,6 +19,10 @@ public class LobbyController {
      */
     private LobbyController() { }
 
+    /**
+     * Singleton instance getter
+     * @return the instance of the LobbyController
+     */
     public static synchronized LobbyController getInstance() {
         if (instance == null) {
             instance = new LobbyController();

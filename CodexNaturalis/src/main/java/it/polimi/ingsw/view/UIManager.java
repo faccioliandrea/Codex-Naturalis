@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
+import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.view.data.UIData;
 import java.awt.*;
 import java.util.*;
@@ -79,7 +80,7 @@ public abstract class UIManager {
      * Notifies the user that the username is invalid
      * @param username the username
      */
-    public abstract void invalidUsername(String username);
+    public abstract void invalidUsername(String username, LogInResponse status);
 
     /**
      * Shows a welcome message
@@ -311,8 +312,8 @@ public abstract class UIManager {
     }
 
     /**
-     * Getter for the instance of the UIManager class
-     * @return the instance of the UIManager class
+     * Singleton instance getter
+     * @return the instance of the UIManager
      */
     public static synchronized UIManager getInstance() {
         return instance;

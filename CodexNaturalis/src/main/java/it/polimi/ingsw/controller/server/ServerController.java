@@ -38,6 +38,10 @@ public class ServerController {
     private final Map<String, TimerTask> onePlayer = new HashMap<>();
     private ExecutorService executorService;
 
+    /**
+     * Singleton instance getter
+     * @return the instance of the ServerController
+     */
     public static synchronized ServerController getInstance() {
         if (instance == null) {
             instance = new ServerController();

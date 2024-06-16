@@ -14,6 +14,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConnectionBridge {
     private static ConnectionBridge instance;
@@ -22,6 +24,10 @@ public class ConnectionBridge {
 
     private ConnectionBridge() { }
 
+    /**
+     * Singleton instance getter
+     * @return the instance of the ConnectionBridge
+     */
     public static synchronized ConnectionBridge getInstance() {
         if (instance == null) {
             instance = new ConnectionBridge();
@@ -30,11 +36,22 @@ public class ConnectionBridge {
     }
 
     /**
+     * Validates the username
+     * @param username the username
+     * @return true if the username is valid, false otherwise
+     */
+    private static boolean isValidUsername(String username) {
+        Pattern usernamePattern = Pattern.compile("^[a-zA-Z0-9_]{1,15}$");
+        Matcher matcher = usernamePattern.matcher(username);
+        return matcher.matches();
+    }
+
+    /**
      * Add a connection to the list of connections
      * @param connection the connection to add
      * @param username the username of the connection
+     * @return the response to the login request
      */
-
     public LogInResponse addConnection(ClientConnection connection, String username) throws IOException {
         if(connections.containsKey(username) && connections.get(username).getStatus() == ConnectionStatus.OFFLINE){
             connections.replace(username, connection);
@@ -43,9 +60,14 @@ public class ConnectionBridge {
             return ServerController.getInstance().playerReconnected(username);
 
         }
-        else if(connections.containsKey(username) || username.trim().isEmpty()) {
+        else if(connections.containsKey(username)){
             if (connection instanceof SocketClientConnection)
-                invalidUsername(connection);
+                invalidUsername(connection, LogInResponse.USERNAME_TAKEN);
+            return LogInResponse.USERNAME_TAKEN;
+        }
+        else if (!isValidUsername(username)){
+            if (connection instanceof SocketClientConnection)
+                invalidUsername(connection, LogInResponse.INVALID_USERNAME);
             return LogInResponse.INVALID_USERNAME;
         }
         else{
@@ -309,9 +331,9 @@ public class ConnectionBridge {
         }
     }
 
-    public void invalidUsername(ClientConnection connection) {
+    public void invalidUsername(ClientConnection connection, LogInResponse status) {
         try {
-            ((SocketClientConnection) connection).invalidUsername();
+            ((SocketClientConnection) connection).invalidUsername(status);
         } catch (IOException e) {
             connection.setOffline();
         }

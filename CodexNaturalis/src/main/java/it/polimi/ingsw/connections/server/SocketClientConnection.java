@@ -5,6 +5,7 @@ import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.InputStreamRunnable;
 import it.polimi.ingsw.connections.OutputStreamRunnable;
 import it.polimi.ingsw.connections.data.*;
+import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.connections.messages.Message;
 import it.polimi.ingsw.connections.messages.client.ClientToServerMessage;
 import it.polimi.ingsw.connections.messages.client.LoginRequestMessage;
@@ -141,8 +142,8 @@ public class SocketClientConnection implements ClientConnection, Runnable {
      * Notify the client that the username is invalid.
      * @throws IOException if an error occurs while sending the message
      */
-    public void invalidUsername() throws IOException {
-        this.outputStream.sendMessage(new InvalidUsernameMessage());
+    public void invalidUsername(LogInResponse status) throws IOException {
+        this.outputStream.sendMessage(new InvalidUsernameMessage(status));
     }
 
     /**

@@ -20,6 +20,10 @@ public class ConnectionBridge {
 
     private ConnectionBridge() { }
 
+    /**
+     * Singleton instance getter
+     * @return the instance of the ConnectionBridge
+     */
     public static synchronized ConnectionBridge getInstance() {
         if (instance == null) {
             instance = new ConnectionBridge();
@@ -56,8 +60,8 @@ public class ConnectionBridge {
             LogInResponse login = ((RMIServerConnectionInterface) serverConnection).loginRequest(username, clientConnection);
             if(login.equals(LogInResponse.LOGGED_IN)) {
                 validUsername();
-            } else if (login.equals(LogInResponse.INVALID_USERNAME)) {
-                invalidUsername();
+            } else if (login.equals(LogInResponse.USERNAME_TAKEN) || login.equals(LogInResponse.INVALID_USERNAME)) {
+                invalidUsername(login);
             } else {
                 System.out.println(LogInResponse.RECONNECT);
                 //TODO: handle reconnect
@@ -67,9 +71,8 @@ public class ConnectionBridge {
         }
     }
 
-    public void invalidUsername() {
-
-        ClientController.getInstance().invalidUsername();
+    public void invalidUsername(LogInResponse status) {
+        ClientController.getInstance().invalidUsername(status);
     }
 
     public void validUsername() {

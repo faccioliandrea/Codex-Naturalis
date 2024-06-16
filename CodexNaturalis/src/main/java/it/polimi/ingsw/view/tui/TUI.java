@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.tui;
 
 import it.polimi.ingsw.chat.ClientChatHandler;
 import it.polimi.ingsw.connections.data.*;
+import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.view.UIManager;
 import it.polimi.ingsw.chat.ChatMessageData;
@@ -58,20 +59,12 @@ public class TUI extends UIManager {
     @Override
     public String askForUsername() {
         synchronized (lock) {
-            String username;
-            do {
-                inputQueue.clear();
-                this.printColorDebug(TUIColors.PURPLE, "Username: ");
-                try {
-                    username = inputQueue.take();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                if (username.isEmpty()) {
-                    System.out.println("Please, type a valid username");
-                }
-            } while (username.isEmpty());
-            return username;
+            this.printColorDebug(TUIColors.PURPLE, "Username: ");
+            try {
+                return inputQueue.take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -311,9 +304,12 @@ public class TUI extends UIManager {
     }
 
     @Override
-    public void invalidUsername(String username) {
+    public void invalidUsername(String username, LogInResponse status) {
         synchronized (lock) {
-            this.printColorDebug(TUIColors.RED, username + " is already taken. Please select a new one");
+            if (status.equals(LogInResponse.USERNAME_TAKEN))
+                this.printColorDebug(TUIColors.RED, username + UIMessagesConstants.usernameTaken);
+            if (status.equals(LogInResponse.INVALID_USERNAME))
+                this.printColorDebug(TUIColors.RED, UIMessagesConstants.invalidUsername);
         }
     }
 

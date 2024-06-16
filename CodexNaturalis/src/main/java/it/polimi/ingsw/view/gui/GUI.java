@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.gui;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
+import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.view.UIManager;
 import it.polimi.ingsw.view.UIMessagesConstants;
 import it.polimi.ingsw.view.gui.controller.*;
@@ -149,8 +150,11 @@ public class GUI extends UIManager {
     }
 
     @Override
-    public void invalidUsername(String username) {
-        GUIApp.showAlert("Invalid username", Alert.AlertType.WARNING);
+    public void invalidUsername(String username, LogInResponse status) {
+        if (status.equals(LogInResponse.USERNAME_TAKEN))
+            GUIApp.showAlert(username + UIMessagesConstants.usernameTaken, Alert.AlertType.WARNING);
+        if (status.equals(LogInResponse.INVALID_USERNAME))
+            GUIApp.showAlert(UIMessagesConstants.invalidUsername, Alert.AlertType.WARNING);
     }
 
     @Override

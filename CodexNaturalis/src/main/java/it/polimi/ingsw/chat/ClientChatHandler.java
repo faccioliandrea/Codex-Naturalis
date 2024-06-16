@@ -26,8 +26,8 @@ public class ClientChatHandler implements Runnable {
     }
 
     /**
-     * Getter for the instance of the ClientChatHandler class.
-     * @return the instance of the ClientChatHandler class
+     * Singleton instance getter
+     * @return the instance of the ClientChatHandler
      */
     public static synchronized ClientChatHandler getInstance() {
         if (instance == null) {
