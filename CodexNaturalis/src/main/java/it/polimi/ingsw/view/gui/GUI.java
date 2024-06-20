@@ -36,6 +36,11 @@ public class GUI extends UIManager {
         return queue;
     }
 
+    /**
+     * Asks the user for the server address
+     * @param defaultAddr the default address
+     * @return the server address
+     */
     @Override
     public String askForServerAddr(String defaultAddr) {
         //GUIApp.changeScene("join-menu", new JoinMenuController());
@@ -47,6 +52,10 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Asks the user for username
+     * @return the username
+     */
     @Override
     public String askForUsername() {
         GUIApp.changeScene("lobbies", lobbiesController);
@@ -59,6 +68,10 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Asks the user for the number of players
+     * @return the number of players
+     */
     @Override
     public int askForPlayerNum() {
         GUIApp.changeScene("new-lobby", new NewLobbyController());
@@ -70,6 +83,11 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Asks the user for the lobby id
+     * @param lobbies the list of lobbies
+     * @return the lobby id
+     */
     @Override
     public String askForLobbyId(ArrayList<String> lobbies) {
         lobbiesController.showLobbies(lobbies);
@@ -81,6 +99,10 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Asks the user for the private goal
+     * @return the index of the private goal
+     */
     @Override
     public int askForPrivateGoal() {
         Platform.runLater(gameSetupController::askPublicGoals);
@@ -92,6 +114,10 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Asks the user for the starter card side
+     * @return the side of the starter card
+     */
     @Override
     public boolean askForStarterCardSide() {
         Platform.runLater(gameSetupController::askStarterCardSide);
@@ -103,6 +129,10 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Asks the user for the card to play
+     * @return the card to play
+     */
     @Override
     public CardInfo askForPlayCard() {
         Platform.runLater(() -> {
@@ -113,9 +143,9 @@ public class GUI extends UIManager {
         CardInfo selected;
         try {
             queue.clear();
-            Point point = (Point) queue.take();
+            Point coord = (Point) queue.take();
             selected = mainController.cardSelected();
-            selected.setCoord(point);
+            selected.setCoord(coord);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -123,6 +153,10 @@ public class GUI extends UIManager {
         return selected;
     }
 
+    /**
+     * Asks the user for the card to draw
+     * @return the index of the card to draw
+     */
     @Override
     public int askForDrawCard() {
         Platform.runLater(() -> {
@@ -138,6 +172,10 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Asks the user if they want to play another game
+     * @return true if the user wants to play another game, false otherwise
+     */
     @Override
     public boolean askForNewGame() {
         Platform.runLater(gameEndController::askNewGame);
@@ -149,6 +187,11 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Notifies the user that the username is invalid
+     * @param username the username
+     * @param status the status of the login
+     */
     @Override
     public void invalidUsername(String username, LogInResponse status) {
         if (status.equals(LogInResponse.USERNAME_TAKEN))
@@ -169,23 +212,38 @@ public class GUI extends UIManager {
     public void noLobbies() {
     }
 
+    /**
+     * Notifies the user lobby has been joined successfully
+     */
     @Override
     public void joinedLobby() {
         GUIApp.changeScene("wait-lobby", waitLobbyController);
     }
 
+    /**
+     * Notifies the user that a player has joined the lobby
+     * @param username the username of the player
+     */
     @Override
     public void joinedLobby(String username) {
         Platform.runLater(() -> waitLobbyController.addNotification(username));
     }
 
+    /**
+     * Notifies the user that a lobby has been created
+     * @param lobbyId the id of the lobby
+     */
     @Override
     public void lobbyCreated(String lobbyId) {
         GUIApp.changeScene("wait-lobby", waitLobbyController);
         Platform.runLater(() -> waitLobbyController.setLobbyId(lobbyId));
     }
 
-
+    /**
+     * Notifies the user that another player has disconnected
+     * @param username the username of the player
+     * @param gameStarted true if the game has started, false otherwise
+     */
     @Override
     public void playerDisconnected(String username, boolean gameStarted) {
         Platform.runLater(() -> {
@@ -198,6 +256,10 @@ public class GUI extends UIManager {
         });
     }
 
+    /**
+     * Notifies the user that another player has reconnected
+     * @param username the username of the player
+     */
     @Override
     public void playerReconnected(String username) {
         Platform.runLater(() ->
@@ -205,6 +267,9 @@ public class GUI extends UIManager {
         );
     }
 
+    /**
+     * Displays the current state of the game when the user reconnects
+     */
     @Override
     public void reconnectionState() {
         GUIApp.changeScene("main", mainController);
@@ -219,11 +284,17 @@ public class GUI extends UIManager {
     public void joinedLobbyLast() {
     }
 
+    /**
+     * Notifies the user that the lobby is full
+     */
     @Override
     public void lobbyFull() {
         GUIApp.showAlert("Lobby is full", Alert.AlertType.ERROR);
     }
 
+    /**
+     * Notifies the user that the game has started
+     */
     @Override
     public void gameStarted(StarterData starterData) {
         GUIApp.changeScene("game-setup", gameSetupController);
@@ -231,11 +302,18 @@ public class GUI extends UIManager {
         gameSetupController.setStarterCard(starterData.getStarterCard());
     }
 
+    /**
+     * Notifies the user to wait for the other players to choose the private goal and starter card side
+     */
     @Override
     public void waitingOthersStartingChoice() {
         GUIApp.changeScene("wait-setup", null);
     }
 
+    /**
+     * Notifies the user that it's another player's turn
+     * @param currentPlayer the username of the current player
+     */
     @Override
     public void otherPlayerTurn(String currentPlayer) {
         GUIApp.changeScene("main", mainController);
@@ -245,6 +323,10 @@ public class GUI extends UIManager {
         });
     }
 
+    /**
+     * Notifies the user that it's their turn
+     * @param isLastTurn true if it's the last turn, false otherwise
+     */
     @Override
     public void yourTurn(boolean isLastTurn) {
         GUIApp.changeScene("main", mainController);
@@ -253,23 +335,36 @@ public class GUI extends UIManager {
         }
     }
 
+    /**
+     * Update GUI when the card has been placed successfully
+     */
     @Override
     public void placeCardSuccess() {
         Platform.runLater(mainController::updateData
         );
     }
 
+    /**
+     * Notifies user when the card has not been placed successfully
+     */
     @Override
     public void placeCardFailure() {
         GUIApp.showAlert(UIMessagesConstants.placeCardFailure, Alert.AlertType.WARNING);
     }
 
+    /**
+     * Update GUI when the card has been drawn successfully
+     */
     @Override
     public void drawCardSuccess() {
         Platform.runLater(mainController::updateData
         );
     }
 
+    /**
+     * Notifies the user that another player's turn has ended
+     * @param gameStateInfo the current game state
+     */
     @Override
     public void turnEnded(GameStateInfo gameStateInfo) {
         Platform.runLater(() -> {
@@ -278,6 +373,9 @@ public class GUI extends UIManager {
         });
     }
 
+    /**
+     * Notifies the user that the game has ended
+     */
     @Override
     public void gameEnded() {
         GUIApp.changeScene("game-end", gameEndController);
@@ -285,27 +383,43 @@ public class GUI extends UIManager {
         );
     }
 
+    /**
+     * Close the application
+     */
     @Override
     public void goodbye() {
         Platform.exit();
         System.exit(0);
     }
 
+    /**
+     * Shows an error message
+     * @param message the message
+     */
     @Override
     public void showErrorMessage(String message) {
         GUIApp.notInteractableAlert(message, Alert.AlertType.ERROR);
     }
 
+    /**
+     * Notifies the user that is joining the server
+     */
     @Override
     public void connectingToServer() {
         GUIApp.changeScene("connecting-server", null);
     }
 
+    /**
+     * Notifies the user that no other player is connected
+     */
     @Override
     public void noOtherPlayerConnected() {
         GUIApp.showAlert(UIMessagesConstants.noOtherPlayerConnected, Alert.AlertType.WARNING);
     }
 
+    /**
+     * Notifies the user that the server is offline
+     */
     @Override
     public void serverOfflineMessage() {
         GUIApp.showAlert(UIMessagesConstants.serverOfflineMessage, Alert.AlertType.ERROR);
@@ -320,6 +434,9 @@ public class GUI extends UIManager {
     public void sendMessage(String raw) {
     }
 
+    /**
+     * Notifies the user that a new message has been received
+     */
     @Override
     public void messageReceived() {
         Platform.runLater(mainController::updateChat);

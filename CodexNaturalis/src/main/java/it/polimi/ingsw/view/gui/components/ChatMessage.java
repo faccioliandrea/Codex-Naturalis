@@ -7,7 +7,16 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+/**
+ * Class for the chat message
+ */
 public class ChatMessage extends HBox {
+    /**
+     * Constructor for the chat message
+     *
+     * @param message chat message
+     * @param currentUser current user
+     */
     public ChatMessage(ChatMessageData message, String currentUser) {
         String sender = "[" + message.getSender() + (message.getRecipient() != null ? (" to " + (message.getRecipient().equals(currentUser) ? "you" : message.getRecipient())) : "") + "]:";
         Label senderLabel = new Label(sender);

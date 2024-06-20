@@ -21,6 +21,12 @@ public class NewLobbyController implements Initializable {
     @FXML
     private Button fourPlayerButton;
 
+    /**
+     * Initializes the controller
+     *
+     * @param url URL
+     * @param resourceBundle resource bundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         twoPlayerButton.setGraphic(createIcon("2_players.png"));

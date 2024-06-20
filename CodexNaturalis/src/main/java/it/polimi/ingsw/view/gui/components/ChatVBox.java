@@ -13,8 +13,10 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
+/**
+ * Class that represents the chat box
+ */
 public class ChatVBox extends VBox {
-    // TODO: Fix message to yourself
     @FXML
     private ImageView sendIcon;
     @FXML
@@ -24,6 +26,9 @@ public class ChatVBox extends VBox {
     @FXML
     private ScrollPane chatScrollPane;
 
+    /**
+     * Constructor for the ChatVBox
+     */
     public ChatVBox() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/components/chat.fxml"));
         fxmlLoader.setRoot(this);
@@ -49,6 +54,9 @@ public class ChatVBox extends VBox {
         sendIcon.setOnMouseClicked(e -> sendMessage(messageTextField.getText()));
     }
 
+    /**
+     * Updates the chat messages
+     */
     public void updateMessages() {
         chatVBox.getChildren().clear();
         GUI.getInstance().getData().getLastMessages().forEach(message -> chatVBox.getChildren().add(new ChatMessage(message, GUI.getInstance().getData().getUsername())));
@@ -57,9 +65,6 @@ public class ChatVBox extends VBox {
     private void sendMessage(String message) {
         ClientChatHandler.sendChatMessage(message);
         messageTextField.clear();
-        if (ClientChatHandler.isSameUserMessage(message)) {
-            return;
-        }
         updateMessages();
     }
 }

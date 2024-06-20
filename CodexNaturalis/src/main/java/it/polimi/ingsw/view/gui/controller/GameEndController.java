@@ -22,12 +22,18 @@ public class GameEndController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    /**
+     * Sets the leaderboard
+     */
     public void setLeaderboard() {
         LeaderboxVBox leaderboxVBox = new LeaderboxVBox();
         leaderboardGroup.getChildren().add(leaderboxVBox);
         leaderboxVBox.leaderboardSetup(false);
     }
 
+    /**
+     * Asks the user if they want to start a new game or exit
+     */
     public void askNewGame() {
         newGameButton.setDisable(false);
         newGameButton.setOnAction(e -> {

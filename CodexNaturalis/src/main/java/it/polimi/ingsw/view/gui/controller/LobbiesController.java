@@ -27,6 +27,12 @@ public class LobbiesController implements Initializable {
     private ArrayList<String> lobbies;
     private String selectedLobby;
 
+    /**
+     * Initializes the controller
+     *
+     * @param url URL
+     * @param resourceBundle resource bundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         usernameButton.setOnMouseClicked(e -> onUsernameButtonClicked());
@@ -75,6 +81,11 @@ public class LobbiesController implements Initializable {
         joinLobbyButton.setDisable(lobbyId == null);
     }
 
+    /**
+     * Shows the lobbies
+     *
+     * @param lobbies lobbies
+     */
     public void showLobbies(ArrayList<String> lobbies) {
         this.lobbies = lobbies;
         lobbiesListView.getItems().clear();
@@ -87,6 +98,9 @@ public class LobbiesController implements Initializable {
         createLobbyButton.setDisable(false);
     }
 
+    /**
+     * Asks for the username
+     */
     public void askForUsername() {
         usernameTextField.clear();
         usernameTextField.textProperty().addListener((observable, oldValue, newValue) -> usernameEntered(newValue));

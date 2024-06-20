@@ -41,7 +41,10 @@ public class ClientChatHandler implements Runnable {
      * @param msg the message to send
      */
     private static void sendChatMessage(ChatMessageData msg) {
-        msgsQueue.add(msg);
+        if (!msg.getSender().equals(msg.getRecipient())) {
+            // if the sender equals the recipient, the message will be added on receive (private message to itself, avoid duplicates)
+            msgsQueue.add(msg);
+        }
         ClientController.getInstance().getData().setLastMessages(msgsQueue);
         ConnectionBridge.getInstance().sendChatMessage(msg);
     }

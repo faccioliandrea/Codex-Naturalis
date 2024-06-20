@@ -26,10 +26,20 @@ public class GameSetupController implements Initializable {
     private ArrayList<GoalInfo> privateGoals;
     private CardInfo starterCard;
 
+    /**
+     * Sets the private goals
+     *
+     * @param privateGoals private goals
+     */
     public void setPrivateGoals(ArrayList<GoalInfo> privateGoals) {
         this.privateGoals = privateGoals;
     }
 
+    /**
+     * Sets the starter card
+     *
+     * @param starterCard starter card
+     */
     public void setStarterCard(CardInfo starterCard) {
         this.starterCard = starterCard;
     }
@@ -38,6 +48,9 @@ public class GameSetupController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    /**
+     * Asks the user to choose a private goal
+     */
     public void askPublicGoals() {
         privateGoalsVBox.setVisible(true);
         HBox goalHBox = new HBox();
@@ -54,6 +67,9 @@ public class GameSetupController implements Initializable {
         privateGoalsVBox.getChildren().add(goalHBox);
     }
 
+    /**
+     * Asks the user to choose a starter card side
+     */
     public void askStarterCardSide() {
         starterCardVBox.setVisible(true);
         HBox starterHBox = new HBox();

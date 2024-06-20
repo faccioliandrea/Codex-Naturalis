@@ -23,6 +23,12 @@ public class JoinMenuController implements Initializable {
     @FXML
     private TextField ipTextField;
 
+    /**
+     * Initializes the controller
+     *
+     * @param url URL
+     * @param resourceBundle resource bundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logoImageView.setFitHeight(screen.getVisualBounds().getHeight() * 0.5);
@@ -33,6 +39,9 @@ public class JoinMenuController implements Initializable {
             }});
     }
 
+    /**
+     * Submits the IP address
+     */
     private void submitIp() {
         String ipAddress = ipTextField.getText();
         boolean isIpValid = GUI.isValidIP(ipAddress, "localhost");

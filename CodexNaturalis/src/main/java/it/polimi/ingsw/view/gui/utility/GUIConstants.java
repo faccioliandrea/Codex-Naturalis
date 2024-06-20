@@ -2,6 +2,9 @@ package it.polimi.ingsw.view.gui.utility;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Class that contains the constants used in the GUI
+ */
 public final class GUIConstants {
     public static double mainBoardWidthPercentage = 0.5;
     public static double opponentBoardWidthPercentage = 0.4;

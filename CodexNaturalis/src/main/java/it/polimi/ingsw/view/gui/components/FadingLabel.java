@@ -6,7 +6,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/**
+ * Class for a fading label
+ */
 public class FadingLabel extends Label {
+    /**
+     * Constructor for the fading label
+     *
+     * @param title title of the label
+     */
     public FadingLabel(String title) {
         PauseTransition pause = new PauseTransition(Duration.seconds(10));
         FadeTransition fadeIn = new FadeTransition(

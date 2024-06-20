@@ -118,6 +118,11 @@ public class GUIApp extends Application {
         });
     }
 
+    /**
+     * Shows the opponent board
+     *
+     * @param controller controller for the opponent board
+     */
     public static void showOpponentBoard(OpponentBoardController controller) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(GUIApp.class.getResource("/fxml/opponent-board.fxml"));

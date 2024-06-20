@@ -21,11 +21,23 @@ public class OpponentBoardController implements Initializable {
     private final String opponentName;
     private final ArrayList<CardInfo> board;
 
+    /**
+     * Constructor for the opponent board controller
+     *
+     * @param opponentName name of the opponent
+     * @param board board of the opponent
+     */
     public OpponentBoardController(String opponentName, ArrayList<CardInfo> board) {
         this.opponentName = opponentName;
         this.board = board;
     }
 
+    /**
+     * Initializes the controller
+     *
+     * @param url URL
+     * @param resourceBundle resource bundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         BoardStackPane boardGridPane = new BoardStackPane(GUIConstants.opponentBoardWidthPercentage);

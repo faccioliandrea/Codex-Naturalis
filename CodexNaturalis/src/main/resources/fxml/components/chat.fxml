@@ -17,7 +17,7 @@
         </VBox>
     </ScrollPane>
     <HBox spacing="10" alignment="CENTER">
-        <TextField fx:id="messageTextField" focusTraversable="false" prefWidth="500" />
+        <TextField fx:id="messageTextField" focusTraversable="false" prefWidth="500" promptText="Type @username for private message..."/>
         <ImageView fx:id="sendIcon" fitWidth="20.0" preserveRatio="true" styleClass="iconButton" disable="true"/>
         <padding>
             <Insets right="2"/>

@@ -9,7 +9,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.Objects;
@@ -35,10 +34,20 @@ public final class GUIUtility {
         return imageView;
     }
 
+    /** Creates the path of the card image
+     *
+     * @param card the card
+     * @return the path of the card image
+     */
     public static String getCardPath(CardInfo card) {
         return GUIConstants.imgPath + "cards/" + (card.isFlipped() ? "back/" : "front/") + card.getId() + ".png";
     }
 
+    /** Creates the path of the goal image
+     *
+     * @param goal the goal
+     * @return the path of the goal image
+     */
     public static String getGoalPath(GoalInfo goal) {
         return GUIConstants.imgPath + "cards/front/" + goal.getId() + ".png";
     }
@@ -53,6 +62,10 @@ public final class GUIUtility {
         return new Image(Objects.requireNonNull(GUIUtility.class.getResourceAsStream(path)));
     }
 
+    /** Creates a DropShadow effect with a cyan glow and a cyan inner shadow
+     *
+     * @return the DropShadow effect
+     */
     public static DropShadow highlightShadow() {
         DropShadow glow = new DropShadow(BlurType.ONE_PASS_BOX, Color.CYAN, 50, 0 , 0, 0);
         glow.setInput(new InnerShadow(BlurType.THREE_PASS_BOX, Color.CYAN, 20, 0,0,0));
@@ -60,10 +73,11 @@ public final class GUIUtility {
         return glow;
     }
 
-    public static Border highlightBorder() {
-        return new Border(new BorderStroke(Color.CYAN, BorderStrokeStyle.SOLID, new CornerRadii(18), new BorderWidths(5)));
-    }
-
+    /** Casts player color to JavaFX color
+     *
+     * @param username username of player
+     * @return color of player
+     */
     public static Color playerColor(String username) {
         PlayerColor color = GUI.getInstance().getData().getPlayerColors().get(username);
         switch (color) {
@@ -80,6 +94,11 @@ public final class GUIUtility {
         }
     }
 
+    /** Creates an ImageView for an icon from the specified path
+     *
+     * @param iconName name of the icon
+     * @return the ImageView
+     */
     public static ImageView createIcon(String iconName) {
         ImageView view = new ImageView(new Image(Objects.requireNonNull(GUIUtility.class.getResourceAsStream(GUIConstants.iconsPath + iconName))));
         view.setPreserveRatio(true);

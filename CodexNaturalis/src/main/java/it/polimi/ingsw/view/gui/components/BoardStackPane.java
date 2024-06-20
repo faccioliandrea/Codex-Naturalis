@@ -23,6 +23,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Class that represents the board
+ */
 public class BoardStackPane extends StackPane {
     @FXML
     private GridPane boardGridPane;

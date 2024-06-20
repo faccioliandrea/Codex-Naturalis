@@ -59,6 +59,12 @@ public class MainController implements Initializable {
 
     private double screenWidth;
 
+    /**
+     * Initializes the controller
+     *
+     * @param url URL
+     * @param resourceBundle resource bundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         boardGridPane = new BoardStackPane(GUIConstants.mainBoardWidthPercentage);
@@ -151,10 +157,16 @@ public class MainController implements Initializable {
         boardGridPane.setupBoard(GUI.getInstance().getData().getBoard(), padding);
     }
 
+    /**
+     * Updates the leaderboard
+     */
     public void updateLeaderboard() {
         leaderboxVBox.leaderboardSetup(true);
     }
 
+    /**
+     * Asks the user to play a card
+     */
     public void askForPlayCard() {
         setupHand();
         setupBoard(true);
@@ -165,6 +177,8 @@ public class MainController implements Initializable {
         }
     }
 
+    /** Asks the user to draw a card
+     */
     public void askForDrawCard() {
         setupResources(true);
         setupGold(true);
@@ -177,6 +191,9 @@ public class MainController implements Initializable {
         decksHBox.setEffect(null);
     }
 
+    /**
+     * Updates the GUI (hand, goals, board, leaderboard, resource deck, gold deck)
+     */
     public void updateData() {
         setupHand();
         setupGoals();
@@ -186,25 +203,41 @@ public class MainController implements Initializable {
         setupGold(false);
     }
 
+    /** Get current selected card
+     * @return the selected card
+     */
     public CardInfo cardSelected() {
         CardInfo selected = selectedCard.getKey();
         selectedCard = null;
         return selected;
     }
 
+    /**
+     * Sets the title of the turn info
+     * @param title the title
+     */
     public void setTitle(String title) {
         turnInfoLabel.setText(title);
     }
 
+    /**
+     * Remove hand highlight effect at end of picking the card
+     */
     public void endPickCard() {
         handHBox.setEffect(null);
     }
 
+    /**
+     * Sets the info title
+     * @param title the title
+     */
     public void setInfoTitle(String title) {
         FadingLabel label = new FadingLabel(title);
         infoVBox.getChildren().add(label);
     }
 
+    /** Updates the chat GUI
+     */
     public void updateChat() {
         chatVBox.updateMessages();
     }

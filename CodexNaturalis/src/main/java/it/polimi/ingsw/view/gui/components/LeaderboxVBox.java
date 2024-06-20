@@ -17,11 +17,17 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Class that represents the leaderbox
+ */
 public class LeaderboxVBox extends VBox {
-    // TODO: If you click on opponent board on first turn while it's your turn it's not working
     @FXML
     private GridPane leaderboardGridPane;
 
+    /**
+     * Constructor for the LeaderboxVBox
+     *
+     */
     public LeaderboxVBox() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/components/leaderboard.fxml"));
         fxmlLoader.setRoot(this);
