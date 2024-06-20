@@ -148,7 +148,7 @@ public class ServerController {
     }
 
     /**
-     * let the player choose its private goal
+     * Let the player choose its private goal
      * @param username the username of the player
      * @param index the index of the private goal to choose
      */
@@ -160,6 +160,7 @@ public class ServerController {
      * Handle the choice of the starter card side
      * @param username the username of the player
      * @param flipped side of the starter card
+     * @return the response of the operation
      */
     public ChooseStarterCardSideResponse chooseStarterCardSide(String username, boolean flipped) {
         gameController.chooseStarterCardSide(userToGame.get(username), username, flipped);
@@ -177,6 +178,7 @@ public class ServerController {
      * @param user the username of the player
      * @param cardId the id of the card to place
      * @param position the position to place the card
+     * @return the placeCardSuccessInfo
      */
     public PlaceCardSuccessInfo placeCard(String user, String cardId, Point position, boolean flipped) throws RequirementsNotSatisfied, InvalidPositionException{
 
@@ -197,10 +199,9 @@ public class ServerController {
      * Draw a resource from the deck and return the new hand
      * @param user the username of the player
      * @param index the index of the resource to draw
+     * @return the new hand
      */
     public ArrayList<CardInfo> drawResource(String user, int index){
-
-        //TODO check if deck is empty
         if(gameController.getGames().get(userToGame.get(user))!=null && checkUserCurrentPlayer(user) ) {
             gameController.drawResource(userToGame.get(user), index);
             return gameController.getHand(userToGame.get(user), user);
@@ -212,6 +213,7 @@ public class ServerController {
      * Draw a gold from the deck and return the new hand
      * @param user the username of the player
      * @param index the index of the gold to draw
+     * @return the new hand
      */
     public ArrayList<CardInfo> drawGold(String user, int index){
         if( gameController.getGames().get(userToGame.get(user))!=null && checkUserCurrentPlayer(user) ) {
@@ -313,7 +315,7 @@ public class ServerController {
 
     private void destroyGame(String gameId){
         List<String> names = userToGame.keySet().stream().filter(username -> userToGame.get(username).equals(gameId)).collect(Collectors.toList());
-        names.forEach(username -> userToGame.remove(username));
+        names.forEach(userToGame::remove);
         gameController.getGames().remove(gameId);
     }
 
@@ -328,7 +330,6 @@ public class ServerController {
             String lobbyId = "" + (int) (Math.random() * 1000);
             lobbyController.createNewLobby(lobbyId, numPlayers);
             return lobbyId;
-
         }
         return null;
     }
@@ -356,7 +357,10 @@ public class ServerController {
                 } else if( gameController.getCurrentPlayer(userToGame.get(username)).equals(username)){
                     if(gameController.getHand(userToGame.get(username), username).size()!=3){
                         //disconnection during the turn before draw -> draw a resource and end the turn
-                        gameController.drawResource(userToGame.get(username), 0);
+                        if(!gameController.getResourceDeck(userToGame.get(username)).isEmpty())
+                            gameController.drawResource(userToGame.get(username), 0);
+                        else if(!gameController.getGoldDeck(userToGame.get(username)).isEmpty())
+                            gameController.drawGold(userToGame.get(username), 0);
                     }
 
                     if(gameController.getGamePlayers(userToGame.get(username)).stream().anyMatch(x -> connectionBridge.checkUserConnected(x.getUsername()))){
@@ -474,6 +478,7 @@ public class ServerController {
      * Add a player to a lobby
      * @param username the username of the player
      * @param lobbyId the id of the lobby
+     * @return the response of the operation
      */
     public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) {
         if (connectionBridge.checkUserConnected(username)) {
@@ -559,7 +564,10 @@ public class ServerController {
         return lobbyController;
     }
 
-
+    /**
+     * Distribute a message to the players in the same lobby
+     * @param msg the message to distribute
+     */
     public void distributeMessage(ChatMessageData msg) {
         try {
             String lobbyId = this.userToLobby.get(msg.getSender());

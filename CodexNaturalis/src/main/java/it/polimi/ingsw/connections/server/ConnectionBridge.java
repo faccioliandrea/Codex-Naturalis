@@ -17,6 +17,10 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * This class handles the connections between the server and the clients
+ */
 public class ConnectionBridge {
     private static ConnectionBridge instance;
 
@@ -55,7 +59,6 @@ public class ConnectionBridge {
     public LogInResponse addConnection(ClientConnection connection, String username) throws IOException {
         if(connections.containsKey(username) && connections.get(username).getStatus() == ConnectionStatus.OFFLINE){
             connections.replace(username, connection);
-
             System.out.printf("%s Reconnected%n", username);
             return ServerController.getInstance().playerReconnected(username);
 
@@ -91,6 +94,10 @@ public class ConnectionBridge {
 
 
     // Client -> Server methods
+    /**
+     * @param username the username of the player
+     * @return the list of lobbies
+     */
     public ArrayList<String> getLobbies(String username) {
         ArrayList<String> idList = ServerController.getInstance().getLobbies(username);
 
@@ -115,6 +122,11 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * @param username the username of the player
+     * @param lobbyId the id of the lobby
+     * @return the response of addPlayerToLobby
+     */
     public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) {
         AddPlayerToLobbyresponse result = ServerController.getInstance().addPlayerToLobby(username, lobbyId);
         if (connections.get(username) instanceof SocketClientConnection) {
@@ -163,6 +175,11 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Receive the private goal choice from the player
+     * @PARAM connection the connection of the player
+     * @param username the username of the player who joined the lobby
+     */
     private void playerJoinedLobby(ClientConnection connection, String username) {
         try {
             connection.playerJoined(username);
@@ -171,6 +188,11 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Receive the private goal choice from the player
+     * @param username the username of the player
+     * @param index the index of the private goal
+     */
     public void choosePrivateGoal(String username, int index) {
         ServerController.getInstance().choosePrivateGoal(username, index);
         if (connections.get(username) instanceof SocketClientConnection) {
@@ -182,6 +204,12 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Receive the starter card side choice from the player
+     * @param username the username of the player
+     * @param flipped the side of the starter card
+     * @return the response of chooseStarterCardSide
+     */
     public ChooseStarterCardSideResponse chooseStarterCardSide(String username, boolean flipped) {
         ChooseStarterCardSideResponse result = ServerController.getInstance().chooseStarterCardSide(username, flipped);
         if (connections.get(username) instanceof SocketClientConnection  ) {
@@ -205,7 +233,14 @@ public class ConnectionBridge {
         }
     }
 
-
+    /**
+     * Place a card on the board
+     * @param username the username of the player
+     * @param cardId the id of the card
+     * @param position the position of the card
+     * @param flipped the side of the card
+     * @return the response of placeCard
+     */
     public PlaceCardSuccessInfo placeCard(String username, String cardId, Point position, boolean flipped) {
         try {
             PlaceCardSuccessInfo placeCardSuccessInfo = ServerController.getInstance().placeCard(username, cardId, position, flipped);
@@ -233,6 +268,12 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Draw a  resource card from the hand
+     * @param username the username of the player
+     * @param index the index of the card
+     * @return the updated hand
+     */
     public ArrayList<CardInfo> drawResource(String username, int index) {
         ArrayList<CardInfo> result = ServerController.getInstance().drawResource(username, index);
         if (connections.get(username) instanceof SocketClientConnection ) {
@@ -247,6 +288,12 @@ public class ConnectionBridge {
         return result;
     }
 
+    /**
+     * Draw a gold card from the hand
+     * @param username the username of the player
+     * @param index the index of the card
+     * @return updated hand
+     */
     public ArrayList<CardInfo> drawGold(String username, int index) {
         ArrayList<CardInfo> result = ServerController.getInstance().drawGold(username, index);
         if (connections.get(username) instanceof SocketClientConnection ) {
@@ -262,7 +309,12 @@ public class ConnectionBridge {
     }
 
 
-
+    /**
+     * Create a lobby
+     * @param username the username of the player
+     * @param numPlayers the number of players in the lobby
+     * @return the id of the lobby
+     */
     public String createLobby(String username, int numPlayers) {
         String lobbyId = ServerController.getInstance().createLobby(username, numPlayers);
         if (connections.get(username) instanceof SocketClientConnection ){
@@ -278,18 +330,30 @@ public class ConnectionBridge {
         return lobbyId;
     }
 
-
+    /**
+     * End the turn of the player
+     * @param username the username of the player
+     */
     public void endTurn(String username) {
         ServerController.getInstance().endTurn(username);
 
     }
 
+    /**
+     * Create a game
+     * @param username the username of the player
+     */
     public void createGame(String username) {
         ServerController.getInstance().createGame(ServerController.getInstance().getLobbyController().getLobbies().get(ServerController.getInstance().getUserToLobby().get(username)));
     }
 
-    // Server -> Client communications
 
+    // Server -> Client communications
+    /**
+     * Notify the player that it's his turn
+     * @param username the username of the player to notify
+     * @param turnInfo the information of the turn
+     */
     public void initTurn(String username, TurnInfo turnInfo){
         try {
             connections.get(username).initTurn(turnInfo);
@@ -298,6 +362,11 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Notify the player the current player
+     * @param username the username of the player to notify
+     * @param currentPlayer the username of the current player
+     */
     public void otherPlayerTurn(String username, String currentPlayer){
         try {
             connections.get(username).otherPlayerTurnMessage(currentPlayer);
@@ -306,6 +375,11 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Notify the player that the game has ended
+     * @param username the username of the player to notify
+     * @param leaderboard the leaderboard of the game
+     */
     public void endGame(String username, HashMap<String, Integer> leaderboard) {
         try {
             connections.get(username).gameEnded(leaderboard);
@@ -314,6 +388,11 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Notify the player that the game has been created
+     * @param username the username of the player to notify
+     * @param starterData the data of the game start
+     */
     public void gameCreated(String username, StarterData starterData) {
         try {
                 connections.get(username).gameStarted(starterData);
@@ -322,6 +401,10 @@ public class ConnectionBridge {
             }
     }
 
+    /**
+     * Notify the player that the username is valid
+     * @param connection the connection of the player to notify
+     */
     public void validUsername(ClientConnection connection) {
         try {
             if (connection instanceof SocketClientConnection)
@@ -331,6 +414,11 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Notify the player that the username is invalid
+     * @param connection the connection of the player to notify
+     * @param status the response of the login request
+     */
     public void invalidUsername(ClientConnection connection, LogInResponse status) {
         try {
             ((SocketClientConnection) connection).invalidUsername(status);
@@ -339,8 +427,11 @@ public class ConnectionBridge {
         }
     }
 
-
-
+    /**
+     * Send to the player the updated game state
+     * @param username the username of the player to notify
+     * @param gameStateInfo the updated game state
+     */
     public void gameState(String username, GameStateInfo gameStateInfo) {
         try {
             connections.get(username).sendStatus(gameStateInfo);
@@ -350,6 +441,10 @@ public class ConnectionBridge {
     }
 
 
+    /**
+     * Handle the disconnection of a player
+     * @param c the connection of the player that disconnected
+     */
     public void onClientDisconnect(ClientConnection c){
         c.setOffline();
         System.out.printf("Client %s disconnected%n", c.getRemoteAddr());
@@ -357,6 +452,12 @@ public class ConnectionBridge {
         ServerController.getInstance().playerDisconnected(username);
     }
 
+    /**
+     * Notify the player that another player disconnected
+     * @param username the username of the player that disconnected
+     * @param receiver the username of the player to notify
+     * @param gameStarted true if the game has started, false otherwise
+     */
     public void playerDisconnected(String username, String receiver, boolean gameStarted){
         try {
             connections.get(receiver).playerDisconnected(username, gameStarted);
@@ -365,6 +466,11 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Notify the player that another player reconnected
+     * @param username the username of the player that reconnected
+     * @param receiver the username of the player to notify
+     */
     public void playerReconnected(String username, String receiver) {
         try {
             connections.get(receiver).playerReconnected(username);
@@ -373,6 +479,10 @@ public class ConnectionBridge {
         }
     }
 
+    /**
+     * Send the updated game state to the reconnected player
+     * @param gameStateInfo the game state
+     */
     public void reconnectionState(GameStateInfo gameStateInfo){
         try {
             connections.get(gameStateInfo.getUsername()).reconnectionState(gameStateInfo);
@@ -381,23 +491,40 @@ public class ConnectionBridge {
         }
     }
 
-    public void noOtherPlayerConnected(String user) {
+    /**
+     * Notify the player that no other player is connected
+     * @param username the username of the player to notify
+     */
+    public void noOtherPlayerConnected(String username) {
         try {
-            connections.get(user).noOtherPlayerConnected();
+            connections.get(username).noOtherPlayerConnected();
         } catch (IOException e) {
-            connections.get(user).setOffline();
+            connections.get(username).setOffline();
         }
 
     }
 
+    /**
+     * Get the hash map of connections
+     * @return the hash map of connections
+     */
     public HashMap<String, ClientConnection> getConnections() {
         return connections;
     }
 
+    /**
+     * Handles a received message from the chat
+     * @param msg the chat message
+     */
     public void recvChatMessage(ChatMessageData msg) {
         ServerController.getInstance().distributeMessage(msg);
     }
 
+    /**
+     * Send a chat message to a player
+     * @param msg the chat message
+     * @param receiver the username of the player to notify
+     */
     public void sendChatMessage(ChatMessageData msg, String receiver) {
         try {
             connections.get(receiver).sendChatMessage(msg);

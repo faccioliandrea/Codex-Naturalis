@@ -9,6 +9,9 @@ import it.polimi.ingsw.model.player.Player;
 
 import java.util.ArrayList;
 
+/**
+ * Class that represents a game
+ */
 public class Game {
     private ArrayList<Player> players;
     private GameModel gameModel;
@@ -46,6 +49,9 @@ public class Game {
         return players;
     }
 
+    /**
+     * @return the chat handler
+     */
     protected ServerChatHandler getChatHandler() {
         return chatHandler;
     }

@@ -21,12 +21,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * GameController is a singleton class that manages the game logic.
+ * It creates and manages the games, and it provides methods to interact with the game.
+ */
 public class GameController {
     private static GameController instance;
     private final HashMap<String, Game> games = new HashMap<>();
 
+    /** Default constructor */
     private GameController() { }
 
+    /**
+     * Singleton instance getter
+     * @return the instance of the GameController
+     */
     public static synchronized GameController getInstance() {
         if (instance == null) {
             instance = new GameController();
@@ -34,24 +43,35 @@ public class GameController {
         return instance;
     }
 
+    /**
+     * @return the list of the games
+     */
     protected HashMap<String, Game> getGames() {
         return games;
     }
 
+    /**
+     * Create a new game
+     * @param gameId the id of the game
+     * @param lobby the lobby
+     */
     protected void createGame(String gameId, Lobby lobby) throws DeckInitializationException, InvalidNumberOfPlayersException {
         games.put(gameId, new Game(gameId, lobby));
     }
 
-
+    /**
+     * Start the game
+     * @param gameId the id of the game
+     */
     protected void startGame(String gameId){
         games.get(gameId).getGameModel().startGame();
 
     }
 
-
     /**
      * let the player choose a private goal
      * @param gameID the id of the game
+     * @param username the username of the player
      * @param index the index of the card to choose
      */
     protected void choosePrivateGoal(String gameID,String username, int index){
@@ -59,6 +79,12 @@ public class GameController {
 
     }
 
+    /**
+     * let the player choose the starter card side
+     * @param gameID the id of the game
+     * @param username the username of the player
+     * @param flipped the side of the card
+     */
     protected void chooseStarterCardSide(String gameID, String username, boolean flipped) {
 
         Player player = games.get(gameID).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get();
@@ -74,8 +100,14 @@ public class GameController {
 
     }
 
-
-
+    /**
+     * Handles placement of a card on the board
+     * @param gameId the id of the game
+     * @param card the card to place
+     * @param position the position where to place the card
+     * @throws RequirementsNotSatisfied if the requirements are not satisfied
+     * @throws InvalidPositionException if the position is invalid
+     */
     protected void placeCard(String gameId,Card card, Point position) throws RequirementsNotSatisfied, InvalidPositionException {
         int initialPoints = games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints();
         games.get(gameId).getGameModel().getCurrentPlayer().placeCard(card, position);
@@ -93,6 +125,11 @@ public class GameController {
         games.get(gameId).getGameModel().getCurrentPlayer().drawCard(card);
     }
 
+    /**
+     * Draw a card from the GoldDeck
+     * @param gameId the id of the game
+     * @param index the index of the card to draw from the GoldDeck
+     */
     protected void drawGold( String gameId, int index){
         PlayableCard card = games.get(gameId).getGameModel().fetchGoldCard(index);
         games.get(gameId).getGameModel().getCurrentPlayer().drawCard(card);
@@ -111,6 +148,7 @@ public class GameController {
     }
 
     /**
+     * Get the private goals of the player
      * @param gameId the id of the game
      * @param username the username of the player
      * @return the private goals of the player
@@ -122,11 +160,18 @@ public class GameController {
         return privateGoals;
     }
 
+    /**
+     * Get the chosen private goal of the player
+     * @param gameId the id of the game
+     * @param username the username of the player
+     * @return the private goals of the player
+     */
     protected GoalInfo getPrivateGoal(String gameId, String username) {
         return new GoalInfo(games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getPrivateGoal());
     }
 
     /**
+     * Get the shared goals of the game
      * @param gameId the id of the game
      * @return the shared goals of the game
      */
@@ -137,6 +182,12 @@ public class GameController {
         return sharedGoals;
     }
 
+    /**
+     * Get the starter card of the player
+     * @param gameId the id of the game
+     * @param username the username of the player
+     * @return the starter card of the player
+     */
     protected CardInfo getStarterCard(String gameId, String username) {
         return new CardInfo(games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getStarterCard());
 
@@ -195,6 +246,12 @@ public class GameController {
         return board;
     }
 
+    /**
+     *
+     * @param gameId the id of the game
+     * @param username the username of the player
+     * @return the user Board
+     */
     protected ArrayList<CardInfo> getUserBoardByUsername(String gameId, String username) {
         ArrayList<CardInfo> board = new ArrayList<>();
         if(games.get(gameId) != null) {
@@ -204,6 +261,10 @@ public class GameController {
         return board;
     }
 
+    /**
+     * @param gameId the id of the game
+     * @return the boards of all the players
+     */
     protected  Map<String, ArrayList<CardInfo>> getBoards(String gameId){
         Map<String, ArrayList<CardInfo>> boards = new HashMap<>();
         for(Player player : games.get(gameId).getGameModel().getPlayers()){
@@ -224,14 +285,27 @@ public class GameController {
         return games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints();
     }
 
+    /**
+     * @param gameId the id of the game
+     * @param username the username of the player
+     * @return the points of the player withouth the goals points
+     */
     protected int getUserCardsPoints(String gameId, String username) {
         return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getCardsPoints();
     }
 
+    /**
+     * @param gameId the id of the game
+     * @return the symbols of the current player
+     */
     protected Map<CardSymbol, Integer> getUserSymbols(String gameId) {
         return games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getSymbols();
     }
 
+    /**
+     * @param gameId the id of the game
+     * @return the symbols of the player
+     */
     protected Map<CardSymbol, Integer> getUserSymbols(String gameId, String username) {
         return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getSymbols();
     }
@@ -244,6 +318,10 @@ public class GameController {
         return games.get(gameId).getGameModel().getCurrentPlayer().getGoalPoints();
     }
 
+    /**
+     * @param gameId the id of the game
+     * @return the points of the player withouth the cards points
+     */
     protected int getUserGoalsPoints(String gameId, String username){
         return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getGoalPoints();
     }
@@ -257,7 +335,7 @@ public class GameController {
     }
 
     /**
-     * called when the game is finished, return all the point to the players to generete the leaderboard
+     * called when the game is finished, return all the cards points to the players to generete the leaderboard
      */
     protected HashMap<String, Integer> getLeaderboard(String gameId){
         HashMap<String, Integer> leaderboard = new HashMap<>();
@@ -265,6 +343,10 @@ public class GameController {
             leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints());
         return leaderboard;
     }
+
+    /**
+     * called when the game is finished, return all the points to the players to generete the leaderboard
+     */
     protected HashMap<String, Integer> getFullLeaderboard(String gameId){
         HashMap<String, Integer> leaderboard = new HashMap<>();
         for( int i = 0; i < games.get(gameId).getPlayers().size(); i++)
@@ -330,11 +412,5 @@ public class GameController {
     public Card getCardFromHand(String gameId, String cardId){
         return games.get(gameId).getGameModel().getCurrentPlayer().getHand().stream().filter(x -> x.getId().equals(cardId)).findFirst().orElse(null);
     }
-
-    public Card getCardFromBoard(String gameId, String cardId){
-        return games.get(gameId).getGameModel().getCurrentPlayer().getBoard().getPlayedCards().stream().filter(x -> x.getId().equals(cardId)).findFirst().orElse(null);
-    }
-
-
 
 }

@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Class that handles the client side of the game
+ */
 public class ClientController {
     private static ClientController instance;
     private UIManager ui;
@@ -22,6 +25,9 @@ public class ClientController {
     private TurnInfo currentTurnInfo = new TurnInfo();
     private ClientGameData gameData = new ClientGameData();
 
+    /**
+     * Default constructor
+     */
     private ClientController() { }
 
     /**
@@ -44,31 +50,52 @@ public class ClientController {
         this.gameData.addObserver(this.ui.getData());
     }
 
+    /**
+     * Handles the login request
+     * @return the username
+     */
     public String loginRequest() {
         this.username = ui.askForUsername();
         return username;
     }
 
+    /**
+     * Handles the login response
+     * @param status the login response
+     */
     public void invalidUsername(LogInResponse status) {
         ui.invalidUsername(this.username, status);
         ConnectionBridge.getInstance().loginRequest();
     }
 
+    /**
+     * Handles the valid username
+     */
     public void validUsername() {
         ui.welcome(this.username);
         ConnectionBridge.getInstance().lobbyRequest();
     }
 
+    /**
+     * Handles the lobby request
+     */
     public void lobbyRequest() {
         ConnectionBridge.getInstance().lobbyRequest();
     }
 
+    /**
+     * Handles the lobby response in case of not existing lobbies
+     */
     public void lobbyDoesNotExist() {
         ui.noLobbies();
         int n = ui.askForPlayerNum();
         ConnectionBridge.getInstance().createLobbyRequest(n);
     }
 
+    /**
+     * Handles the lobby response in case of existing lobbies
+     * @param lobbies the list of lobbies
+     */
     public void lobbyExists(ArrayList<String> lobbies) {
         String id = ui.askForLobbyId(lobbies);
         if(id.isEmpty()) {
@@ -78,6 +105,10 @@ public class ClientController {
             ConnectionBridge.getInstance().joinLobbyRequest(id);
     }
 
+    /**
+     * Handles the join lobby success
+     * @param isLastPlayer true if the player is the last one, false otherwise
+     */
     public void joinLobbySuccess(boolean isLastPlayer) {
         chatHandlerSetup();
 
@@ -89,19 +120,33 @@ public class ClientController {
         }
     }
 
+    /**
+     * Handles the join lobby failure
+     */
     public void lobbyFull(){
         ui.lobbyFull();
+        ConnectionBridge.getInstance().lobbyRequest();
     }
 
+    /**
+     * Handles the PlayerJoinedLobby message
+     */
     public void playerJoinedLobby(String username) {
         gameData.putEntry(gameData.getConnectionStatus(), username, ConnectionStatus.ONLINE);
         ui.joinedLobby(username);
     }
 
+    /**
+     * Handles the LobbyCreated message
+     */
     public void lobbyCreated(String lobbyId) {
         ui.lobbyCreated(lobbyId);
     }
 
+    /**
+     * Handles the game started message
+     * @param starterData the StarterData
+     */
     public void gameStarted(StarterData starterData){
         this.gameData.setHand(starterData.getHand());
         this.gameData.setLeaderboard(starterData.getUsers().stream().collect(Collectors.toMap(s -> s, s -> 0, (x, y) -> x, HashMap::new)));
@@ -116,6 +161,9 @@ public class ClientController {
         this.gameData.addToList(this.gameData.getGoals(), starterData.getPrivateGoals().get(chosenGoal));
     }
 
+    /**
+     * Handles the private goal chosen message
+     */
     public void privateGoalChosen(){
         if(!this.gameData.isGameAborted()){
             boolean flipped = ui.askForStarterCardSide();
@@ -123,14 +171,23 @@ public class ClientController {
         }
     }
 
+    /**
+     * Handles the waiting others starting choice message
+     */
     public void waitingOthersStartingChoice() {
         ui.waitingOthersStartingChoice();
     }
 
+    /**
+     * Handles the other player turn message
+     */
     public void otherPlayerTurnMessage(String currentPlayer) {
         ui.otherPlayerTurn(currentPlayer);
     }
 
+    /**
+     * Handles the init turn message
+     */
     public void initTurn(TurnInfo turnInfo){
         this.currentTurnInfo = turnInfo;
         this.gameData.fromTurnInfo(turnInfo);
@@ -140,6 +197,10 @@ public class ClientController {
         ConnectionBridge.getInstance().placeCardRequest(playedCard);
     }
 
+    /**
+     * Handles the place card success message
+     * @param placeCardSuccessInfo the PlaceCardSuccessInfo
+     */
     public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo) {
         this.gameData.removeCardFromHand(placeCardSuccessInfo.getPlayedCard().getId());
         this.gameData.addToList(this.gameData.getBoard(), placeCardSuccessInfo.getPlayedCard());
@@ -161,12 +222,19 @@ public class ClientController {
         }
     }
 
+    /**
+     * Handles the place card failure message
+     */
     public void placeCardFailure(){
         ui.placeCardFailure();
         CardInfo playedCard = ui.askForPlayCard();
         ConnectionBridge.getInstance().placeCardRequest(playedCard);
     }
 
+    /**
+     * Handles the draw card success message
+     * @param hand the updated hand
+     */
     public void drawSuccess(ArrayList<CardInfo> hand){
         hand.forEach(x -> x.setFlipped(false));
         this.gameData.setHand(hand);
@@ -174,6 +242,9 @@ public class ClientController {
         ConnectionBridge.getInstance().endTurn();
     }
 
+    /**
+     * Handles the game state message
+     */
     public void gameState(GameStateInfo gameStateInfo){
         this.gameData.fromGameStateInfo(gameStateInfo);
         if(!username.equals(gameStateInfo.getLastPlayer()) && gameStateInfo.getLastPlayer()!=null){
@@ -181,6 +252,10 @@ public class ClientController {
         }
     }
 
+    /**
+     * Handles the game end message
+     * @param leaderboard the leaderboard
+     */
     public void gameEnd(HashMap<String, Integer> leaderboard){
         this.gameData.setGameAborted(true);
         this.gameData.setLeaderboard(leaderboard);
@@ -195,16 +270,25 @@ public class ClientController {
         }
     }
 
+    /**
+     * Handles the player disconnected message
+     */
     public void playerDisconnected(String username, boolean gameStarted) {
         this.gameData.replaceEntry(this.gameData.getConnectionStatus(), username, ConnectionStatus.OFFLINE);
         ui.playerDisconnected(username, gameStarted);
     }
 
+    /**
+     * Handles the player reconnected message
+     */
     public void playerReconnected(String username) {
         this.gameData.replaceEntry(this.gameData.getConnectionStatus(), username, ConnectionStatus.ONLINE);
         ui.playerReconnected(username);
     }
 
+    /**
+     * Handles the reconnection state message
+     */
     public void reconnectionState(GameStateInfo gameStateInfo) {
         chatHandlerSetup();
 
@@ -219,35 +303,61 @@ public class ClientController {
         }
     }
 
+    /**
+     * getter for the username
+     * @return the username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * getter for the connection bridge
+     * @return the connection bridge
+     */
     public ConnectionBridge getConnectionBridge() {
         return ConnectionBridge.getInstance();
     }
 
+    /**
+     * getter for the current turn info
+     * @return the current turn info
+     */
     public TurnInfo getCurrentTurnInfo() {
         return currentTurnInfo;
     }
 
+    /**
+     * Handles the no other player connected message
+     */
     public void noOtherPlayerConnected() {
         ui.noOtherPlayerConnected();
     }
 
+    /** method to set up the chat handler */
     private void chatHandlerSetup() {
         new Thread(ClientChatHandler.getInstance()).start();
     }
 
+    /** handle a received chat message
+     * @param msg the chat message
+     */
     public void recvChatMessage(ChatMessageData msg) {
         ClientChatHandler.recvChatMessage(msg);
         ui.messageReceived();
     }
 
+    /**
+     * getter for the game data
+     * @return the game data
+     */
     public ClientGameData getData() {
         return gameData;
     }
 
+    /**
+     * Handles the server not found message
+     */
     public void serverNotFound() {
         ui.serverNotFound();
     }

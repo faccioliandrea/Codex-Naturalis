@@ -55,14 +55,26 @@ public class Lobby {
         users.add(username);
     }
 
+    /**
+     * Remove a player from the lobby
+     * @param username the username of the player to remove
+     */
     public void removePlayer(String username) {
         users.remove(username);
     }
 
+    /**
+     * Get the chat handler of the lobby
+     * @return the chat handler of the lobby
+     */
     public ServerChatHandler getChatHandler() {
         return chatHandler;
     }
 
+    /**
+     * Get the id of the lobby
+     * @return the id of the lobby
+     */
     public String getId() {
         return id;
     }

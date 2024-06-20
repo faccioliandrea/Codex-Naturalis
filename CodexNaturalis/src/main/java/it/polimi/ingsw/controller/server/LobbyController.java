@@ -59,8 +59,17 @@ public class LobbyController {
         lobbies.put(lobbyId, new Lobby(lobbyId, numPlayers));
     }
 
+    /**
+     * remove the lobby
+     * @param lobbyId the id of the lobby
+     */
     public void removeLobby(String lobbyId){lobbies.remove(lobbyId);}
 
+     /**
+     * remove a player from a lobby
+     * @param username the username of the player
+     * @param s the id of the lobby
+     */
     public void removePlayer(String username, String s) {
         users.remove(username);
         lobbies.get(s).removePlayer(username);
