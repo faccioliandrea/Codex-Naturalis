@@ -481,7 +481,9 @@ public class ServerController {
      */
     public AddPlayerToLobbyResponse addPlayerToLobby(String username, String lobbyId) {
         if (connectionBridge.checkUserConnected(username)) {
-            if(!lobbyController.getLobbies().containsKey(lobbyId)) {
+            if(lobbyId.equals("1001")) {
+                return AddPlayerToLobbyResponse.REFRESH_LOBBIES;
+            } else if(!lobbyController.getLobbies().containsKey(lobbyId)) {
                 return AddPlayerToLobbyResponse.LOBBY_NOT_FOUND;
             }
             else if(lobbyController.getLobbies().isEmpty()) {

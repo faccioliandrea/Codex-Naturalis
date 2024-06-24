@@ -11,8 +11,6 @@ import it.polimi.ingsw.controller.client.ClientController;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -144,6 +142,8 @@ public class ConnectionBridge {
                 AddPlayerToLobbyResponse result = ((RMIServerConnectionInterface) serverConnection).addPlayerToLobby(ClientController.getInstance().getUsername(), lobbyId);
                 if(result.equals(AddPlayerToLobbyResponse.LOBBY_NOT_FOUND))
                     lobbyFull();
+                else if (result.equals(AddPlayerToLobbyResponse.REFRESH_LOBBIES))
+                    lobbyRequest();
                 else if(result.equals(AddPlayerToLobbyResponse.PLAYER_ADDED))
                     joinLobbySuccess(false);
                 else if(result.equals(AddPlayerToLobbyResponse.PLAYER_ADDED_LAST))

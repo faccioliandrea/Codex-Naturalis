@@ -137,7 +137,13 @@ public class ConnectionBridge {
                         ((SocketClientConnection) connections.get(username)).lobbyFull();
                     } catch (IOException e) {
                         connections.get(username).setOffline();
-
+                    }
+                    break;
+                case REFRESH_LOBBIES:
+                    try {
+                        ((SocketClientConnection) connections.get(username)).lobbyExists(ServerController.getInstance().getLobbies(username));
+                    } catch (IOException e) {
+                        connections.get(username).setOffline();
                     }
                     break;
                 case PLAYER_ADDED:

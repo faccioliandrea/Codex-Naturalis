@@ -8,5 +8,4 @@ public enum ConnectionStatus {
   OFFLINE,
   INITIALIZING,
   CLOSED
-
 }

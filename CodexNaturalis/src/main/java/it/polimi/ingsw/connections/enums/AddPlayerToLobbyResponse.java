@@ -13,5 +13,6 @@ public enum AddPlayerToLobbyResponse {
     NO_LOBBIES,
     LOBBY_NOT_FOUND,
     PLAYER_NOT_CONNECTED,
-    PLAYER_ADDED_LAST
+    PLAYER_ADDED_LAST,
+    REFRESH_LOBBIES
 }
