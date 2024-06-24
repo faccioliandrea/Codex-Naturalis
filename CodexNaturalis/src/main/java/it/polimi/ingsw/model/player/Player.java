@@ -33,7 +33,7 @@ public class Player {
     public Player(String username, PlayerColor playerColor) {
         this.username = username;
         this.playerColor = playerColor;
-        this.cardsPoints = 19;
+        this.cardsPoints = 0;
         this.goalsPoints = 0;
         this.completedGoals = 0;
         this.hand = new ArrayList<>();
