@@ -106,7 +106,6 @@ public class ConnectionBridge {
      * Handles a lobby request
      */
     public void lobbyRequest() {
-
         if (serverConnection instanceof SocketServerConnection) {
             try {
                 ((SocketServerConnection) serverConnection).getLobby(ClientController.getInstance().getUsername());

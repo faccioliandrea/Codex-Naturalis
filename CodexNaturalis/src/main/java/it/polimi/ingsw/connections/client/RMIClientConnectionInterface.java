@@ -35,7 +35,7 @@ public interface RMIClientConnectionInterface extends Remote {
 
     void reconnectionState(GameStateInfo gameStateInfo)throws RemoteException;
 
-    void ping()throws RemoteException;
+    void ping() throws RemoteException;
 
     void recvChatMessage(ChatMessageData msg) throws RemoteException;
 }

@@ -247,8 +247,7 @@ public class UIData implements Observer {
     }
 
     /**
-     * Getter for the leaderboard
-     * @return the leaderboard
+     * Setter for the leaderboard
      */
     public void setLeaderboard(Map<String, Integer> leaderboard) {
         this.leaderboard = leaderboard;
@@ -363,7 +362,7 @@ public class UIData implements Observer {
      * @return the public goals
      */
     public ArrayList<GoalInfo> getPublicGoals() {
-        return new ArrayList<>(this.goals.subList(0, 1));
+        return new ArrayList<>(this.goals.subList(0, 2));
     }
 
     /**

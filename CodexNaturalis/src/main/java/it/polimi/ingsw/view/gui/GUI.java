@@ -90,6 +90,7 @@ public class GUI extends UIManager {
      */
     @Override
     public String askForLobbyId(ArrayList<String> lobbies) {
+        GUIApp.changeScene("lobbies", lobbiesController);
         lobbiesController.showLobbies(lobbies);
         try {
             queue.clear();

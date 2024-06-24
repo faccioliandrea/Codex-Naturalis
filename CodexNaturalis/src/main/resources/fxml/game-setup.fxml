@@ -2,9 +2,12 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import javafx.stage.Screen?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml" styleClass="startBackground">
-
+    <fx:define>
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
+    </fx:define>
     <VBox fx:id="privateGoalsVBox" spacing="20.0" visible="false" alignment="CENTER" AnchorPane.topAnchor="0.0"
           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="120.0">
         <Label textAlignment="CENTER" text="Select&#10;you private goal" styleClass="bigTitle"/>
@@ -13,4 +16,5 @@
           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="120.0">
         <Label textAlignment="CENTER" text="Select&#10;your starter card side" styleClass="bigTitle"/>
     </VBox>
+    <HBox fx:id="handBox" AnchorPane.bottomAnchor="10" BorderPane.alignment="CENTER" alignment="CENTER" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10"/>
 </AnchorPane>

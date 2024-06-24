@@ -3,10 +3,7 @@ package it.polimi.ingsw.view.gui.controller;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.components.BoardStackPane;
-import it.polimi.ingsw.view.gui.components.ChatVBox;
-import it.polimi.ingsw.view.gui.components.FadingLabel;
-import it.polimi.ingsw.view.gui.components.LeaderboxVBox;
+import it.polimi.ingsw.view.gui.components.*;
 import it.polimi.ingsw.view.gui.utility.GUIConstants;
 import it.polimi.ingsw.view.gui.utility.GUIUtility;
 import javafx.fxml.FXML;
@@ -14,13 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
-import javafx.util.Pair;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -29,7 +24,7 @@ public class MainController implements Initializable {
     @FXML
     private Group boardGroup;
     @FXML
-    private HBox handHBox;
+    private HBox handBox;
     @FXML
     private HBox goalsHBox;
     @FXML
@@ -51,11 +46,10 @@ public class MainController implements Initializable {
     @FXML
     private Screen screen;
 
-    private Pair<CardInfo, ImageView> selectedCard;
-
-    private BoardStackPane boardGridPane;
+    private BoardStackPane boardStackPane;
     private LeaderboxVBox leaderboxVBox;
     private ChatVBox chatVBox;
+    private HandHBox handHBox;
 
     private double screenWidth;
 
@@ -67,7 +61,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        boardGridPane = new BoardStackPane(GUIConstants.mainBoardWidthPercentage);
+        boardStackPane = new BoardStackPane(GUIConstants.mainBoardWidthPercentage);
         leaderboxVBox = new LeaderboxVBox();
         leaderboxVBox.setBackground(new Background(new BackgroundFill(Color.web("#ffffffB0"), new CornerRadii(18), new Insets(-7))));
         chatVBox = new ChatVBox();
@@ -75,36 +69,17 @@ public class MainController implements Initializable {
         leaderboardAndChatVBox.getChildren().clear();
         leaderboardAndChatVBox.getChildren().addAll(leaderboxVBox, chatVBox);
         boardGroup.getChildren().clear();
-        boardGroup.getChildren().add(boardGridPane);
+        boardGroup.getChildren().add(boardStackPane);
 
         screenWidth = screen.getVisualBounds().getWidth();
+        handHBox = new HandHBox(screenWidth);
+        handBox.getChildren().add(handHBox);
         leaderboardAndChatVBox.setPrefWidth(screenWidth * GUIConstants.SmallCardToScreenWidthRatio * 2 + 60);
-    }
-
-    private void setupHand() {
-        handHBox.getChildren().clear();
-        for (CardInfo card : GUI.getInstance().getData().getHand()) {
-            ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.BigCardToScreenWidthRatio);
-            imageView.setOnMouseClicked(e -> {
-                if (e.getButton().equals(MouseButton.PRIMARY)) {
-                    if (selectedCard != null && selectedCard.getKey() != card) {
-                        selectedCard.getValue().setEffect(null);
-                    }
-                    boardGridPane.setAvailablePositionDisabled(false); // when card selected, enable selection of available position
-                    selectedCard = new Pair<>(card, imageView);
-                    imageView.setEffect(new Glow(0.5));
-                } else if (e.getButton().equals(MouseButton.SECONDARY)) {
-                    card.setFlipped(!card.isFlipped());
-                    imageView.setImage(GUIUtility.createImage(GUIUtility.getCardPath(card)));
-                }
-            });
-            handHBox.getChildren().add(imageView);
-        }
     }
 
     private void setupGoals() {
         goalsHBox.getChildren().clear();
-        for (GoalInfo goal : GUI.getInstance().getData().getGoals().subList(0,2)) {
+        for (GoalInfo goal : GUI.getInstance().getData().getPublicGoals()) {
             ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getGoalPath(goal), 0, screenWidth * GUIConstants.SmallCardToScreenWidthRatio);
             goalsHBox.getChildren().add(imageView);
         }
@@ -154,7 +129,7 @@ public class MainController implements Initializable {
     }
 
     private void setupBoard(boolean padding) {
-        boardGridPane.setupBoard(GUI.getInstance().getData().getBoard(), padding);
+        boardStackPane.setupBoard(GUI.getInstance().getData().getBoard(), padding);
     }
 
     /**
@@ -168,13 +143,13 @@ public class MainController implements Initializable {
      * Asks the user to play a card
      */
     public void askForPlayCard() {
-        setupHand();
+        handHBox.setupHand(boardStackPane, true);
         setupBoard(true);
-        handHBox.setEffect(GUIUtility.highlightShadow());
-        boardGridPane.addAvailablePositionsToBoard(GUI.getInstance().getData().getAvailablePositions());
-        if (selectedCard != null) {
-            boardGridPane.setAvailablePositionDisabled(false);
+        boardStackPane.addAvailablePositionsToBoard(GUI.getInstance().getData().getAvailablePositions());
+        if (handHBox.cardSelected() != null) {
+            boardStackPane.setAvailablePositionDisabled(false);
         }
+        handHBox.setHandEffect(GUIUtility.highlightShadow());
     }
 
     /** Asks the user to draw a card
@@ -195,7 +170,7 @@ public class MainController implements Initializable {
      * Updates the GUI (hand, goals, board, leaderboard, resource deck, gold deck)
      */
     public void updateData() {
-        setupHand();
+        handHBox.setupHand(boardStackPane, true);
         setupGoals();
         setupBoard(false);
         updateLeaderboard();
@@ -207,9 +182,7 @@ public class MainController implements Initializable {
      * @return the selected card
      */
     public CardInfo cardSelected() {
-        CardInfo selected = selectedCard.getKey();
-        selectedCard = null;
-        return selected;
+        return handHBox.cardSelected();
     }
 
     /**
@@ -224,7 +197,7 @@ public class MainController implements Initializable {
      * Remove hand highlight effect at end of picking the card
      */
     public void endPickCard() {
-        handHBox.setEffect(null);
+        handHBox.setHandEffect(null);
     }
 
     /**

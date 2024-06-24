@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.gui.controller;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.GoalInfo;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.components.HandHBox;
 import it.polimi.ingsw.view.gui.utility.GUIConstants;
 import it.polimi.ingsw.view.gui.utility.GUIUtility;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,6 +24,10 @@ public class GameSetupController implements Initializable {
     private VBox privateGoalsVBox;
     @FXML
     private VBox starterCardVBox;
+    @FXML
+    private HBox handBox;
+    @FXML
+    private Screen screen;
 
     private ArrayList<GoalInfo> privateGoals;
     private CardInfo starterCard;
@@ -46,6 +52,9 @@ public class GameSetupController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        HandHBox handHBox = new HandHBox(screen.getVisualBounds().getWidth());
+        handHBox.setupHand(null, false);
+        handBox.getChildren().add(handHBox);
     }
 
     /**

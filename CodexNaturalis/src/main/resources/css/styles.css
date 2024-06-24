@@ -33,7 +33,7 @@
     -fx-border-width: 3;
 }
 
-#mainBorderPane {
+.mainBg {
     -fx-background-image: url("/img/codex_senza_quadrato.png");
     -fx-background-repeat: stretch;
     -fx-background-size: 100% 100%;
@@ -51,7 +51,7 @@
     -fx-padding: 25;
 }
 
-#decksHBox, #goalsVBox, #handHBox, #turnInfoVBox, #leaderboard, #chat {
+#decksHBox, #goalsVBox, #handHBox, .borderedTitle, #leaderboard, #chat {
     -fx-background-color: black, -fx-gold-gradient, black, -fx-gold-gradient, black, -fx-panels-background;
     -fx-background-insets: -20, -19, -15, -14, -10, -8;
     -fx-effect: dropshadow(three-pass-box, black, 10, 0,0,0);

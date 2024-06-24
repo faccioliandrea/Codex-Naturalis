@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" type="javafx.scene.layout.HBox">
+    <HBox BorderPane.alignment="CENTER" alignment="CENTER">
+        <HBox prefHeight="100.0" alignment="CENTER" fx:id="handHBox" spacing="10.0" />
+    </HBox>
+</fx:root>

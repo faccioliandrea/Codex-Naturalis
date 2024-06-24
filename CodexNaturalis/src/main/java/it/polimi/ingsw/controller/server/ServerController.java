@@ -79,7 +79,6 @@ public class ServerController {
                 executorService.submit(() -> connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, lobby.getUsers(), playerColors)));
             }
 
-
         } catch (DeckInitializationException e) {
             System.err.println("Error in initializing the decks");
             System.exit(0);

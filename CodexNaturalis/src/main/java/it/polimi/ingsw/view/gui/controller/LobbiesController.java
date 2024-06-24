@@ -95,6 +95,7 @@ public class LobbiesController implements Initializable {
         }
         lobbiesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> lobbySelected(newValue));
         usernameButton.setDisable(true);
+        usernameTextField.setDisable(true);
         createLobbyButton.setDisable(false);
     }
 
