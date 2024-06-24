@@ -293,7 +293,7 @@ public class ServerController {
         }
         executorService = Executors.newFixedThreadPool(gameController.getGamePlayers(gameId).size());
         for(String username : userToGame.keySet()){
-            if(userToGame.get(username).equals(userToGame.get(username))) {
+            if(userToGame.get(username).equals(gameId)) {
                 executorService.submit(()-> connectionBridge.endGame(username, leaderboard));
             }
         }
