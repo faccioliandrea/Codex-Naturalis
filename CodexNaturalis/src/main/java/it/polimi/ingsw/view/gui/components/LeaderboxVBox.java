@@ -25,7 +25,7 @@ public class LeaderboxVBox extends VBox {
     private GridPane leaderboardGridPane;
 
     /**
-     * Constructor for the LeaderboxVBox
+     * Constructor for the LeaderboardVBox
      *
      */
     public LeaderboxVBox() {
