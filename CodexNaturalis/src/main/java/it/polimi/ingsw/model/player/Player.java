@@ -33,7 +33,7 @@ public class Player {
     public Player(String username, PlayerColor playerColor) {
         this.username = username;
         this.playerColor = playerColor;
-        this.cardsPoints = 0;
+        this.cardsPoints = 19;
         this.goalsPoints = 0;
         this.completedGoals = 0;
         this.hand = new ArrayList<>();
@@ -194,6 +194,14 @@ public class Player {
             completedGoals += 1;
         }
     }
+
+    /**
+     * This method returns the number of completed goals
+     */
+    public int getCompletedGoals() {
+        return completedGoals;
+    }
+
 
 
 

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class is the RMI client connection interface
@@ -25,7 +27,7 @@ public interface RMIClientConnectionInterface extends Remote {
 
     void sendStatus(GameStateInfo gameStateInfo) throws RemoteException;
 
-    void gameEnded(HashMap<String, Integer> leaderboard) throws RemoteException;
+    void gameEnded(Map<String, Integer> leaderboard) throws RemoteException;
 
     void noOtherPlayerConnected() throws IOException;
 

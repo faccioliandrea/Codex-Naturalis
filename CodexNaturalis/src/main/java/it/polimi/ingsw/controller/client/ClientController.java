@@ -12,6 +12,8 @@ import it.polimi.ingsw.view.tui.enums.Decks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -148,7 +150,7 @@ public class ClientController {
      */
     public void gameStarted(StarterData starterData){
         this.gameData.setHand(starterData.getHand());
-        this.gameData.setLeaderboard(starterData.getUsers().stream().collect(Collectors.toMap(s -> s, s -> 0, (x, y) -> x, HashMap::new)));
+        this.gameData.setLeaderboard(starterData.getUsers().stream().collect(Collectors.toMap(s -> s, s -> 0, (x, y) -> x, LinkedHashMap::new)));
         this.gameData.setBoards(starterData.getUsers().stream().collect(Collectors.toMap(s -> s, x -> new ArrayList<>(), (x, y) -> x, HashMap::new)));
         this.gameData.setPlayerColors(starterData.getPlayerColors());
         this.gameData.setGoals(starterData.getSharedGoals());
@@ -254,7 +256,7 @@ public class ClientController {
      * Handles the game end message
      * @param leaderboard the leaderboard
      */
-    public void gameEnd(HashMap<String, Integer> leaderboard){
+    public void gameEnd(Map<String, Integer> leaderboard){
         this.gameData.setGameAborted(true);
         this.gameData.setLeaderboard(leaderboard);
         ui.gameEnded();

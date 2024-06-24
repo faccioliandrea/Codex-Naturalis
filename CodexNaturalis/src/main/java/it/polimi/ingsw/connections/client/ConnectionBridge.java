@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class handles the connections between the client and the server
@@ -470,7 +472,7 @@ public class ConnectionBridge {
      * Handles the game end message
      * @param leaderboard the final leaderboard of the game
      */
-    public void gameEnd(HashMap<String, Integer> leaderboard){
+    public void gameEnd(Map<String, Integer> leaderboard){
         ClientController.getInstance().gameEnd(leaderboard);
     }
 

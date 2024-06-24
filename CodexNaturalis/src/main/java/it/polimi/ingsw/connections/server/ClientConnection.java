@@ -8,6 +8,8 @@ import it.polimi.ingsw.connections.data.TurnInfo;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Interface for the connection to the client
@@ -67,7 +69,7 @@ public interface ClientConnection {
      * @param leaderboard the leaderboard of the game
      * @throws IOException if an error occurs while sending the message
      */
-    void gameEnded(HashMap<String, Integer> leaderboard)throws IOException;
+    void gameEnded(Map<String, Integer> leaderboard)throws IOException;
 
     /**
      * Notify the client that the game has started

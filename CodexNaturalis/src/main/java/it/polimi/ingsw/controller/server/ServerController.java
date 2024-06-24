@@ -231,7 +231,7 @@ public class ServerController {
         if(gameController.getGames().get(userToGame.get(user))!=null && checkUserCurrentPlayer(user) ) {
             ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
-            HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
+            Map<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
             Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
             for (Player player : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
 
@@ -263,7 +263,7 @@ public class ServerController {
             }
 
             if (gameController.isGameFinished(userToGame.get(user)))
-                endGame(userToGame.get(user));
+                endGame(userToGame.get(user), null);
             else {
                 gameController.endTurn(userToGame.get(user));
                 initTurn(gameController.getCurrentPlayer(userToGame.get(user)));
@@ -280,8 +280,8 @@ public class ServerController {
      * @param forceWinner username of the player that is selected as winner
      */
     private void endGame(String gameId, String forceWinner){
+        Map<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
 
-        HashMap<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
         if(forceWinner!= null){
             leaderboard.keySet().forEach(x->{
                 if(!x.equals(forceWinner)){
@@ -291,20 +291,6 @@ public class ServerController {
                 }
             });
         }
-        for(String username : userToGame.keySet()){
-            if(userToGame.get(username).equals(userToGame.get(username))) {
-                connectionBridge.endGame(username, leaderboard);
-            }
-        }
-        destroyGame(gameId);
-    }
-
-    /**
-     * End the game and send a notification to all the players in the lobby
-     * @param gameId the id of the game
-     */
-    private void endGame(String gameId) {
-        HashMap<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
         for(String username : userToGame.keySet()){
             if(userToGame.get(username).equals(userToGame.get(username))) {
                 connectionBridge.endGame(username, leaderboard);
@@ -438,7 +424,7 @@ public class ServerController {
                 } else if (userToGame.get(u).equals(userToGame.get(username)) && u.equals(username)) {
                     ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(username));
                     ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(username));
-                    HashMap<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(username));
+                    Map<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(username));
                     Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
                     for (Player player : gameController.getGames().get(userToGame.get(username)).getPlayers()) {
                         connectionStatus.put(player.getUsername(), connectionBridge.getConnections().get(player.getUsername()).getStatus());

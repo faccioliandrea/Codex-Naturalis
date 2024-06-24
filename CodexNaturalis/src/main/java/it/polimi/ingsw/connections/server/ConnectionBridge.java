@@ -14,6 +14,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -380,7 +382,7 @@ public class ConnectionBridge {
      * @param username the username of the player to notify
      * @param leaderboard the leaderboard of the game
      */
-    public void endGame(String username, HashMap<String, Integer> leaderboard) {
+    public void endGame(String username, Map<String, Integer> leaderboard) {
         try {
             connections.get(username).gameEnded(leaderboard);
         } catch (IOException e) {

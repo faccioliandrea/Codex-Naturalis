@@ -6,6 +6,8 @@ import it.polimi.ingsw.connections.data.TurnInfo;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class is the RMI client connection class
@@ -97,7 +99,7 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void gameEnded(HashMap<String, Integer> leaderboard) throws RemoteException {
+    public void gameEnded(Map<String, Integer> leaderboard) throws RemoteException {
         connectionBridge.gameEnd(leaderboard);
     }
 

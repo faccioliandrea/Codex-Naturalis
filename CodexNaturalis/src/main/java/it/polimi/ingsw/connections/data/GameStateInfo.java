@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GameStateInfo implements Serializable {
@@ -24,7 +25,7 @@ public class GameStateInfo implements Serializable {
     private boolean isLastTurn = false;
     private ArrayList<CardInfo> board = new ArrayList<>();
     final private Map<CardSymbol, Integer> symbols;
-    private Map<String, Integer> leaderboard = new HashMap<>();
+    private Map<String, Integer> leaderboard = new LinkedHashMap<>();
     private Map<String, ArrayList<CardInfo>> boards = new HashMap<>();
     private Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
     private ArrayList<GoalInfo> goals = new ArrayList<>();

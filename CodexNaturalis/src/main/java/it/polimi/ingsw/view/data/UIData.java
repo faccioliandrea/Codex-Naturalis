@@ -28,7 +28,7 @@ public class UIData implements Observer {
     private boolean isLastTurn = false;
     private ArrayList<CardInfo> board = new ArrayList<>();
     private Map<CardSymbol, Integer> symbols;
-    private Map<String, Integer> leaderboard = new HashMap<>();
+    private Map<String, Integer> leaderboard = new LinkedHashMap<>();
     private Map<String, ArrayList<CardInfo>> boards = new HashMap<>();
     private Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
     private ArrayList<GoalInfo> goals = new ArrayList<>();
@@ -424,10 +424,7 @@ public class UIData implements Observer {
      * Getter for the sorted leaderboard
      * @return the sorted leaderboard
      */
-    public LinkedHashMap<String, Integer> getSortedLeaderboard() {
-        return this.getLeaderboard().entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
+    public Map<String, Integer> getSortedLeaderboard() {
+        return this.getLeaderboard();
     }
 }

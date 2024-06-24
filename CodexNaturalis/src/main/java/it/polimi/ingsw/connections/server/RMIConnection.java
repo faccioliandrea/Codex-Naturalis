@@ -10,6 +10,8 @@ import it.polimi.ingsw.connections.data.TurnInfo;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class is used to handle the RMI connection from the server side to the client.
@@ -79,7 +81,7 @@ public class RMIConnection implements ClientConnection{
     }
 
     @Override
-    public void gameEnded(HashMap<String, Integer> leaderboard) throws RemoteException{
+    public void gameEnded(Map<String, Integer> leaderboard) throws RemoteException{
         rmiClientConnection.gameEnded(leaderboard);
     }
 

@@ -28,7 +28,7 @@ public class ClientGameData extends Observable {
     private int currentTurn = 0;
     private boolean isLastTurn = false;
     private ArrayList<CardInfo> board = new ArrayList<>();
-    private Map<String, Integer> leaderboard = new HashMap<>();
+    private Map<String, Integer> leaderboard = new LinkedHashMap<>();
     private Map<String, ArrayList<CardInfo>> boards = new HashMap<>();
     private Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
     private ArrayList<GoalInfo> goals = new ArrayList<>();

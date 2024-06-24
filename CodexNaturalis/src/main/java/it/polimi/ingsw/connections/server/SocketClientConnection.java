@@ -17,6 +17,8 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -235,7 +237,7 @@ public class SocketClientConnection implements ClientConnection, Runnable {
     }
 
     @Override
-    public void gameEnded(HashMap<String, Integer> leaderboard) throws IOException {
+    public void gameEnded(Map<String, Integer> leaderboard) throws IOException {
         this.outputStream.sendMessage(new GameEndMessage(leaderboard));
     }
 
