@@ -390,6 +390,10 @@ public class GUI extends UIManager {
      */
     @Override
     public void goodbye() {
+        closeGame();
+    }
+
+    private void closeGame() {
         Platform.exit();
         System.exit(0);
     }
@@ -401,6 +405,7 @@ public class GUI extends UIManager {
     @Override
     public void showErrorMessage(String message) {
         GUIApp.notInteractableAlert(message, Alert.AlertType.ERROR);
+        closeGame();
     }
 
     /**
@@ -424,7 +429,7 @@ public class GUI extends UIManager {
      */
     @Override
     public void serverOfflineMessage() {
-        GUIApp.showAlert(UIMessagesConstants.serverOfflineMessage, Alert.AlertType.ERROR, event -> goodbye());
+        GUIApp.showAlert(UIMessagesConstants.serverOfflineMessage, Alert.AlertType.ERROR, event -> closeGame());
     }
 
     @Override

@@ -327,6 +327,5 @@ public abstract class UIManager {
      */
     public void serverNotFound() {
         serverOfflineMessage();
-        //TODO:send to join menu
     }
 }
