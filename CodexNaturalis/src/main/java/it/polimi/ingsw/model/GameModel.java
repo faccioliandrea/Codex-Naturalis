@@ -23,6 +23,7 @@ public class GameModel {
     private ArrayList<ResourceCard> resourceCardDeck;
     private ArrayList<GoldCard> goldCardDeck;
     private ArrayList<Goal> goalsDeck;
+    private boolean endGame = false;
 
     /**
      * Constructor
@@ -245,6 +246,8 @@ public class GameModel {
      * Signals the start of the final stages of the game
      */
     public void startEndGame() {
+        if (this.endGame) return;
+        endGame = true;
         // current + final turn + additional turns to come back to first player
         totalTurns = currentTurn + this.players.size() + (this.players.size() - currentTurn % players.size()) - 1;
     }
