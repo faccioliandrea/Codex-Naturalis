@@ -36,7 +36,7 @@
     <top>
         <HBox alignment="CENTER" BorderPane.alignment="CENTER" >
             <VBox alignment="CENTER" spacing="10" fx:id="turnInfoVBox" styleClass="borderedTitle">
-                <Label fx:id="turnInfoLabel" styleClass="mainTitle" wrapText="true" />
+                <Label fx:id="turnInfoLabel" styleClass="mainTitle, bold" wrapText="true" />
                 <VBox fx:id="infoVBox" alignment="CENTER" spacing="2"/>
             </VBox>
         </HBox>

@@ -167,6 +167,8 @@ public class ServerController {
         if(gameController.getGames().get(userToGame.get(username)).getPlayers().stream().anyMatch(x->x.getBoard().getPlayedCards().isEmpty())){
             return ChooseStarterCardSideResponse.WAIT_FOR_OTHER_PLAYER;
         } else if (gameController.getGames().get(userToGame.get(username)).getPlayers().stream().allMatch(x->x.getBoard().getPlayedCards().size()==1)){
+            String currentPlayer = ServerController.getInstance().getGameController().getCurrentPlayer(ServerController.getInstance().getUserToGame().get(username));
+            initTurn(currentPlayer);
             return ChooseStarterCardSideResponse.SUCCESS;
         }
         return ChooseStarterCardSideResponse.FAILURE;
@@ -340,9 +342,9 @@ public class ServerController {
             } else{
                 if(gameController.getUserBoardByUsername(userToGame.get(username), username).isEmpty() && !gameController.getHand(userToGame.get(username), username).isEmpty()){
                     if(gameController.getPrivateGoals(userToGame.get(username), username).size()==2) {
-                        gameController.choosePrivateGoal(userToGame.get(username), username, 0);
+                        choosePrivateGoal( username, 0);
                     }
-                    gameController.chooseStarterCardSide(userToGame.get(username), username, false);
+                    chooseStarterCardSide(username, false);
                 } else if( gameController.getCurrentPlayer(userToGame.get(username)).equals(username)){
                     if(gameController.getHand(userToGame.get(username), username).size()!=3){
                         //disconnection during the turn before draw -> draw a resource and end the turn

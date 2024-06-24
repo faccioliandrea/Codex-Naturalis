@@ -15,6 +15,9 @@
     -fx-stroke: black;
 }
 
+.bold {
+    -fx-font-weight: bold;
+}
 .bigTitle {
     -fx-font-size: 40;
 }
@@ -58,9 +61,7 @@
     -fx-background-radius: 25, 24, 20, 19, 15, 13;
 }
 
-#turnInfoLabel {
-    -fx-font-weight: bold;
-}
+
 
 #card {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0,0,0);

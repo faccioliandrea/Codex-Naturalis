@@ -220,16 +220,9 @@ public class ConnectionBridge {
                 } catch (IOException e) {
                     connections.get(username).setOffline();
                 }
-            } else if (result.equals(ChooseStarterCardSideResponse.SUCCESS)){
-                String currentPlayer = ServerController.getInstance().getGameController().getCurrentPlayer(ServerController.getInstance().getUserToGame().get(username));
-                ServerController.getInstance().initTurn(currentPlayer);
             }
             return result;
         } else {
-            if (result.equals(ChooseStarterCardSideResponse.SUCCESS)) {
-                String currentPlayer = ServerController.getInstance().getGameController().getCurrentPlayer(ServerController.getInstance().getUserToGame().get(username));
-                ServerController.getInstance().initTurn(currentPlayer);
-            }
             return result;
         }
     }
