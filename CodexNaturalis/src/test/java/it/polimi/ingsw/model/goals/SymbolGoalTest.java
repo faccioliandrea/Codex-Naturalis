@@ -20,16 +20,14 @@ class SymbolGoalTest implements ConstructorTest, GoalTest {
     private GoalRequirement[] goal;
     private int points;
 
-    private static ArrayList<Goal> sharedGoals;
-    private static Goal privateGoal;
     private static Board board;
 
     @BeforeEach
     void setup(){
-        sharedGoals = new ArrayList<>();
-        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOMLEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
+        ArrayList<Goal> sharedGoals = new ArrayList<>();
+        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOM_LEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
         sharedGoals.add(new PatternGoalDiagonal("002", 2,true, CardSymbolKingdom.MUSHROOM));
-        privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
+        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOM_LEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
         board = new Board(privateGoal, sharedGoals);
         HashMap<CardSymbol, Integer> map = new HashMap<>(7);
         map.put(CardSymbolKingdom.MUSHROOM,    3);

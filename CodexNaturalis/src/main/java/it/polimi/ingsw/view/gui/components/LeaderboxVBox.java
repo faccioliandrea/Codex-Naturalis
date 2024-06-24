@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Class that represents the leaderbox
+ * Class that represents the leader box
  */
 public class LeaderboxVBox extends VBox {
     @FXML

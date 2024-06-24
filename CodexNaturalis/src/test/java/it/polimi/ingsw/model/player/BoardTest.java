@@ -25,9 +25,9 @@ public class BoardTest implements ConstructorTest {
     @BeforeEach
     void setup() {
         sharedGoals = new ArrayList<>();
-        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOMLEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
+        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOM_LEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
         sharedGoals.add(new PatternGoalDiagonal("002", 3, true, CardSymbolKingdom.LEAF));
-        privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
+        privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOM_LEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
         board = new Board(privateGoal, sharedGoals);
     }
 

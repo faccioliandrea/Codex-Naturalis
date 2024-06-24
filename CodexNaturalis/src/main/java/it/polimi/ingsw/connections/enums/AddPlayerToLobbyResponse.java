@@ -6,12 +6,12 @@ package it.polimi.ingsw.connections.enums;
  * LOBBY_FULL if the lobby is full
  * LOBBY_NOT_FOUND if the lobby is not found
  * PLAYER_NOT_CONNECTED if the player is not connected
- * PlAYER_ADDED_LAST if the player is added and is the last player
+ * PLAYER_ADDED_LAST if the player is added and is the last player
  */
-public enum AddPlayerToLobbyresponse {
+public enum AddPlayerToLobbyResponse {
     PLAYER_ADDED,
     LOBBY_FULL,
     LOBBY_NOT_FOUND,
     PLAYER_NOT_CONNECTED,
-    PlAYER_ADDED_LAST
+    PLAYER_ADDED_LAST
 }

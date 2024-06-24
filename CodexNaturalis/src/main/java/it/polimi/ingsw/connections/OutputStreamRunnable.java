@@ -18,17 +18,6 @@ public class OutputStreamRunnable implements StreamRunnable {
 
     /**
      * Constructor
-     * @param oos: ObjectOutputStream to write to
-     * @param callback: Consumer to call when an exception is thrown
-     */ 
-    public OutputStreamRunnable(ObjectOutputStream oos, Consumer<String> callback) throws IOException {
-        this.outputStream = oos;
-        this.isStopped = false;
-        this.callback = callback;
-    }
-
-    /**
-     * Constructor
      * @param os: OutputStream to write to
      * @param callback: Consumer to call when an exception is thrown
      */ 
@@ -48,7 +37,6 @@ public class OutputStreamRunnable implements StreamRunnable {
             }
         } catch (IOException | InterruptedException e) {
             this.callback.accept(e.getMessage());
-            return;
         }
     }
 

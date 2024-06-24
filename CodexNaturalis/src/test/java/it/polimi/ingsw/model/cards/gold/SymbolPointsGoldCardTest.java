@@ -80,7 +80,7 @@ public class SymbolPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         ArrayList<Goal> sharedGoals = new ArrayList<>();
         sharedGoals.add(new PatternGoalDiagonal("002", 2, false, CardSymbolKingdom.WOLF));
         sharedGoals.add(new PatternGoalDiagonal("003", 2, true, CardSymbolKingdom.BUTTERFLY));
-        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
+        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOM_LEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
         board = new Board(privateGoal, sharedGoals);
 
         player.setBoard(board);

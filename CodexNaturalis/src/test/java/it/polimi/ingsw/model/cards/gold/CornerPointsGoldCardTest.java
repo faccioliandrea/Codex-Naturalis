@@ -75,7 +75,7 @@ public class CornerPointsGoldCardTest implements ConstructorTest, GoldCardTest {
         ArrayList<Goal> sharedGoals = new ArrayList<>();
         sharedGoals.add(new PatternGoalDiagonal("002", 2, false, WOLF));
         sharedGoals.add(new PatternGoalDiagonal("003", 2, true, BUTTERFLY));
-        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
+        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOM_LEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
         Board board = new Board(privateGoal, sharedGoals);
         ArrayList<Card> playedCards = new ArrayList<>();
         playedCards.add(starterCard());

@@ -4,8 +4,8 @@ package it.polimi.ingsw.model.enumeration;
  * Enum Direction of the PatternGoalL
  */
 public enum LDirection {
-    TOPLEFT,
-    TOPRIGHT,
-    BOTTOMLEFT,
-    BOTTOMRIGHT
+    TOP_LEFT,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT
 }

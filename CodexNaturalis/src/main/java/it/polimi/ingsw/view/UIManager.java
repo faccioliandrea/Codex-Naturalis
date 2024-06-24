@@ -5,6 +5,8 @@ import it.polimi.ingsw.connections.data.GameStateInfo;
 import it.polimi.ingsw.connections.data.StarterData;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.view.data.UIData;
+import it.polimi.ingsw.view.tui.enums.Decks;
+
 import java.awt.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -66,9 +68,10 @@ public abstract class UIManager {
 
     /**
      * Asks the user for the card to draw
+     *
      * @return the index of the card to draw
      */
-    public abstract int askForDrawCard();
+    public abstract Decks askForDrawCard();
 
     /**
      * Asks the user if they want to play another game
@@ -116,7 +119,7 @@ public abstract class UIManager {
     public abstract void lobbyCreated(String lobbyId);
 
     /**
-     * Notifies the user that another plaer has disconnected
+     * Notifies the user that another player has disconnected
      * @param username the username of the player
      * @param gameStarted true if the game has started, false otherwise
      */
@@ -129,7 +132,7 @@ public abstract class UIManager {
     public abstract void playerReconnected(String username);
 
     /**
-     * Displays the curretn state of the game when the user reconnects
+     * Displays the current state of the game when the user reconnects
      */
     public abstract void reconnectionState();
 
@@ -255,7 +258,7 @@ public abstract class UIManager {
     public static int boardGridColumns(ArrayList<CardInfo> board, boolean padding) {
         OptionalInt x_max = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.x).max();
         OptionalInt x_min = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.x).min();
-        if (!x_min.isPresent() || !x_max.isPresent()) {
+        if (!x_min.isPresent()) {
             return 0;
         }
         int width = x_max.getAsInt() - x_min.getAsInt() + 1;
@@ -273,7 +276,7 @@ public abstract class UIManager {
     public static int boardGridRows(ArrayList<CardInfo> board, boolean padding) {
         OptionalInt y_max = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.y).max();
         OptionalInt y_min = board.stream().map(CardInfo::getCoord).mapToInt(p -> p.y).min();
-        if (!y_min.isPresent() || !y_max.isPresent()) {
+        if (!y_min.isPresent()) {
             return 0;
         }
         int height = y_max.getAsInt() - y_min.getAsInt() + 1;
@@ -324,5 +327,6 @@ public abstract class UIManager {
      */
     public void serverNotFound() {
         serverOfflineMessage();
+        //TODO:send to join menu
     }
 }

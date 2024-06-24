@@ -2,7 +2,7 @@ package it.polimi.ingsw.connections.client;
 
 import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.data.*;
-import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
+import it.polimi.ingsw.connections.enums.AddPlayerToLobbyResponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.connections.server.RMIServerConnectionInterface;
@@ -70,7 +70,7 @@ public class ConnectionBridge {
 
     /**
      * Send a login request to the server with RMI
-     * @param username the username to login with
+     * @param username the username to log in with
      */
     private void rmiLoginRequest(String username) {
         try {
@@ -139,12 +139,12 @@ public class ConnectionBridge {
             }
         } else {
             try {
-                AddPlayerToLobbyresponse result = ((RMIServerConnectionInterface) serverConnection).addPlayerToLobby(ClientController.getInstance().getUsername(), lobbyId);
-                if(result.equals(AddPlayerToLobbyresponse.LOBBY_NOT_FOUND))
+                AddPlayerToLobbyResponse result = ((RMIServerConnectionInterface) serverConnection).addPlayerToLobby(ClientController.getInstance().getUsername(), lobbyId);
+                if(result.equals(AddPlayerToLobbyResponse.LOBBY_NOT_FOUND))
                     lobbyDoesNotExists();
-                else if(result.equals(AddPlayerToLobbyresponse.PLAYER_ADDED))
+                else if(result.equals(AddPlayerToLobbyResponse.PLAYER_ADDED))
                     joinLobbySuccess(false);
-                else if(result.equals(AddPlayerToLobbyresponse.PlAYER_ADDED_LAST))
+                else if(result.equals(AddPlayerToLobbyResponse.PLAYER_ADDED_LAST))
                     joinLobbySuccess(true);
                 else
                     lobbyFull();
@@ -156,7 +156,7 @@ public class ConnectionBridge {
     }
 
     /**
-     * Handles a lobby does not exists response from the server
+     * Handles a lobby does not exist response from the server
      */
     public void lobbyDoesNotExists() {
         ClientController.getInstance().lobbyDoesNotExist();
@@ -205,9 +205,9 @@ public class ConnectionBridge {
             }
         } else {
             try {
-                String lobbyid = ((RMIServerConnectionInterface) serverConnection).createLobbyAndJoin(ClientController.getInstance().getUsername(), numPlayers);
-                lobbyCreated(lobbyid);
-                joinLobbyRequest(lobbyid);
+                String lobbyId = ((RMIServerConnectionInterface) serverConnection).createLobbyAndJoin(ClientController.getInstance().getUsername(), numPlayers);
+                lobbyCreated(lobbyId);
+                joinLobbyRequest(lobbyId);
             } catch (RemoteException ignored) {
                 //handled by the ping
             }

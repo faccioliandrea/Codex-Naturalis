@@ -83,7 +83,7 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
     }
 
     /**
-     * Method to send the status of the game, recived at the end of each turn
+     * Method to send the status of the game, received at the end of each turn
      * @param gameStateInfo the game state info: the round track, the draft pool, the tool cards, the round, the turn, the player's status
      */
     @Override

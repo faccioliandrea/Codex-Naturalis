@@ -109,7 +109,7 @@ public class SocketServerConnection implements ServerConnection, Runnable {
     }
 
     /**
-     * Requests available lobbies from the servere.
+     * Requests available lobbies from the server.
      * @param username The username used by the server to identify the sender.
      * @throws IOException If an error occurs during the communication with the server.
      */

@@ -5,7 +5,7 @@ import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.client.RMIClientConnectionInterface;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.PlaceCardSuccessInfo;
-import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
+import it.polimi.ingsw.connections.enums.AddPlayerToLobbyResponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 
@@ -79,7 +79,7 @@ public class RMIServerConnection extends UnicastRemoteObject implements RMIServe
      * @throws RemoteException if the connection fails
      */
     @Override
-    public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) throws RemoteException {
+    public AddPlayerToLobbyResponse addPlayerToLobby(String username, String lobbyId) throws RemoteException {
         return ConnectionBridge.getInstance().addPlayerToLobby(username, lobbyId);
     }
 

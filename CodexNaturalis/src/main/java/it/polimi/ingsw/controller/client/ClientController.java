@@ -8,6 +8,7 @@ import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.*;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.view.UIManager;
+import it.polimi.ingsw.view.tui.enums.Decks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,9 +21,7 @@ public class ClientController {
     private static ClientController instance;
     private UIManager ui;
     private String username;
-    private ClientChatHandler chatHandler;
 
-    private TurnInfo currentTurnInfo = new TurnInfo();
     private ClientGameData gameData = new ClientGameData();
 
     /**
@@ -189,7 +188,6 @@ public class ClientController {
      * Handles the init turn message
      */
     public void initTurn(TurnInfo turnInfo){
-        this.currentTurnInfo = turnInfo;
         this.gameData.fromTurnInfo(turnInfo);
         ui.yourTurn(turnInfo.isLastTurn());
 
@@ -211,11 +209,11 @@ public class ClientController {
         this.gameData.setSymbols(placeCardSuccessInfo.getSymbols());
         ui.placeCardSuccess();
         if(!gameData.getResourceDeck().isEmpty() || !gameData.getGoldDeck().isEmpty()){
-            int choice = ui.askForDrawCard();
-            if(choice / 10 == 1){
-                ConnectionBridge.getInstance().drawResourceRequest(choice%10);
+            Decks choice = ui.askForDrawCard();
+            if(choice.isResourceDeck()){
+                ConnectionBridge.getInstance().drawResourceRequest(choice.getCard());
             } else {
-                ConnectionBridge.getInstance().drawGoldRequest(choice%10);
+                ConnectionBridge.getInstance().drawGoldRequest(choice.getCard());
             }
         } else {
             ConnectionBridge.getInstance().endTurn();
@@ -309,22 +307,6 @@ public class ClientController {
      */
     public String getUsername() {
         return username;
-    }
-
-    /**
-     * getter for the connection bridge
-     * @return the connection bridge
-     */
-    public ConnectionBridge getConnectionBridge() {
-        return ConnectionBridge.getInstance();
-    }
-
-    /**
-     * getter for the current turn info
-     * @return the current turn info
-     */
-    public TurnInfo getCurrentTurnInfo() {
-        return currentTurnInfo;
     }
 
     /**

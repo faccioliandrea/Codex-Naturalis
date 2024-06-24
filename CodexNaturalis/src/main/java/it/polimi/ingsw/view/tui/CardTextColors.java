@@ -13,11 +13,11 @@ public enum CardTextColors {
     POTION(TUIColors.YELLOW),
     STARTER(TUIColors.YELLOW);
 
-    private final String colorcode;
+    private final String colorCode;
 
     CardTextColors(TUIColors bg) {
         String ansi =  "\u001B[3%dm";
-        this.colorcode = String.format(ansi, bg.getValue());
+        this.colorCode = String.format(ansi, bg.getValue());
     }
 
     /**
@@ -25,6 +25,6 @@ public enum CardTextColors {
      * @return the color code
      */
     public String toString() {
-        return this.colorcode;
+        return this.colorCode;
     }
 }

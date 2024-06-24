@@ -302,7 +302,7 @@ public class GameController {
 
     /**
      * @param gameId the id of the game
-     * @return the points of the current player withouth the goals points
+     * @return the points of the current player without the goals points
      */
     protected int getUserCardsPoints(String gameId) {
         return games.get(gameId).getGameModel().getCurrentPlayer().getCardsPoints();
@@ -311,7 +311,7 @@ public class GameController {
     /**
      * @param gameId the id of the game
      * @param username the username of the player
-     * @return the points of the player withouth the goals points
+     * @return the points of the player without the goals points
      */
     protected int getUserCardsPoints(String gameId, String username) {
         Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
@@ -345,7 +345,7 @@ public class GameController {
 
     /**
      * @param gameId the id of the game
-     * @return the points of the current player withouth the cards points
+     * @return the points of the current player without the cards points
      */
     protected int getUserGoalsPoints(String gameId){
         return games.get(gameId).getGameModel().getCurrentPlayer().getGoalPoints();
@@ -353,7 +353,7 @@ public class GameController {
 
     /**
      * @param gameId the id of the game
-     * @return the points of the player withouth the cards points
+     * @return the points of the player without the cards points
      */
     protected int getUserGoalsPoints(String gameId, String username){
         Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
@@ -373,7 +373,7 @@ public class GameController {
     }
 
     /**
-     * called when the game is finished, return all the cards points to the players to generete the leaderboard
+     * called when the game is finished, return all the cards points to the players to generate the leaderboard
      */
     protected HashMap<String, Integer> getLeaderboard(String gameId){
         HashMap<String, Integer> leaderboard = new HashMap<>();
@@ -383,7 +383,7 @@ public class GameController {
     }
 
     /**
-     * called when the game is finished, return all the points to the players to generete the leaderboard
+     * called when the game is finished, return all the points to the players to generate the leaderboard
      */
     protected HashMap<String, Integer> getFullLeaderboard(String gameId){
         HashMap<String, Integer> leaderboard = new HashMap<>();
@@ -422,13 +422,6 @@ public class GameController {
         return games.get(gameId).getGameModel().getCurrentTurn();
     }
 
-    /**
-     * @param gameId the id of the game
-     * @return the total turns of the game
-     */
-    protected int getTotalTurns(String gameId) {
-        return games.get(gameId).getGameModel().getTotalTurns();
-    }
 
     /**
      * @param gameId the id of the game

@@ -3,28 +3,28 @@
         {
             "id": "008",
             "points": 3,
-            "direction": "TOPLEFT",
+            "direction": "TOP_LEFT",
             "verticalKingdom": "BUTTERFLY",
             "horizontalKingdom": "WOLF"
         },
         {
             "id": "009",
             "points": 3,
-            "direction": "TOPRIGHT",
+            "direction": "TOP_RIGHT",
             "verticalKingdom": "WOLF",
             "horizontalKingdom": "MUSHROOM"
         },
         {
             "id": "010",
             "points": 3,
-            "direction": "BOTTOMLEFT",
+            "direction": "BOTTOM_LEFT",
             "verticalKingdom": "LEAF",
             "horizontalKingdom": "BUTTERFLY"
         },
         {
             "id": "011",
             "points": 3,
-            "direction": "BOTTOMRIGHT",
+            "direction": "BOTTOM_RIGHT",
             "verticalKingdom": "MUSHROOM",
             "horizontalKingdom": "LEAF"
         }

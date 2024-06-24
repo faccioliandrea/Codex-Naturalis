@@ -7,7 +7,7 @@ import it.polimi.ingsw.connections.client.ServerConnection;
 import it.polimi.ingsw.connections.data.CardInfo;
 import it.polimi.ingsw.connections.data.PlaceCardSuccessInfo;
 
-import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
+import it.polimi.ingsw.connections.enums.AddPlayerToLobbyResponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public interface RMIServerConnectionInterface extends Remote, ServerConnection {
     LogInResponse loginRequest(String username, RMIClientConnectionInterface client) throws IOException;
     ArrayList<String> getLobby(String username) throws RemoteException;
-    AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) throws RemoteException;
+    AddPlayerToLobbyResponse addPlayerToLobby(String username, String lobbyId) throws RemoteException;
     void choosePrivateGoal(String username, int index) throws RemoteException;
     ChooseStarterCardSideResponse chooseStarterCardSide(String username, boolean flipped) throws RemoteException;
     PlaceCardSuccessInfo placeCard(String username, String cardId, Point position, boolean flipped) throws RemoteException;

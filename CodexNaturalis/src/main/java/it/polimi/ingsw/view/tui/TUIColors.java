@@ -13,13 +13,13 @@ public enum TUIColors {
     CYAN(6),
     WHITE(7);
 
-    private final String colorcode;
+    private final String colorCode;
     private final int value;
 
     TUIColors(int code) {
         String ansi =  "\u001B[%d%dm";
         this.value = code;
-        this.colorcode = String.format(ansi, 3, code);
+        this.colorCode = String.format(ansi, 3, code);
     }
 
     /**
@@ -27,7 +27,7 @@ public enum TUIColors {
      * @return the color code
      */
     public String toString() {
-        return this.colorcode;
+        return this.colorCode;
     }
 
     /**

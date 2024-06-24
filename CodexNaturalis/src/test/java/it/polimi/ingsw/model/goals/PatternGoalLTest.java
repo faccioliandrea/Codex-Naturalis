@@ -32,15 +32,15 @@ class PatternGoalLTest implements GoalTest, ConstructorTest {
     void setup(){
         id = "002";
         points = 3;
-        direction = LDirection.TOPLEFT;
+        direction = LDirection.TOP_LEFT;
         verticalKingdom = MUSHROOM;
         horizontalKingdom = LEAF;
         goal = new PatternGoalL(id,points,direction,verticalKingdom,horizontalKingdom);
 
         ArrayList<Goal> sharedGoals = new ArrayList<>();
-        sharedGoals.add(new PatternGoalL("002", 3, LDirection.BOTTOMLEFT, WOLF,MUSHROOM));
-        sharedGoals.add(new PatternGoalL("003", 3, LDirection.TOPRIGHT, BUTTERFLY, LEAF));
-        PatternGoalL privateGoal = new PatternGoalL("003", 3, LDirection.BOTTOMRIGHT, WOLF, LEAF);
+        sharedGoals.add(new PatternGoalL("002", 3, LDirection.BOTTOM_LEFT, WOLF,MUSHROOM));
+        sharedGoals.add(new PatternGoalL("003", 3, LDirection.TOP_RIGHT, BUTTERFLY, LEAF));
+        PatternGoalL privateGoal = new PatternGoalL("003", 3, LDirection.BOTTOM_RIGHT, WOLF, LEAF);
         board = new Board(privateGoal, sharedGoals);
     }
     @Test

@@ -173,10 +173,10 @@ public class Parser {
             JsonObject jsonCard = jsonCardArray.get(index).getAsJsonObject();
             String id = jsonCard.get("id").getAsString();
             CardSymbolKingdom verticalKingdom = CardSymbolKingdom.valueOf(jsonCard.get("verticalKingdom").getAsString());
-            CardSymbolKingdom horizonalKingdom = CardSymbolKingdom.valueOf(jsonCard.get("horizontalKingdom").getAsString());
+            CardSymbolKingdom horizontalKingdom = CardSymbolKingdom.valueOf(jsonCard.get("horizontalKingdom").getAsString());
             LDirection direction = LDirection.valueOf(jsonCard.get("direction").getAsString());
             int points = jsonCard.get("points").getAsInt();
-            LGoals[index] = new PatternGoalL(id, points, direction, verticalKingdom, horizonalKingdom);
+            LGoals[index] = new PatternGoalL(id, points, direction, verticalKingdom, horizontalKingdom);
         }
         return LGoals;
     }

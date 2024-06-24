@@ -4,7 +4,7 @@ import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.chat.ServerChatHandler;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.*;
-import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
+import it.polimi.ingsw.connections.enums.AddPlayerToLobbyResponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
@@ -285,7 +285,7 @@ public class ServerController {
             leaderboard.keySet().forEach(x->{
                 if(!x.equals(forceWinner)){
                     leaderboard.replace(x, 0);
-                } else if(x.equals(forceWinner)){
+                } else {
                     leaderboard.replace(x,20);
                 }
             });
@@ -376,12 +376,20 @@ public class ServerController {
                     destroyGame(userToGame.get(username));
                 } else if(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).count()==1){
                     System.out.println("Only 1 player connected, game will finish in 1 minute.");
-                    connectionBridge.noOtherPlayerConnected(gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst().get().getUsername());
+                    Optional<Player> optionalPlayer = gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst();
+                    if(!optionalPlayer.isPresent()){
+                        throw new NullPointerException();
+                    }
+                    connectionBridge.noOtherPlayerConnected(optionalPlayer.get().getUsername());
                     Timer timer = new Timer();
                     TimerTask task1 = new TimerTask() {
                         @Override
                         public void run() {
-                            endGame(userToGame.get(username), gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst().get().getUsername());
+                            Optional<Player> optionalPlayer = gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst();
+                            if(!optionalPlayer.isPresent()){
+                                throw new NullPointerException();
+                            }
+                            endGame(userToGame.get(username), optionalPlayer.get().getUsername());
                         }
                     };
                     onePlayer.put(userToGame.get(username), task1);
@@ -479,21 +487,21 @@ public class ServerController {
      * @param lobbyId the id of the lobby
      * @return the response of the operation
      */
-    public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) {
+    public AddPlayerToLobbyResponse addPlayerToLobby(String username, String lobbyId) {
         if (connectionBridge.checkUserConnected(username)) {
             if(!lobbyController.getLobbies().containsKey(lobbyId)) {
-                return AddPlayerToLobbyresponse.LOBBY_NOT_FOUND;
+                return AddPlayerToLobbyResponse.LOBBY_NOT_FOUND;
             }
             else if(lobbyController.getLobbies().get(lobbyId).isFull()) {
-                return AddPlayerToLobbyresponse.LOBBY_FULL;
+                return AddPlayerToLobbyResponse.LOBBY_FULL;
             }
             else {
                 lobbyController.addPlayer(username, lobbyId);
                 userToLobby.put(username, lobbyId);
-                return AddPlayerToLobbyresponse.PLAYER_ADDED;
+                return AddPlayerToLobbyResponse.PLAYER_ADDED;
             }
         }
-        return AddPlayerToLobbyresponse.PLAYER_NOT_CONNECTED;
+        return AddPlayerToLobbyResponse.PLAYER_NOT_CONNECTED;
     }
 
     /**
@@ -537,14 +545,6 @@ public class ServerController {
      */
     public HashMap<String, String> getUserToGame() {
         return userToGame;
-    }
-
-    /**
-     * Getter for the connection bridge
-     * @return the connection bridge
-     */
-    public ConnectionBridge getConnectionBridge() {
-        return connectionBridge;
     }
 
     /**

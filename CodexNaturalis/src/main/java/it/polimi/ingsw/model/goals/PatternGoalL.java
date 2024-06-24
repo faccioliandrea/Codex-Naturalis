@@ -50,14 +50,14 @@ public class PatternGoalL extends Goal{
             tmpSet.clear();
             if(c instanceof PlayableCard && ((PlayableCard) c).getCardKingdom().equals(getVerticalKingdom())){
                 Optional<Card> cc1, cc2;
-                if(direction.equals(LDirection.BOTTOMLEFT)){
+                if(direction.equals(LDirection.BOTTOM_LEFT)){
                     cc1 = cards.stream().filter(x -> x.getCoord().y == c.getCoord().y+2 && x.getCoord().x == c.getCoord().x && x instanceof PlayableCard && ((PlayableCard) x).getCardKingdom().equals(getVerticalKingdom())).findFirst();
                     cc2 = cards.stream().filter(x -> x.getCoord().y == c.getCoord().y-1 && x.getCoord().x == c.getCoord().x-1 && x instanceof PlayableCard && ((PlayableCard) x).getCardKingdom().equals(getHorizontalKingdom())).findFirst();
-                } else if(direction.equals(LDirection.BOTTOMRIGHT)){
+                } else if(direction.equals(LDirection.BOTTOM_RIGHT)){
                     cc1 = cards.stream().filter(x -> x.getCoord().y == c.getCoord().y+2 && x.getCoord().x == c.getCoord().x && x instanceof PlayableCard && ((PlayableCard) x).getCardKingdom().equals(getVerticalKingdom())).findFirst();
                     cc2 = cards.stream().filter(x -> x.getCoord().y == c.getCoord().y-1 && x.getCoord().x == c.getCoord().x+1 && x instanceof PlayableCard && ((PlayableCard) x).getCardKingdom().equals(getHorizontalKingdom())).findFirst();
                 }
-                else if(direction.equals(LDirection.TOPLEFT)){
+                else if(direction.equals(LDirection.TOP_LEFT)){
                     cc1 = cards.stream().filter(x -> x.getCoord().y == c.getCoord().y+1 && x.getCoord().x == c.getCoord().x-1 && x instanceof PlayableCard && ((PlayableCard) x).getCardKingdom().equals(getHorizontalKingdom())).findFirst();
                     cc2 = cards.stream().filter(x -> x.getCoord().y == c.getCoord().y-2 && x.getCoord().x == c.getCoord().x && x instanceof PlayableCard && ((PlayableCard) x).getCardKingdom().equals(getVerticalKingdom())).findFirst();
                 }

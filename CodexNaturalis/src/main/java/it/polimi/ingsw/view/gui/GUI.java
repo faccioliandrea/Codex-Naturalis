@@ -7,6 +7,7 @@ import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.view.UIManager;
 import it.polimi.ingsw.view.UIMessagesConstants;
 import it.polimi.ingsw.view.gui.controller.*;
+import it.polimi.ingsw.view.tui.enums.Decks;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -156,10 +157,11 @@ public class GUI extends UIManager {
 
     /**
      * Asks the user for the card to draw
+     *
      * @return the index of the card to draw
      */
     @Override
-    public int askForDrawCard() {
+    public Decks askForDrawCard() {
         Platform.runLater(() -> {
             mainController.updateData();
             mainController.askForDrawCard();
@@ -167,7 +169,7 @@ public class GUI extends UIManager {
         });
         try {
             queue.clear();
-            return (int) queue.take();
+            return Decks.getDeck((int) queue.take());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

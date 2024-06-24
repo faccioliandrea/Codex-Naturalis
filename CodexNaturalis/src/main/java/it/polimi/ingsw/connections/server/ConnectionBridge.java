@@ -3,7 +3,7 @@ package it.polimi.ingsw.connections.server;
 import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.connections.ConnectionStatus;
 import it.polimi.ingsw.connections.data.*;
-import it.polimi.ingsw.connections.enums.AddPlayerToLobbyresponse;
+import it.polimi.ingsw.connections.enums.AddPlayerToLobbyResponse;
 import it.polimi.ingsw.connections.enums.ChooseStarterCardSideResponse;
 import it.polimi.ingsw.connections.enums.LogInResponse;
 import it.polimi.ingsw.controller.server.ServerController;
@@ -127,8 +127,8 @@ public class ConnectionBridge {
      * @param lobbyId the id of the lobby
      * @return the response of addPlayerToLobby
      */
-    public AddPlayerToLobbyresponse addPlayerToLobby(String username, String lobbyId) {
-        AddPlayerToLobbyresponse result = ServerController.getInstance().addPlayerToLobby(username, lobbyId);
+    public AddPlayerToLobbyResponse addPlayerToLobby(String username, String lobbyId) {
+        AddPlayerToLobbyResponse result = ServerController.getInstance().addPlayerToLobby(username, lobbyId);
         if (connections.get(username) instanceof SocketClientConnection) {
             switch (result) {
                 case LOBBY_NOT_FOUND:
@@ -160,11 +160,11 @@ public class ConnectionBridge {
                     }
                     break;
             }
-            return AddPlayerToLobbyresponse.PLAYER_ADDED;
+            return AddPlayerToLobbyResponse.PLAYER_ADDED;
         } else {
-            if(result.equals(AddPlayerToLobbyresponse.PLAYER_ADDED)) {
+            if(result.equals(AddPlayerToLobbyResponse.PLAYER_ADDED)) {
                 if (ServerController.getInstance().getLobbyController().getLobbies().get(lobbyId).isFull())
-                    result = AddPlayerToLobbyresponse.PlAYER_ADDED_LAST;
+                    result = AddPlayerToLobbyResponse.PLAYER_ADDED_LAST;
                 for (String u : ServerController.getInstance().getUserToLobby().keySet()) {
                     if (ServerController.getInstance().getUserToLobby().get(u).equals(lobbyId) && !u.equals(username)) {
                         playerJoinedLobby(connections.get(u), username);
@@ -177,7 +177,7 @@ public class ConnectionBridge {
 
     /**
      * Receive the private goal choice from the player
-     * @PARAM connection the connection of the player
+     * @param connection the connection of the player
      * @param username the username of the player who joined the lobby
      */
     private void playerJoinedLobby(ClientConnection connection, String username) {

@@ -79,9 +79,9 @@ class PlayerTest implements ConstructorTest {
     @Test
     void successfulPlaceCard() throws InvalidPositionException, RequirementsNotSatisfied {
         ArrayList<Goal> sharedGoals = new ArrayList<>();
-        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOMLEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
+        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOM_LEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
         sharedGoals.add(new PatternGoalDiagonal("002", 3, true, CardSymbolKingdom.LEAF));
-        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
+        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOM_LEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
         Board board = new Board(privateGoal, sharedGoals);
         player.setBoard(board);
 
@@ -113,11 +113,11 @@ class PlayerTest implements ConstructorTest {
         ResourceCard resourceCard = new ResourceCard(id, CardSymbolKingdom.MUSHROOM, corners, points);
         player.drawCard(resourceCard);
 
-        Point coor = new Point(1,1);
+        Point coord = new Point(1,1);
 
-        player.placeCard(resourceCard, coor);
+        player.placeCard(resourceCard, coord);
 
-        assertEquals(resourceCard.getCoord(), coor);
+        assertEquals(resourceCard.getCoord(), coord);
         assertFalse(player.getHand().contains(resourceCard));
         assertTrue(player.getBoard().getPlayedCards().contains(resourceCard));
 
@@ -126,9 +126,9 @@ class PlayerTest implements ConstructorTest {
     @Test
     void exceptionalPlaceGoldCard() throws InvalidPositionException, RequirementsNotSatisfied {
         ArrayList<Goal> sharedGoals = new ArrayList<>();
-        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOMLEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
+        sharedGoals.add(new PatternGoalL("001", 1, LDirection.BOTTOM_LEFT, CardSymbolKingdom.MUSHROOM, CardSymbolKingdom.WOLF));
         sharedGoals.add(new PatternGoalDiagonal("002", 3, true, CardSymbolKingdom.LEAF));
-        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
+        Goal privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOM_LEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
         Board board = new Board(privateGoal, sharedGoals);
         player.setBoard(board);
 
@@ -150,7 +150,6 @@ class PlayerTest implements ConstructorTest {
         player.placeCard(starterCard, new Point(0,0));
 
         String id = "000";
-        CardSymbolKingdom centerSymbol = CardSymbolKingdom.MUSHROOM;
         Corner[] corners = new Corner[4];
         corners[0] = new Corner(CardSymbolObject.SCROLL);
         corners[1] = new Corner(null);
@@ -160,12 +159,12 @@ class PlayerTest implements ConstructorTest {
         GoldCardRequirement[] requirements = new GoldCardRequirement[2];
         requirements[0] = requirement_1;
         requirements[1] = requirement_2;
-        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, centerSymbol, corners, points, requirements);
+        FixedPointsGoldCard goldCard = new FixedPointsGoldCard(id, CardSymbolKingdom.MUSHROOM, corners, points, requirements);
         player.drawCard(goldCard);
 
-        Point coor = new Point(1,1);
+        Point coord = new Point(1,1);
 
-        Exception exception = assertThrows(RequirementsNotSatisfied.class, () -> player.placeCard(goldCard, coor));
+        Exception exception = assertThrows(RequirementsNotSatisfied.class, () -> player.placeCard(goldCard, coord));
         String expectedMessage = "Error: you don't satisfy the requirements!";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
@@ -204,8 +203,8 @@ class PlayerTest implements ConstructorTest {
         player.drawCard(resourceCard);
 
         Exception exception = assertThrows(InvalidPositionException.class, () -> {
-            Point invalidCoor = new Point(1,-1);
-            player.placeCard(resourceCard, invalidCoor);
+            Point invalidCoord = new Point(1,-1);
+            player.placeCard(resourceCard, invalidCoord);
         });
         String expectedMessage = "Error: you can't place a card here!";
         String actualMessage = exception.getMessage();

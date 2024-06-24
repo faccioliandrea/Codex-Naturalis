@@ -107,20 +107,6 @@ public class Player {
     }
 
     /**
-     * Setter for Cards points attribute
-     */
-    public void setCardsPoints(int cardsPoints) {
-        this.cardsPoints = cardsPoints;
-    }
-
-    /**
-     * Setter for Goals points attribute
-     */
-    public void setGoalsPoints(int goalsPoints) {
-        this.goalsPoints = goalsPoints;
-    }
-
-    /**
      * Setter for Player's hand attribute
      */
     public void setHand(ArrayList<PlayableCard> hand) {
@@ -135,7 +121,7 @@ public class Player {
     }
 
     /**
-     * Setter for Player's startercard attribute
+     * Setter for Player's starterCard attribute
      */
     public void setStarterCard(StarterCard starterCard) {
         this.starterCard = starterCard;
@@ -146,20 +132,6 @@ public class Player {
      */
     public void setBoard(Board board) {
         this.board = board;
-    }
-
-    /**
-     * Setter for Player's completedGoals attribute
-     */
-    public int getCompletedGoals() {
-        return completedGoals;
-    }
-
-    /**
-     * Getter for Player's completedGoals attribute
-     */
-    public void setCompletedGoals(int completedGoals) {
-        this.completedGoals = completedGoals;
     }
 
     /**

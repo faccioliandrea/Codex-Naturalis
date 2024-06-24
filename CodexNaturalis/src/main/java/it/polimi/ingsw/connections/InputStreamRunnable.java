@@ -19,20 +19,6 @@ public class InputStreamRunnable implements StreamRunnable {
 
   /**
    * Constructor
-   * @param ois: ObjectInputStream to read from
-   * @param msgQueue: BlockingQueue where to put the read messages
-   * @param callback: Consumer to call when an exception is thrown
-   */
-  public InputStreamRunnable(ObjectInputStream ois, BlockingQueue<Message> msgQueue, Consumer<String> callback)
-      throws IOException {
-    this.inputStream = ois;
-    this.isStopped = false;
-    this.msgQueue = msgQueue;
-    this.callback = callback;
-  }
-
-  /**
-   * Constructor
    * @param is: InputStream to read from
    * @param msgQueue: BlockingQueue where to put the read messages
    * @param callback: Consumer to call when an exception is thrown
@@ -43,14 +29,6 @@ public class InputStreamRunnable implements StreamRunnable {
     this.isStopped = false;
     this.msgQueue = msgQueue;
     this.callback = callback;
-  }
-
-  /**
-   * Getter for the ObjectInputStream
-   * @return ObjectInputStream
-   */
-  public ObjectInputStream getInputStream() {
-    return inputStream;
   }
 
   /**
@@ -69,7 +47,6 @@ public class InputStreamRunnable implements StreamRunnable {
       }
     } catch (IOException | InterruptedException | ClassNotFoundException e) {
       this.callback.accept(e.getMessage());
-      return;
     }
   }
 

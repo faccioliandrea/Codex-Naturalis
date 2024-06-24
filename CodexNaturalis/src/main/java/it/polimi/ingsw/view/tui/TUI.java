@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.view.UIManager;
 import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.view.UIMessagesConstants;
+import it.polimi.ingsw.view.tui.enums.Decks;
 
 import java.awt.*;
 import java.util.*;
@@ -16,7 +17,6 @@ import java.util.stream.Stream;
 
 public class TUI extends UIManager {
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
-    private final BlockingQueue<String> commandQueue = new LinkedBlockingQueue<>();
     private final Object lock = new Object();
 
     private static final int CHAT_HISTORY_LENGTH = 10;
@@ -26,6 +26,7 @@ public class TUI extends UIManager {
      */
     public TUI() {
         instance = this;
+        BlockingQueue<String> commandQueue = new LinkedBlockingQueue<>();
         new Thread(new InputHandler(commandQueue, inputQueue)).start();
         new Thread(new CommandHandler(commandQueue)).start();
     }
@@ -243,10 +244,10 @@ public class TUI extends UIManager {
     }
 
     @Override
-    public int askForDrawCard() {
+    public Decks askForDrawCard() {
         synchronized (lock) {
             int choice = -1;
-            int deck;
+            Decks deck;
             do {
                 inputQueue.clear();
                 this.printColorDebug(TUIColors.PURPLE, "Choose which deck do you want to draw from: [1] Resource [2] Gold");
@@ -265,9 +266,9 @@ public class TUI extends UIManager {
                     System.out.println("Oops, you inserted a string!");
                 }
             } while (choice != 1 && choice != 2);
-            deck = choice == 1 ? 10 : 20;
+            deck = choice == 1 ? Decks.RESOURCE_DECK : Decks.GOLD_DECK;
 
-            this.printColorDebug(TUIColors.PURPLE, String.format("Choose which card do you want to draw: [1] %s [2] %s [3] Covered", deck == 10 ? this.data.getResourceDeck().get(0).getId() : this.data.getGoldDeck().get(0).getId(), deck == 10 ? this.data.getResourceDeck().get(1).getId() : this.data.getGoldDeck().get(1).getId()));
+            this.printColorDebug(TUIColors.PURPLE, String.format("Choose which card do you want to draw: [1] %s [2] %s [3] Covered", deck == Decks.RESOURCE_DECK ? this.data.getResourceDeck().get(0).getId() : this.data.getGoldDeck().get(0).getId(), deck == Decks.RESOURCE_DECK ? this.data.getResourceDeck().get(1).getId() : this.data.getGoldDeck().get(1).getId()));
 
             int choiceCard = -1;
             do {
@@ -284,7 +285,7 @@ public class TUI extends UIManager {
                 }
             } while (choiceCard != 1 && choiceCard != 2 && choiceCard != 3);
 
-            deck = deck + choiceCard - 1;
+            deck = Decks.getDeck(deck.getValue() + choiceCard - 1);
             return deck;
         }
     }
@@ -605,13 +606,13 @@ public class TUI extends UIManager {
     }
 
     private void printCardInfo(CardInfo card) {
-        String descr;
+        String description;
         if (card.getCoord() != null) {
-            descr = card.isFlipped() ? card.getFrontDescription() : card.getBackDescription();
+            description = card.isFlipped() ? card.getFrontDescription() : card.getBackDescription();
         } else {
-            descr = card.getDescription();
+            description = card.getDescription();
         }
-        printDebug(applyColors(descr));
+        printDebug(applyColors(description));
         vRule();
     }
 
@@ -713,7 +714,7 @@ public class TUI extends UIManager {
 
     private String applyColors(String s) {
         for (CardTextColors cc: CardTextColors.values()) {
-            s = s.replace(cc.name(), cc.toString() + cc.name() + TUIColors.reset());
+            s = s.replace(cc.name(), cc + cc.name() + TUIColors.reset());
         }
         return s;
     }

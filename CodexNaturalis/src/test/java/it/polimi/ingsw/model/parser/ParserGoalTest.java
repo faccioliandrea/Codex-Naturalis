@@ -27,7 +27,7 @@ public class ParserGoalTest {
         CardSymbolKingdom horizontalKingdom = CardSymbolKingdom.BUTTERFLY;
         CardSymbolKingdom verticalKingdom = CardSymbolKingdom.LEAF;
         int points = 3;
-        LDirection direction = LDirection.BOTTOMLEFT;
+        LDirection direction = LDirection.BOTTOM_LEFT;
         PatternGoalL goalCard = new PatternGoalL(id, points, direction, verticalKingdom, horizontalKingdom);
         Optional<Goal> goalCardJsonOpt = Arrays.stream(cards).filter(card -> Objects.equals(card.getId(), id)).findFirst();
         assertTrue(goalCardJsonOpt.isPresent());
