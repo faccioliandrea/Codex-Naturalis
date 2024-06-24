@@ -10,7 +10,7 @@ package it.polimi.ingsw.connections.enums;
  */
 public enum AddPlayerToLobbyResponse {
     PLAYER_ADDED,
-    LOBBY_FULL,
+    NO_LOBBIES,
     LOBBY_NOT_FOUND,
     PLAYER_NOT_CONNECTED,
     PLAYER_ADDED_LAST

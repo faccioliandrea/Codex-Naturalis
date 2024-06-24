@@ -143,7 +143,7 @@ public class ConnectionBridge {
             try {
                 AddPlayerToLobbyResponse result = ((RMIServerConnectionInterface) serverConnection).addPlayerToLobby(ClientController.getInstance().getUsername(), lobbyId);
                 if(result.equals(AddPlayerToLobbyResponse.LOBBY_NOT_FOUND))
-                    lobbyDoesNotExists();
+                    lobbyFull();
                 else if(result.equals(AddPlayerToLobbyResponse.PLAYER_ADDED))
                     joinLobbySuccess(false);
                 else if(result.equals(AddPlayerToLobbyResponse.PLAYER_ADDED_LAST))

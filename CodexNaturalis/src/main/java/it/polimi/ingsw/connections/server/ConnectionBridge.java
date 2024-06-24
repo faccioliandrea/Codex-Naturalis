@@ -14,7 +14,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -135,7 +134,7 @@ public class ConnectionBridge {
             switch (result) {
                 case LOBBY_NOT_FOUND:
                     try {
-                        ((SocketClientConnection) connections.get(username)).lobbyDoesNotExist();
+                        ((SocketClientConnection) connections.get(username)).lobbyFull();
                     } catch (IOException e) {
                         connections.get(username).setOffline();
 
@@ -154,9 +153,9 @@ public class ConnectionBridge {
                         }
                     }
                     break;
-                case LOBBY_FULL:
+                case NO_LOBBIES:
                     try {
-                        ((SocketClientConnection) connections.get(username)).lobbyFull();
+                        ((SocketClientConnection) connections.get(username)).lobbyDoesNotExist();
                     } catch (IOException e) {
                         connections.get(username).setOffline();
                     }

@@ -482,8 +482,8 @@ public class ServerController {
             if(!lobbyController.getLobbies().containsKey(lobbyId)) {
                 return AddPlayerToLobbyResponse.LOBBY_NOT_FOUND;
             }
-            else if(lobbyController.getLobbies().get(lobbyId).isFull()) {
-                return AddPlayerToLobbyResponse.LOBBY_FULL;
+            else if(lobbyController.getLobbies().isEmpty()) {
+                return AddPlayerToLobbyResponse.NO_LOBBIES;
             }
             else {
                 lobbyController.addPlayer(username, lobbyId);
