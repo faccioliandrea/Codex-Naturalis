@@ -291,9 +291,10 @@ public class ServerController {
                 }
             });
         }
+        executorService = Executors.newFixedThreadPool(gameController.getGamePlayers(gameId).size());
         for(String username : userToGame.keySet()){
             if(userToGame.get(username).equals(userToGame.get(username))) {
-                connectionBridge.endGame(username, leaderboard);
+                executorService.submit(()-> connectionBridge.endGame(username, leaderboard));
             }
         }
         destroyGame(gameId);

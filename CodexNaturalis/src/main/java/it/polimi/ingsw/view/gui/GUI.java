@@ -369,10 +369,7 @@ public class GUI extends UIManager {
      */
     @Override
     public void turnEnded(GameStateInfo gameStateInfo) {
-        Platform.runLater(() -> {
-            mainController.updateData();
-            mainController.setTitle("Turn ended. Now wait for your opponent(s) to finish their turn");
-        });
+        Platform.runLater(mainController::updateData);
     }
 
     /**
