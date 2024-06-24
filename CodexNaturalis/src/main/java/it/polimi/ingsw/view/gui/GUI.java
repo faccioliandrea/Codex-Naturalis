@@ -59,7 +59,7 @@ public class GUI extends UIManager {
     @Override
     public String askForUsername() {
         GUIApp.changeScene("lobbies", lobbiesController);
-        lobbiesController.askForUsername();
+        Platform.runLater(lobbiesController::askForUsername);
         try {
             queue.clear();
             return queue.take().toString();
@@ -91,7 +91,7 @@ public class GUI extends UIManager {
     @Override
     public String askForLobbyId(ArrayList<String> lobbies) {
         GUIApp.changeScene("lobbies", lobbiesController);
-        lobbiesController.showLobbies(lobbies);
+        Platform.runLater(() -> lobbiesController.showLobbies(lobbies));
         try {
             queue.clear();
             return queue.take().toString();
