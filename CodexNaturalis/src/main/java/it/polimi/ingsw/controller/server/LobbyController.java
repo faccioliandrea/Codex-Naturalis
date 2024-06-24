@@ -1,7 +1,5 @@
 package it.polimi.ingsw.controller.server;
 
-import it.polimi.ingsw.connections.server.ConnectionBridge;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

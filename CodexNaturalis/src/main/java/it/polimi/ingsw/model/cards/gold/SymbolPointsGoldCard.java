@@ -10,7 +10,7 @@ import it.polimi.ingsw.model.player.Board;
  */
 public class SymbolPointsGoldCard extends GoldCard {
 
-    private CardSymbolObject pointsSymbol;
+    private final CardSymbolObject pointsSymbol;
 
     /**
      * Default constructor

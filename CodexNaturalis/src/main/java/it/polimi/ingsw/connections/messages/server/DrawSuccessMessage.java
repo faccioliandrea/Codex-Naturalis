@@ -5,7 +5,7 @@ import it.polimi.ingsw.connections.data.CardInfo;
 import java.util.ArrayList;
 
 public class DrawSuccessMessage extends ServerToClientMessage {
-    private ArrayList<CardInfo> updatedHand;
+    final private ArrayList<CardInfo> updatedHand;
 
     public DrawSuccessMessage(ArrayList<CardInfo> updatedHand) {
         this.updatedHand = updatedHand;

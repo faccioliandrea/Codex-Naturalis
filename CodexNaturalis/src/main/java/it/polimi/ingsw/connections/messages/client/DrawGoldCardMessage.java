@@ -3,7 +3,7 @@ import it.polimi.ingsw.connections.server.ConnectionBridge;
 
 
 public class DrawGoldCardMessage extends ClientToServerMessage {
-    private int index;
+    final private int index;
 
     public DrawGoldCardMessage(String username, int index) {
         this.username = username;

@@ -3,7 +3,7 @@ import it.polimi.ingsw.connections.server.ConnectionBridge;
 
 
 public class CreateLobbyAndJoinMessage extends ClientToServerMessage {
-    private int numOfPlayers;
+    final private int numOfPlayers;
 
     public CreateLobbyAndJoinMessage(String username, int numOfPlayers) {
         this.username = username;

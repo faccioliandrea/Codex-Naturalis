@@ -6,8 +6,8 @@ import it.polimi.ingsw.model.enumeration.CardSymbol;
  * Class representing a requirement of the Goal
  */
 public class GoalRequirement {
-    private CardSymbol requiredSymbol;
-    private int quantity;
+    final private CardSymbol requiredSymbol;
+    final private int quantity;
     /**
      * Default constructor
      * @param requiredSymbol Symbol required

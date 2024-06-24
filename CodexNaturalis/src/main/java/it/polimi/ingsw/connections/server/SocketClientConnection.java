@@ -24,9 +24,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * This class is the implementation of the ClientConnection interface for the Socket connection type.
  */
 public class SocketClientConnection implements ClientConnection, Runnable {
-    private SocketAddress remoteAddr;
-    private Socket clientSocket;
-    private ServerSocket serverSocket;
+    final private SocketAddress remoteAddr;
+    final private Socket clientSocket;
+    final private ServerSocket serverSocket;
     private InputStreamRunnable inputStream;
     private OutputStreamRunnable outputStream;
 

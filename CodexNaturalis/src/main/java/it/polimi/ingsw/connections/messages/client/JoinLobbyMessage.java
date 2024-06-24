@@ -3,7 +3,7 @@ import it.polimi.ingsw.connections.server.ConnectionBridge;
 
 
 public class JoinLobbyMessage extends ClientToServerMessage {
-    private String lobbyID;
+    final private String lobbyID;
 
     public JoinLobbyMessage(String username, String lobbyID) {
         this.username = username;

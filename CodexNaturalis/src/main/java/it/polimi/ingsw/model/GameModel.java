@@ -209,10 +209,10 @@ public class GameModel {
         this.players.forEach(x -> x.setStarterCard(this.starterCardDeck.remove(0)));
 
         // sets same shared goals for all players
-        this.players.forEach(x -> x.getBoard().setSharedGoals(new ArrayList<Goal>(goalsDeck.subList(0,2))));
+        this.players.forEach(x -> x.getBoard().setSharedGoals(new ArrayList<>(goalsDeck.subList(0, 2))));
         // sets private goals for each player
         for (int i=0, j=0; i<this.players.size() && j<goalsDeck.size(); i++, j += 2) {
-            this.players.get(i).setPrivateGoals(new ArrayList<Goal>(goalsDeck.subList(j+2,j+4)));
+            this.players.get(i).setPrivateGoals(new ArrayList<>(goalsDeck.subList(j + 2, j + 4)));
         }
 
         // sets hand

@@ -16,9 +16,9 @@ import java.util.Set;
  */
 public class PatternGoalL extends Goal{
 
-    private LDirection direction;
-    private CardSymbolKingdom verticalKingdom;
-    private CardSymbolKingdom horizontalKingdom;
+    final private LDirection direction;
+    final private CardSymbolKingdom verticalKingdom;
+    final private CardSymbolKingdom horizontalKingdom;
 
     /**
      * Default constructor

@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 
-import it.polimi.ingsw.connections.messages.Message;
 import it.polimi.ingsw.connections.messages.*;
 
 /**
@@ -15,8 +14,8 @@ import it.polimi.ingsw.connections.messages.*;
 public class InputStreamRunnable implements StreamRunnable {
   private final ObjectInputStream inputStream;
   private boolean isStopped;
-  private BlockingQueue<Message> msgQueue;
-  private Consumer<String> callback;
+  final private BlockingQueue<Message> msgQueue;
+  final private Consumer<String> callback;
 
   /**
    * Constructor

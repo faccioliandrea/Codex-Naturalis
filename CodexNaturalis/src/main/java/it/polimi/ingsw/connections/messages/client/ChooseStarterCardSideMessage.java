@@ -3,7 +3,7 @@ package it.polimi.ingsw.connections.messages.client;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 
 public class ChooseStarterCardSideMessage extends ClientToServerMessage {
-    private boolean flipped;
+    final private boolean flipped;
 
     public ChooseStarterCardSideMessage(String username, boolean flipped) {
         this.username = username;

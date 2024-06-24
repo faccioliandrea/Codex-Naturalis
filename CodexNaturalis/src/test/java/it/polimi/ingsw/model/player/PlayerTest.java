@@ -165,9 +165,7 @@ class PlayerTest implements ConstructorTest {
 
         Point coor = new Point(1,1);
 
-        Exception exception = assertThrows(RequirementsNotSatisfied.class, () -> {
-            player.placeCard(goldCard, coor);
-        });
+        Exception exception = assertThrows(RequirementsNotSatisfied.class, () -> player.placeCard(goldCard, coor));
         String expectedMessage = "Error: you don't satisfy the requirements!";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));

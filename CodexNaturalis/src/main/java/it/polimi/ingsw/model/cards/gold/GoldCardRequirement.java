@@ -5,8 +5,8 @@ import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
  * Class representing a requirement to place a gold card
  */
 public class GoldCardRequirement {
-    private CardSymbolKingdom requiredSymbol;
-    private int quantity;
+    final private CardSymbolKingdom requiredSymbol;
+    final private int quantity;
 
     /**
      * Default constructor

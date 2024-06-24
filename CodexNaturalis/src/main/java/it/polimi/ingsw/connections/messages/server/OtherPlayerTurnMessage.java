@@ -4,7 +4,7 @@ import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class OtherPlayerTurnMessage extends ServerToClientMessage{
 
-    private String currentPlayer;
+    final private String currentPlayer;
     public OtherPlayerTurnMessage(String currentPlayer) {
         this.currentPlayer = currentPlayer;
     }

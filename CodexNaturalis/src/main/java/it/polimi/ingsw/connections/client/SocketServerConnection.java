@@ -10,7 +10,6 @@ import it.polimi.ingsw.connections.messages.server.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,7 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class SocketServerConnection implements ServerConnection, Runnable {
     private InputStreamRunnable inputStream;
     private OutputStreamRunnable outputStream;
-    private Socket socket;
+    private final Socket socket;
     private final BlockingQueue<Message> queue = new LinkedBlockingQueue<>();
     private ConnectionStatus connectionStatus;
 

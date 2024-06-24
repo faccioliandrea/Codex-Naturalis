@@ -15,7 +15,6 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import static it.polimi.ingsw.model.enumeration.CardSymbolKingdom.*;
-import static it.polimi.ingsw.model.enumeration.CardSymbolKingdom.BUTTERFLY;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CornerPointsGoldCardTest implements ConstructorTest, GoldCardTest {

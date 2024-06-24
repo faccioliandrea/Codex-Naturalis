@@ -12,7 +12,7 @@ import it.polimi.ingsw.connections.messages.PingMessage;
 public class OutputStreamRunnable implements StreamRunnable {
     private final ObjectOutputStream outputStream;
     private boolean isStopped;
-    private Consumer<String> callback;
+    final private Consumer<String> callback;
 
     final Object lock = new Object();
 

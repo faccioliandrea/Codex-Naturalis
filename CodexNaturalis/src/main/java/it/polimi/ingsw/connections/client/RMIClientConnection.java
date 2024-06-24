@@ -11,7 +11,7 @@ import java.util.HashMap;
  * This class is the RMI client connection class
  */
 public class RMIClientConnection extends UnicastRemoteObject implements RMIClientConnectionInterface {
-    private ConnectionBridge connectionBridge = ConnectionBridge.getInstance();
+    final private ConnectionBridge connectionBridge = ConnectionBridge.getInstance();
     private final Object lock = new Object();
 
     /**

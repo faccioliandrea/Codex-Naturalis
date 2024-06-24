@@ -5,8 +5,8 @@ import it.polimi.ingsw.model.player.Board;
  * Abstract class representing the goals in the game
  */
 public abstract class Goal {
-    private String id;
-    private int points;
+    final private String id;
+    final private int points;
 
     /**
      * Default constructor

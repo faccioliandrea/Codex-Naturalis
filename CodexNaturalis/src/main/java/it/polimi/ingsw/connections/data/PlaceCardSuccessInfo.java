@@ -9,12 +9,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PlaceCardSuccessInfo implements Serializable {
-    private int cardsPoint;
-    private int goalsPoints;
-    private CardInfo playedCard;
-    private ArrayList<Point> available;
-
-    private Map<CardSymbol, Integer> symbols;
+    final private int cardsPoint;
+    final private int goalsPoints;
+    final private CardInfo playedCard;
+    final private ArrayList<Point> available;
+    final private Map<CardSymbol, Integer> symbols;
 
     public PlaceCardSuccessInfo(int cardsPoint, int goalsPoints, CardInfo playedCard, ArrayList<Point> available, Map<CardSymbol, Integer> symbols) {
         this.cardsPoint = cardsPoint;

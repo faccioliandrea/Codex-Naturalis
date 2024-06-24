@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class GameStateInfo implements Serializable {
 
-    private String username;
-    private String currentPlayer;
-    private String lastPlayer;
-    private Map<String, PlayerColor> playerColors;
+    final private String username;
+    final private String currentPlayer;
+    final private String lastPlayer;
+    final private Map<String, PlayerColor> playerColors;
     private ArrayList<CardInfo> hand = new ArrayList<>();
     private ArrayList<CardInfo> resourceDeck = new ArrayList<>();
     private ArrayList<CardInfo> goldDeck = new ArrayList<>();
@@ -23,7 +23,7 @@ public class GameStateInfo implements Serializable {
     private int currentTurn = 0;
     private boolean isLastTurn = false;
     private ArrayList<CardInfo> board = new ArrayList<>();
-    private Map<CardSymbol, Integer> symbols;
+    final private Map<CardSymbol, Integer> symbols;
     private Map<String, Integer> leaderboard = new HashMap<>();
     private Map<String, ArrayList<CardInfo>> boards = new HashMap<>();
     private Map<String, ConnectionStatus> connectionStatus = new HashMap<>();

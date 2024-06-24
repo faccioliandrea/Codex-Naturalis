@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.player.Board;
  * Class representing the symbol goal card
  */
 public class SymbolGoal extends Goal{
-    private GoalRequirement[] symbolGoalRequirements;
+    private final GoalRequirement[] symbolGoalRequirements;
 
     /**
      * Default constructor

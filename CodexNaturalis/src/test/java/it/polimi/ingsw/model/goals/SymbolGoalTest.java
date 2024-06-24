@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.goals;
 
 import it.polimi.ingsw.model.ConstructorTest;
+import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
 import it.polimi.ingsw.model.enumeration.CardSymbolObject;
 import it.polimi.ingsw.model.enumeration.LDirection;
@@ -30,7 +31,7 @@ class SymbolGoalTest implements ConstructorTest, GoalTest {
         sharedGoals.add(new PatternGoalDiagonal("002", 2,true, CardSymbolKingdom.MUSHROOM));
         privateGoal = new PatternGoalL("003", 5, LDirection.BOTTOMLEFT, CardSymbolKingdom.WOLF, CardSymbolKingdom.LEAF);
         board = new Board(privateGoal, sharedGoals);
-        HashMap map = new HashMap<>(7);
+        HashMap<CardSymbol, Integer> map = new HashMap<>(7);
         map.put(CardSymbolKingdom.MUSHROOM,    3);
         map.put(CardSymbolKingdom.BUTTERFLY,   6);
         map.put(CardSymbolKingdom.WOLF,        9);
@@ -85,7 +86,7 @@ class SymbolGoalTest implements ConstructorTest, GoalTest {
         goal[2] = new GoalRequirement(CardSymbolObject.POTION, 1);
         points = 3;
         symbolGoal = new SymbolGoal(id,points,goal);
-        HashMap map = new HashMap<>(7);
+        HashMap<CardSymbol, Integer> map = new HashMap<>(7);
         map.put(CardSymbolKingdom.MUSHROOM,    3);
         map.put(CardSymbolKingdom.BUTTERFLY,   6);
         map.put(CardSymbolKingdom.WOLF,        9);

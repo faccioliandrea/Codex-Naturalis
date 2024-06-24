@@ -4,7 +4,7 @@ import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.GameStateInfo;
 
 public class ReconnectionStateMessage extends ServerToClientMessage {
-    private GameStateInfo gameStateInfo;
+    final private GameStateInfo gameStateInfo;
 
     public ReconnectionStateMessage(GameStateInfo gameStateInfo) {
         this.gameStateInfo = gameStateInfo;

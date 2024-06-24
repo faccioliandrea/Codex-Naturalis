@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.enumeration.CardSymbol;
 public class Corner {
 
     private boolean covered;
-    private CardSymbol symbol;
+    final private CardSymbol symbol;
 
     /**
      * Constructor

@@ -3,7 +3,7 @@ package it.polimi.ingsw.connections.messages.client;
 import it.polimi.ingsw.connections.server.ConnectionBridge;
 
 public class ChoosePrivateGoalMessage extends ClientToServerMessage {
-    private int index;
+    final private int index;
 
     public ChoosePrivateGoalMessage(String username, int index) {
         this.username = username;

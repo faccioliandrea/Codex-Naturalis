@@ -4,7 +4,7 @@ import it.polimi.ingsw.connections.client.ConnectionBridge;
 import java.util.HashMap;
 
 public class GameEndMessage extends ServerToClientMessage {
-    private HashMap<String, Integer> leaderBoard;
+    final private HashMap<String, Integer> leaderBoard;
 
     public GameEndMessage(HashMap<String, Integer> leaderBoard) {
         this.leaderBoard = leaderBoard;

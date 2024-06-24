@@ -13,9 +13,9 @@ import java.util.ArrayList;
  * Class that represents a game
  */
 public class Game {
-    private ArrayList<Player> players;
-    private GameModel gameModel;
-    private ServerChatHandler chatHandler;
+    final private ArrayList<Player> players;
+    final private GameModel gameModel;
+    final private ServerChatHandler chatHandler;
 
     /**
      * Constructor for the Game class

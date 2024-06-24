@@ -16,10 +16,7 @@ import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * GameController is a singleton class that manages the game logic.
@@ -44,7 +41,7 @@ public class GameController {
     }
 
     /**
-     * @return the list of the games
+     * @return the map of the games
      */
     protected HashMap<String, Game> getGames() {
         return games;
@@ -75,8 +72,7 @@ public class GameController {
      * @param index the index of the card to choose
      */
     protected void choosePrivateGoal(String gameID,String username, int index){
-        games.get(gameID).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().choosePrivateGoal(index);
-
+        games.get(gameID).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().ifPresent(value -> value.choosePrivateGoal(index));
     }
 
     /**
@@ -87,14 +83,16 @@ public class GameController {
      */
     protected void chooseStarterCardSide(String gameID, String username, boolean flipped) {
 
-        Player player = games.get(gameID).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get();
+        Optional<Player> optionalPlayer = games.get(gameID).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
         StarterCard starterCard= player.getStarterCard();
         starterCard.setFlipped(flipped);
         try {
             player.placeCard(player.getStarterCard(), new Point(0,0));
-        } catch (InvalidPositionException e) {
-            throw new RuntimeException(e);
-        } catch (RequirementsNotSatisfied e) {
+        } catch (InvalidPositionException | RequirementsNotSatisfied e) {
             throw new RuntimeException(e);
         }
 
@@ -142,7 +140,12 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getHand(String gameId, String username) {
         ArrayList<CardInfo> hand = new ArrayList<>();
-        for (Card card : games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getHand())
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
+        for (Card card : player.getHand())
             hand.add(new CardInfo(card));
         return hand;
     }
@@ -155,7 +158,12 @@ public class GameController {
      */
     protected ArrayList<GoalInfo> getPrivateGoals(String gameId, String username) {
         ArrayList<GoalInfo> privateGoals = new ArrayList<>();
-        for (Goal card : games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getPrivateGoals())
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
+        for (Goal card : player.getPrivateGoals())
             privateGoals.add(new GoalInfo(card));
         return privateGoals;
     }
@@ -167,7 +175,12 @@ public class GameController {
      * @return the private goals of the player
      */
     protected GoalInfo getPrivateGoal(String gameId, String username) {
-        return new GoalInfo(games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getPrivateGoal());
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
+        return new GoalInfo(player.getBoard().getPrivateGoal());
     }
 
     /**
@@ -189,7 +202,12 @@ public class GameController {
      * @return the starter card of the player
      */
     protected CardInfo getStarterCard(String gameId, String username) {
-        return new CardInfo(games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getStarterCard());
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
+        return new CardInfo(player.getStarterCard());
 
     }
 
@@ -254,8 +272,13 @@ public class GameController {
      */
     protected ArrayList<CardInfo> getUserBoardByUsername(String gameId, String username) {
         ArrayList<CardInfo> board = new ArrayList<>();
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
         if(games.get(gameId) != null) {
-            for (Card card : games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getPlayedCards())
+            for (Card card : player.getBoard().getPlayedCards())
                 board.add(new CardInfo(card));
         }
         return board;
@@ -291,7 +314,12 @@ public class GameController {
      * @return the points of the player withouth the goals points
      */
     protected int getUserCardsPoints(String gameId, String username) {
-        return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getCardsPoints();
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
+        return player.getCardsPoints();
     }
 
     /**
@@ -307,7 +335,12 @@ public class GameController {
      * @return the symbols of the player
      */
     protected Map<CardSymbol, Integer> getUserSymbols(String gameId, String username) {
-        return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().getSymbols();
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
+        return player.getBoard().getSymbols();
     }
 
     /**
@@ -323,7 +356,12 @@ public class GameController {
      * @return the points of the player withouth the cards points
      */
     protected int getUserGoalsPoints(String gameId, String username){
-        return games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getGoalPoints();
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
+        return player.getGoalPoints();
     }
 
     /**
@@ -368,8 +406,12 @@ public class GameController {
      * @return the current player positions where he can place a card
      */
     protected ArrayList<Point> getAvailablePositions(String gameId, String username) {
-
-        return new ArrayList<>(games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst().get().getBoard().availablePositions());
+        Optional<Player> optionalPlayer = games.get(gameId).getGameModel().getPlayers().stream().filter(x->x.getUsername().equals(username)).findFirst();
+        if(!optionalPlayer.isPresent()){
+            throw new RuntimeException();
+        }
+        Player player = optionalPlayer.get();
+        return new ArrayList<>(player.getBoard().availablePositions());
     }
 
     /**

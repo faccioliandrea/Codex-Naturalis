@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.enumeration.CardSymbolObject;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FixedPointsGoldCardTest implements ConstructorTest, GoldCardTest {
     @Override

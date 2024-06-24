@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
  * Abstract class representing a GoldCard of the game
  */
 public abstract class GoldCard extends PlayableCard {
-    private GoldCardRequirement[] requirements;
+    final private GoldCardRequirement[] requirements;
 
     /**
      * Default constructor

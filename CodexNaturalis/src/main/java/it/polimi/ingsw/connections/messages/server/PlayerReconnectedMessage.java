@@ -3,7 +3,7 @@ package it.polimi.ingsw.connections.messages.server;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class PlayerReconnectedMessage extends ServerToClientMessage {
-    private String username;
+    final private String username;
 
     public PlayerReconnectedMessage(String username) {
         this.username = username;

@@ -2,7 +2,6 @@ package it.polimi.ingsw.connections.client;
 
 import it.polimi.ingsw.connections.ConnectionStatus;
 
-import java.awt.*;
 import java.io.IOException;
 
 /**

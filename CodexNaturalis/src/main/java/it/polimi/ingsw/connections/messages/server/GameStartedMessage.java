@@ -3,7 +3,7 @@ import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.connections.data.StarterData;
 
 public class GameStartedMessage extends ServerToClientMessage {
-    private StarterData starterData;
+    final private StarterData starterData;
 
     public GameStartedMessage(StarterData starterData) {
         this.starterData = starterData;

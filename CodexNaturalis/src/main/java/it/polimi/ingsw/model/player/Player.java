@@ -15,8 +15,8 @@ import java.util.Arrays;
 
 /** Class representing a player in the game */
 public class Player {
-    private String username;
-    private PlayerColor playerColor;
+    final private String username;
+    final private PlayerColor playerColor;
     private int cardsPoints;
     private int goalsPoints;
     private int completedGoals;
@@ -36,7 +36,7 @@ public class Player {
         this.cardsPoints = 0;
         this.goalsPoints = 0;
         this.completedGoals = 0;
-        this.hand = new ArrayList<PlayableCard>();
+        this.hand = new ArrayList<>();
         this.starterCard = null;
         privateGoals = null;
         this.board = new Board();

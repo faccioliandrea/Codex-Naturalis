@@ -23,7 +23,7 @@ public class Client {
     private static final String DEFAULT_ADDRESS = "localhost";
     private static final String REMOTE_NAME = "Codex";
 
-    private static int port = DEFAULT_PORT;
+    final private static int port = DEFAULT_PORT;
     private static String address = DEFAULT_ADDRESS;
 
     public static void main(String[] args) {

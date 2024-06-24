@@ -24,7 +24,7 @@ class GameModelTest implements ConstructorTest{
         Player player2 = new Player("bar", PlayerColor.RED);
         Player player3 = new Player("baz", PlayerColor.GREEN);
         Player player4 = new Player("qux", PlayerColor.YELLOW);
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
         players.add(player3);

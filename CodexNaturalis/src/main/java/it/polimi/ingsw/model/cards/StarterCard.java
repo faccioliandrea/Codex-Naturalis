@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.enumeration.CardSymbolKingdom;
  */
 public class StarterCard extends Card{
 
-    private CardSymbolKingdom[] centerSymbols;
+    private final CardSymbolKingdom[] centerSymbols;
 
     /**
      * Default constructor

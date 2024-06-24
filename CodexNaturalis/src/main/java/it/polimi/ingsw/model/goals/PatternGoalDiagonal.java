@@ -11,8 +11,8 @@ import java.util.*;
  * Class representing  the diagonal Goal card
  */
 public class PatternGoalDiagonal extends Goal{
-    private boolean isPrimaryDiagonal;
-    private CardSymbolKingdom kingdom;
+    final private boolean isPrimaryDiagonal;
+    final private CardSymbolKingdom kingdom;
 
     /**
      * Default constructor

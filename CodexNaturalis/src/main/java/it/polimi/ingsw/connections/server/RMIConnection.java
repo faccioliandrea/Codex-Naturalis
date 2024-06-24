@@ -19,7 +19,7 @@ public class RMIConnection implements ClientConnection{
 
     private ConnectionStatus connectionStatus;
 
-    private RMIClientConnectionInterface rmiClientConnection;
+    final private RMIClientConnectionInterface rmiClientConnection;
 
 
     public RMIConnection(RMIClientConnectionInterface rmiClientConnection) {

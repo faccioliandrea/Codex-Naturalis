@@ -3,7 +3,7 @@ package it.polimi.ingsw.connections.messages.server;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class LobbyCreatedMessage extends ServerToClientMessage {
-    private String lobbyId;
+    final private String lobbyId;
 
     public LobbyCreatedMessage(String lobbyId) {
         this.lobbyId = lobbyId;

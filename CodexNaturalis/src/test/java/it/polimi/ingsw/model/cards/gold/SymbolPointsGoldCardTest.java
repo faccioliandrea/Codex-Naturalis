@@ -17,7 +17,6 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SymbolPointsGoldCardTest implements ConstructorTest, GoldCardTest {
     @Override

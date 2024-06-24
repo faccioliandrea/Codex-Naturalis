@@ -2,7 +2,7 @@ package it.polimi.ingsw.connections.messages.server;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 
 public class JoinLobbySuccessMessage extends ServerToClientMessage {
-    private boolean isLastPlayer;
+    final private boolean isLastPlayer;
     public JoinLobbySuccessMessage(boolean isLastPlayer) {
         this.isLastPlayer = isLastPlayer;
     }

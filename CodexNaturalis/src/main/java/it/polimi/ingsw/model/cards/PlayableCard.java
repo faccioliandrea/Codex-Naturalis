@@ -7,9 +7,8 @@ import it.polimi.ingsw.model.player.Board;
  * Abstract class for Playable Cards (Resource and Gold cards)
  */
 public abstract class PlayableCard extends Card {
-    private CardSymbolKingdom kingdomSymbol;
-
-    private int points;
+    final private CardSymbolKingdom kingdomSymbol;
+    final private int points;
 
     /**
      * Default constructor

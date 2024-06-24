@@ -8,12 +8,12 @@ import java.util.Map;
 
 public class StarterData implements Serializable {
 
-    private ArrayList<CardInfo> hand;
-    private ArrayList<GoalInfo> privateGoals;
-    private ArrayList<GoalInfo> sharedGoals;
-    private CardInfo starterCard;
-    private ArrayList<String> users;
-    private Map<String, PlayerColor> playerColors;
+    private final ArrayList<CardInfo> hand;
+    private final ArrayList<GoalInfo> privateGoals;
+    private final ArrayList<GoalInfo> sharedGoals;
+    private final CardInfo starterCard;
+    private final ArrayList<String> users;
+    private final Map<String, PlayerColor> playerColors;
 
     public StarterData(ArrayList<CardInfo> hand, ArrayList<GoalInfo> privateGoals, ArrayList<GoalInfo> sharedGoals, CardInfo starterCard, ArrayList<String> users, Map<String, PlayerColor> playerColors) {
         this.hand = hand;
