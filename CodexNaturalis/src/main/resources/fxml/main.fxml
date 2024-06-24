@@ -23,11 +23,11 @@
             </VBox>
             <HBox spacing="15" fx:id="decksHBox">
                 <VBox>
-                    <Label text="Resource deck" styleClass="midTitle, codexFont"/>
+                    <Label text="Resource" styleClass="midTitle, codexFont"/>
                     <VBox alignment="CENTER_LEFT" fx:id="resourcesVBox" spacing="5.0"/>
                 </VBox>
                 <VBox>
-                    <Label text="Gold deck" styleClass="midTitle, codexFont"/>
+                    <Label text="Gold" styleClass="midTitle, codexFont"/>
                     <VBox alignment="CENTER_LEFT" fx:id="goldVBox" spacing="5.0"/>
                 </VBox>
             </HBox>

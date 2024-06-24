@@ -206,7 +206,9 @@ public class MainController implements Initializable {
      */
     public void setInfoTitle(String title) {
         FadingLabel label = new FadingLabel(title);
-        infoVBox.getChildren().add(label);
+        try {
+            infoVBox.getChildren().add(label);
+        } catch (NullPointerException ignored) {}
     }
 
     /** Updates the chat GUI

@@ -116,9 +116,5 @@ public class Client {
                 ui.showErrorMessage("An error occurred.");
             }
         }
-
-
-
-
     }
 }
