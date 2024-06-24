@@ -123,7 +123,7 @@ public class ServerController {
                                 gameController.isLast(userToGame.get(user)),
                                 gameController.getUserBoardByUsername(userToGame.get(user), username.getUsername()),
                                 gameController.getUserSymbols(userToGame.get(user), username.getUsername()),
-                                gameController.getLeaderboard(userToGame.get(user)),
+                                sortLeaderboard(gameController.getLeaderboard(userToGame.get(user))),
                                 gameController.getBoards(userToGame.get(user)),
                                 connectionStatus,
                                 gameController.getSharedGoals(userToGame.get(user)),
@@ -231,7 +231,7 @@ public class ServerController {
         if(gameController.getGames().get(userToGame.get(user))!=null && checkUserCurrentPlayer(user) ) {
             ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(user));
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
-            Map<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(user));
+            Map<String, Integer>  leaderboard= sortLeaderboard(gameController.getLeaderboard(userToGame.get(user)));
             Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
             for (Player player : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
 
@@ -280,21 +280,23 @@ public class ServerController {
      * @param forceWinner username of the player that is selected as winner
      */
     private void endGame(String gameId, String forceWinner){
-        Map<String, Integer> leaderboard = gameController.getFullSortedLeaderboard(gameId);
+        Map<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
 
         if(forceWinner!= null){
-            leaderboard.keySet().forEach(x->{
-                if(!x.equals(forceWinner)){
-                    leaderboard.replace(x, 0);
+            for(String username : leaderboard.keySet()){
+                if(!username.equals(forceWinner)){
+                    leaderboard.replace(username, 0);
                 } else {
-                    leaderboard.replace(x,20);
+                    leaderboard.replace(username,20);
                 }
-            });
+            }
         }
+        leaderboard = sortLeaderboard(leaderboard);
         executorService = Executors.newFixedThreadPool(gameController.getGamePlayers(gameId).size());
         for(String username : userToGame.keySet()){
             if(userToGame.get(username).equals(gameId)) {
-                executorService.submit(()-> connectionBridge.endGame(username, leaderboard));
+                Map<String, Integer> finalLeaderboard = leaderboard;
+                executorService.submit(()-> connectionBridge.endGame(username, finalLeaderboard));
             }
         }
         destroyGame(gameId);
@@ -425,7 +427,7 @@ public class ServerController {
                 } else if (userToGame.get(u).equals(userToGame.get(username)) && u.equals(username)) {
                     ArrayList<CardInfo> rd = gameController.getResourceDeck(userToGame.get(username));
                     ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(username));
-                    Map<String, Integer>  leaderboard= gameController.getLeaderboard(userToGame.get(username));
+                    Map<String, Integer>  leaderboard= sortLeaderboard(gameController.getLeaderboard(userToGame.get(username)));
                     Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
                     for (Player player : gameController.getGames().get(userToGame.get(username)).getPlayers()) {
                         connectionStatus.put(player.getUsername(), connectionBridge.getConnections().get(player.getUsername()).getStatus());
@@ -566,5 +568,17 @@ public class ServerController {
             chatHandler.distributeMessage(msg);
         }
 
+    }
+
+    private Map<String, Integer> sortLeaderboard(Map<String, Integer> leaderboard){
+        return leaderboard.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())
+                        .thenComparing(e -> Objects.requireNonNull(gameController.getGames().get(userToGame.get(leaderboard.keySet().stream().findFirst().orElse(null))).getPlayers().stream()
+                                        .filter(x -> x.getUsername().equals(e.getKey()))
+                                        .findFirst()
+                                        .orElse(null))
+                                .getCompletedGoals(), Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
     }
 }

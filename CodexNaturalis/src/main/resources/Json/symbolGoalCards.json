@@ -32,7 +32,7 @@
         },
         {
             "id": "003",
-            "points": 2,
+            "points": 3,
             "goalRequirements": [
                 {
                     "symbol": "FEATHER",

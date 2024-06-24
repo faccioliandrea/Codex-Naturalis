@@ -443,21 +443,13 @@ public class GameController {
      * Getter for the sorted leaderboard
      * @return the sorted leaderboard
      */
-    protected Map<String, Integer> getFullSortedLeaderboard(String gameId) {
+    protected Map<String, Integer> getFullLeaderboard(String gameId) {
         Map<String, Integer> leaderboard = new LinkedHashMap<>();
         for( int i = 0; i < games.get(gameId).getPlayers().size(); i++)
             leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints() + games.get(gameId).getPlayers().get(i).getGoalPoints());
 
 
-        return leaderboard.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())
-                        .thenComparing(e -> Objects.requireNonNull(games.get(gameId).getPlayers().stream()
-                                        .filter(x -> x.getUsername().equals(e.getKey()))
-                                        .findFirst()
-                                        .orElse(null))
-                                .getCompletedGoals(), Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
+        return leaderboard;
     }
 
 }
