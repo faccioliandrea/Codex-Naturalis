@@ -3,12 +3,12 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.connections.server.RMIServerConnection;
 import it.polimi.ingsw.connections.server.RMIServerConnectionInterface;
 import it.polimi.ingsw.connections.server.SocketClientConnection;
-import it.polimi.ingsw.controller.server.ServerController;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -19,14 +19,20 @@ public class Server
 
     private static final String name = "Codex";
 
-    private static final ServerController serverController = ServerController.getInstance();
 
     public static void main( String[] args )
     {
+        InetAddress inetAddress;
+        try {
+            inetAddress = InetAddress.getLocalHost();
+            System.out.println("Server IP Address: " + inetAddress.getHostAddress());
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
         // MARK: listen for connections from client and create thread for each one
         new Thread(() -> {
-            try (ServerSocket serverSocket = new ServerSocket(localPort);) {
-                System.out.println("Server listening on port " + localPort);
+            try (ServerSocket serverSocket = new ServerSocket(localPort)) {
+                System.out.println("Socket Server listening on port " + localPort);
 
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
