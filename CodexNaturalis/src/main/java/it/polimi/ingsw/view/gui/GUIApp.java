@@ -5,12 +5,14 @@ import it.polimi.ingsw.view.gui.controller.OpponentBoardController;
 import it.polimi.ingsw.view.gui.utility.GUIConstants;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
@@ -51,9 +53,9 @@ public class GUIApp extends Application {
         stage.setTitle("Codex Naturalis");
         stage.setMaximized(true);
         stage.setResizable(false);
-        Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/UnifrakturMaguntia-Regular.ttf"), 20);
-        Font font2 = Font.loadFont(getClass().getResourceAsStream("/fonts/Exo2-Regular.ttf"), 20);
-        Font font3 = Font.loadFont(getClass().getResourceAsStream("/fonts/Exo2-Bold.ttf"), 20);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/UnifrakturMaguntia-Regular.ttf"), 20);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Exo2-Regular.ttf"), 20);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Exo2-Bold.ttf"), 20);
 
         changeScene("join-menu", new JoinMenuController());
         stage.setOnCloseRequest(e -> {
@@ -91,13 +93,31 @@ public class GUIApp extends Application {
      *
      * @param errorMessage message to show
      * @param type         type of the alert
+     * @param onCloseRequest event handler for the close request
+     */
+    public static void showAlert(String errorMessage, Alert.AlertType type, EventHandler<DialogEvent> onCloseRequest) {
+        showAlertHelper(errorMessage, type, onCloseRequest);
+    }
+
+    /**
+     * Shows an alert with the specified message and type
+     *
+     * @param errorMessage message to show
+     * @param type         type of the alert
      */
     public static void showAlert(String errorMessage, Alert.AlertType type) {
+        showAlertHelper(errorMessage, type, null);
+    }
+
+    private static void showAlertHelper(String errorMessage, Alert.AlertType type, EventHandler<DialogEvent> onCloseRequest) {
         Platform.runLater(() -> {
             Alert errorAlert = new Alert(type);
             errorAlert.setHeaderText(null);
             errorAlert.setTitle(type.toString());
             errorAlert.setContentText(errorMessage);
+            if (onCloseRequest != null) {
+                errorAlert.setOnCloseRequest(onCloseRequest);
+            }
             errorAlert.show();
         });
     }

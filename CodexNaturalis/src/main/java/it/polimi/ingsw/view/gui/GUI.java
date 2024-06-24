@@ -44,7 +44,6 @@ public class GUI extends UIManager {
      */
     @Override
     public String askForServerAddr(String defaultAddr) {
-        //GUIApp.changeScene("join-menu", new JoinMenuController());
         try {
             queue.clear();
             return queue.take().toString();
@@ -425,8 +424,7 @@ public class GUI extends UIManager {
      */
     @Override
     public void serverOfflineMessage() {
-        GUIApp.showAlert(UIMessagesConstants.serverOfflineMessage, Alert.AlertType.ERROR);
-        GUIApp.changeScene("join-menu", new JoinMenuController());
+        GUIApp.showAlert(UIMessagesConstants.serverOfflineMessage, Alert.AlertType.ERROR, event -> goodbye());
     }
 
     @Override

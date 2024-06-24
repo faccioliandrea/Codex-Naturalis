@@ -537,6 +537,7 @@ public class TUI extends UIManager {
     @Override
     public void serverOfflineMessage() {
         printColorDebug(TUIColors.RED, UIMessagesConstants.serverOfflineMessage);
+        goodbye();
     }
 
     /**
