@@ -3,6 +3,7 @@ package it.polimi.ingsw.chat;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.controller.client.ClientController;
 
+import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
@@ -121,5 +122,9 @@ public class ClientChatHandler implements Runnable {
      */
     public static boolean isRunning() {
         return running;
+    }
+
+    public static void  reset() {
+        msgsQueue.forEach(msgsQueue::remove);
     }
 }

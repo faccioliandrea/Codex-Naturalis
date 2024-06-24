@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import com.google.gson.JsonParseException;
 import it.polimi.ingsw.model.cards.PlayableCard;
+import it.polimi.ingsw.model.enumeration.PlayerColor;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.goals.Goal;
 import it.polimi.ingsw.model.player.Player;
@@ -13,6 +14,7 @@ import it.polimi.ingsw.model.parser.Parser;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameModel {
     private String gameId;
@@ -181,6 +183,10 @@ public class GameModel {
         } catch (AssertionError e) {
             throw new InvalidNumberOfPlayersException();
         }
+
+        List<PlayerColor> colors = Arrays.stream(PlayerColor.values()).collect(Collectors.toList());
+        Collections.shuffle(colors);
+        players.forEach(x->x.setPlayerColor(colors.remove(0)));
 
         try {
             starterCardDeck = new ArrayList<>(Arrays.asList(Parser.parser.initStarterCards()));

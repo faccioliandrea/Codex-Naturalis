@@ -26,10 +26,9 @@ public class Game {
      */
 
     public Game(String gameId, Lobby lobby) throws DeckInitializationException, InvalidNumberOfPlayersException {
-        PlayerColor[] colors = PlayerColor.values();
         players = new ArrayList<>();
         for(String user : lobby.getUsers()){
-            players.add(new Player(user, colors[players.size()]));
+            players.add(new Player(user));
         }
         gameModel = new GameModel(gameId, players);
         chatHandler = lobby.getChatHandler();

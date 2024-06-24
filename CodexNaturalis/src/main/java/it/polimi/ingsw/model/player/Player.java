@@ -15,8 +15,8 @@ import java.util.Arrays;
 
 /** Class representing a player in the game */
 public class Player {
-    final private String username;
-    final private PlayerColor playerColor;
+    private final String username;
+    private PlayerColor playerColor;
     private int cardsPoints;
     private int goalsPoints;
     private int completedGoals;
@@ -43,6 +43,21 @@ public class Player {
     }
 
     /**
+     * Default constructor
+     * @param username Username
+     */
+    public Player(String username) {
+        this.username = username;
+        this.cardsPoints = 0;
+        this.goalsPoints = 0;
+        this.completedGoals = 0;
+        this.hand = new ArrayList<>();
+        this.starterCard = null;
+        privateGoals = null;
+        this.board = new Board();
+    }
+
+    /**
      * Getter for Username attribute
      * @return username
      */
@@ -56,6 +71,14 @@ public class Player {
      */
     public PlayerColor getPlayerColor() {
         return playerColor;
+    }
+
+    /**
+     * Sets the player color
+     * @param playerColor the color to assign to the player
+     */
+    public void setPlayerColor(PlayerColor playerColor) {
+        this.playerColor = playerColor;
     }
 
     /**

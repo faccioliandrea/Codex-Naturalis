@@ -259,6 +259,7 @@ public class ClientController {
     public void gameEnd(Map<String, Integer> leaderboard){
         this.gameData.setGameAborted(true);
         this.gameData.setLeaderboard(leaderboard);
+        ClientChatHandler.reset();
         ui.gameEnded();
         boolean newGame = ui.askForNewGame();
         if(newGame) {
