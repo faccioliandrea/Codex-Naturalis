@@ -383,14 +383,6 @@ public class GameController {
         return leaderboard;
     }
 
-    /**
-     * called when the game is finished, return all the points to the players to generate the leaderboard
-     */
-    protected Map<String, Integer> getFullLeaderboard(String gameId){
-
-        return getSortedLeaderboard(gameId);
-    }
-
 
     /**
      * @return the list of users
@@ -451,10 +443,10 @@ public class GameController {
      * Getter for the sorted leaderboard
      * @return the sorted leaderboard
      */
-    private Map<String, Integer> getSortedLeaderboard(String gameId) {
+    protected Map<String, Integer> getFullSortedLeaderboard(String gameId) {
         Map<String, Integer> leaderboard = new LinkedHashMap<>();
         for( int i = 0; i < games.get(gameId).getPlayers().size(); i++)
-            leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints());
+            leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints() + games.get(gameId).getPlayers().get(i).getGoalPoints());
 
 
         return leaderboard.entrySet()

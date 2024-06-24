@@ -280,7 +280,7 @@ public class ServerController {
      * @param forceWinner username of the player that is selected as winner
      */
     private void endGame(String gameId, String forceWinner){
-        Map<String, Integer> leaderboard = gameController.getFullLeaderboard(gameId);
+        Map<String, Integer> leaderboard = gameController.getFullSortedLeaderboard(gameId);
 
         if(forceWinner!= null){
             leaderboard.keySet().forEach(x->{
