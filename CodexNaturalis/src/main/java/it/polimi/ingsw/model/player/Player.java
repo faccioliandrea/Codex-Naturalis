@@ -55,8 +55,6 @@ public class Player {
         this.starterCard = null;
         privateGoals = null;
         this.board = new Board();
-
-        this.cardsPoints = 18;
     }
 
     /**
