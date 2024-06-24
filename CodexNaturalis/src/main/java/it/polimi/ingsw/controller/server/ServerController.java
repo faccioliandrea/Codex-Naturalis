@@ -137,7 +137,8 @@ public class ServerController {
                         connectionBridge.otherPlayerTurn(username.getUsername(), user);
                     }
                 }
-                connectionBridge.initTurn(user, turnInfo);
+                executorService = Executors.newFixedThreadPool(1);
+                executorService.submit(()->connectionBridge.initTurn(user, turnInfo));
             } else if(gameController.getGamePlayers(userToGame.get(user)).stream().filter(x -> connectionBridge.checkUserConnected(x.getUsername())).count()>1){
                 gameController.endTurn(userToGame.get(user));
                 gameController.getGames().get(userToGame.get(user)).getGameModel().setTotalTurns(gameController.getGames().get(userToGame.get(user)).getGameModel().getTotalTurns()+1);

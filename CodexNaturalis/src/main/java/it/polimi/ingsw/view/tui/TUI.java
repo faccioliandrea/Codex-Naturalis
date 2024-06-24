@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.enumeration.CardSymbol;
 import it.polimi.ingsw.view.UIManager;
 import it.polimi.ingsw.chat.ChatMessageData;
 import it.polimi.ingsw.view.UIMessagesConstants;
-import it.polimi.ingsw.view.tui.enums.Decks;
+import it.polimi.ingsw.view.tui.enums.*;
 
 import java.awt.*;
 import java.util.*;
