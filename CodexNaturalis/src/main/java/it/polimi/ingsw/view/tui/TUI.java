@@ -160,6 +160,10 @@ public class TUI extends UIManager {
 
     }
 
+    /**
+     * Displays the board of a specific player
+     * @param username the username of the player
+     */
     protected void displayBoard(String username) {
         if (data.getBoard().isEmpty()) {
             this.printColorDebug(TUIColors.RED, "Board not available");
@@ -535,6 +539,12 @@ public class TUI extends UIManager {
         printColorDebug(TUIColors.RED, UIMessagesConstants.serverOfflineMessage);
     }
 
+    /**
+     * Displays the board
+     * @param board board to display
+     * @param availablePos array of available positions
+     * @param symbols map of symbols present on the game table
+     */
     public void displayBoard(ArrayList<CardInfo> board, ArrayList<Point> availablePos, Map<CardSymbol, Integer> symbols) {
         boolean padding = availablePos != null && !availablePos.isEmpty();
 
@@ -572,14 +582,28 @@ public class TUI extends UIManager {
     }
 
 
+    /**
+     * Prints a generic object
+     * @param o object to print
+     */
     public void printDebug(Object o) {
         System.out.println(o.toString());
     }
 
+
+    /**
+     * Prints a colored message
+     * @param color TUIColour to use
+     * @param o object to print
+     */
     public void printColorDebug(TUIColors color, Object o) {
         System.out.println(color.toString() + o.toString() + TUIColors.reset());
     }
 
+    /**
+     * Prints a card data
+     * @param cardId card id
+     */
     protected void printCardInfo(String cardId) {
         if (cardId == null || cardId.isEmpty()) {
             printColorDebug(TUIColors.RED, "Please specify a card (type :card [cardId])");
@@ -616,13 +640,20 @@ public class TUI extends UIManager {
         vRule();
     }
 
+    /**
+     * Prints the goal
+     */
     protected void printGoalsInfo() {
         try {
-            ArrayList<GoalInfo> goals = data.getGoals();
-            if (goals.isEmpty()) {
+            ArrayList<GoalInfo> goalsPub = data.getPublicGoals();
+            GoalInfo goalsPriv = data.getPrivateGoal();
+            if (goalsPub.isEmpty() || goalsPriv == null) {
                 printColorDebug(TUIColors.RED, "Goals not available, wait for the game to start");
             } else {
-                goals.forEach(this::printGoalInfo);
+                printColorDebug(TUIColors.CYAN, "Public goals:");
+                goalsPub.forEach(this::printGoalInfo);
+                printColorDebug(TUIColors.CYAN, "Private goal:");
+                printGoalInfo(goalsPriv);
             }
         } catch (NullPointerException e) {
             printColorDebug(TUIColors.RED, "Goals not available, wait for the game to start");
@@ -638,6 +669,9 @@ public class TUI extends UIManager {
         symbols.forEach((k, v) -> printDebug(String.format("%s: %d", applyColors(k.toString()), v)));
     }
 
+    /**
+     * Prints the leaderboard
+     */
     protected void printLeaderboard() {
         try {
             printLeaderboard(data.getSortedLeaderboard());
@@ -686,6 +720,9 @@ public class TUI extends UIManager {
         printColorDebug(TUIColors.YELLOW, "New message received! Type :chat to open the chat.");
     }
 
+    /**
+     * Prints the cards in the player's hand
+     */
     protected void printHand() {
         try {
             data.getHand().forEach(this::printCardInfo);
@@ -694,6 +731,9 @@ public class TUI extends UIManager {
         }
     }
 
+    /**
+     * Prints the current points
+     */
     protected void printPoints() {
         if (!data.getBoard().isEmpty()) {
             printDebug(

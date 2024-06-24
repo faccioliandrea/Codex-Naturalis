@@ -19,6 +19,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+
 public class GUIApp extends Application {
 
     public static void main(String[] args) {

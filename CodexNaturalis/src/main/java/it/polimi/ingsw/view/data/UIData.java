@@ -178,7 +178,7 @@ public class UIData implements Observer {
      * Setter for the leaderboard
      * @param leaderboard the leaderboard
      */
-    public void setLeaderboard(HashMap<String, Integer> leaderboard) {
+    public void setLeaderboard(Map<String, Integer> leaderboard) {
         this.leaderboard = leaderboard;
     }
 
@@ -244,13 +244,6 @@ public class UIData implements Observer {
      */
     public void setGoalPoints(int goalPoints) {
         this.goalPoints = goalPoints;
-    }
-
-    /**
-     * Setter for the leaderboard
-     */
-    public void setLeaderboard(Map<String, Integer> leaderboard) {
-        this.leaderboard = leaderboard;
     }
 
     /**

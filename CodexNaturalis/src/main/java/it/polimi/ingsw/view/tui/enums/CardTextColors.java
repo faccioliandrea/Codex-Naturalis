@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.tui;
+package it.polimi.ingsw.view.tui.enums;
 
 /**
  * Enum that defines the colors of the cards
