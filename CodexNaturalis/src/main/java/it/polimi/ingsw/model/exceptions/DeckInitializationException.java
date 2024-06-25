@@ -5,18 +5,6 @@ package it.polimi.ingsw.model.exceptions;
  * from the relative json file
  */
 public class DeckInitializationException extends Exception {
-    public DeckInitializationException() {
-        super();
-    }
-
-    public DeckInitializationException(String message) {
-        super(message);
-    }
-
-    public DeckInitializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-    public DeckInitializationException(Throwable cause) {
-        super(cause);
-    }
+    private static final String msg = "Error while initializing the decks from the json files";
+    public DeckInitializationException() { super(msg); }
 }

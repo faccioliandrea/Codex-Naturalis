@@ -79,13 +79,9 @@ public class ServerController {
                 executorService.submit(() -> connectionBridge.gameCreated(username, new StarterData(hand, privateGoals, sharedGoals, starterCard, lobby.getUsers(), playerColors)));
             }
 
-        } catch (DeckInitializationException e) {
-            System.err.println("Error in initializing the decks");
+        } catch (DeckInitializationException | InvalidNumberOfPlayersException e) {
+            System.err.println(e.getMessage());
             System.exit(0);
-        } catch (InvalidNumberOfPlayersException e) {
-            // TODO: sendServerError
-            // for (String username : users)
-                // connections.get(username).sendNotification("Invalid number of players!");
         }
     }
 

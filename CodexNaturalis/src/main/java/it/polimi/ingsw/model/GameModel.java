@@ -194,7 +194,7 @@ public class GameModel {
             goldCardDeck = new ArrayList<>(Arrays.asList(Parser.parser.initGoldCards()));
             goalsDeck = new ArrayList<>(Arrays.asList(Parser.parser.initGoals()));
         } catch (IllegalArgumentException | FileNotFoundException | JsonParseException e) {
-            throw new DeckInitializationException(e);
+            throw new DeckInitializationException();
         }
 
         Collections.shuffle(starterCardDeck);
