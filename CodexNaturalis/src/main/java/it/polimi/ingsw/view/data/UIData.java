@@ -421,6 +421,14 @@ public class UIData implements Observer {
     }
 
     /**
+     * Utility to check no other players are connected
+     * @return no other player are connected
+     */
+    public boolean noOtherPlayerConnected() {
+        return connectionStatus.keySet().stream().filter(k -> !k.equals(username)).allMatch(k -> connectionStatus.get(k) == ConnectionStatus.OFFLINE);
+    }
+
+    /**
      * Getter for the sorted leaderboard
      * @return the sorted leaderboard
      */

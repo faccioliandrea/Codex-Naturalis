@@ -168,7 +168,11 @@ public class GUI extends UIManager {
         });
         try {
             queue.clear();
-            return Decks.getDeck((int) queue.take());
+            Decks decks = Decks.getDeck((int) queue.take());
+            if (data.noOtherPlayerConnected()) {
+                Platform.runLater(() -> mainController.setTitle("Waiting for other players to reconnect"));
+            }
+            return decks;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

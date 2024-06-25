@@ -106,10 +106,11 @@ public class ServerController {
                 boolean isLastTurn = gameController.isLast(userToGame.get(user));
                 ArrayList<CardInfo> board = gameController.getUserBoard(userToGame.get(user));
                 TurnInfo turnInfo = new TurnInfo(hand, rd, gd, availablePositions, currTurn, symbols, isLastTurn, board);
+                Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
+                for (Player usern : gameController.getGames().get(userToGame.get(user)).getPlayers())
+                    connectionStatus.put(usern.getUsername(), connectionBridge.getConnections().get(usern.getUsername()).getStatus());
                 for (Player username : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
                     if(gameController.getCurrentTurn(userToGame.get(user))==0){
-                        Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
-                        connectionStatus.put(username.getUsername(), connectionBridge.getConnections().get(username.getUsername()).getStatus());
                         connectionBridge.gameState(username.getUsername(), new GameStateInfo(
                                 username.getUsername(),
                                 gameController.getCurrentPlayer(userToGame.get(user)),
@@ -235,9 +236,9 @@ public class ServerController {
             ArrayList<CardInfo> gd = gameController.getGoldDeck(userToGame.get(user));
             Map<String, Integer>  leaderboard= sortLeaderboard(gameController.getLeaderboard(userToGame.get(user)));
             Map<String, ConnectionStatus> connectionStatus = new HashMap<>();
-            for (Player player : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
-
+            for (Player player : gameController.getGames().get(userToGame.get(user)).getPlayers())
                 connectionStatus.put(player.getUsername(), connectionBridge.getConnections().get(player.getUsername()).getStatus());
+            for (Player player : gameController.getGames().get(userToGame.get(user)).getPlayers()) {
 
                 GameStateInfo gameState = new GameStateInfo(
                         player.getUsername(),
@@ -371,6 +372,11 @@ public class ServerController {
                     Optional<Player> optionalPlayer = gameController.getGamePlayers(userToGame.get(username)).stream().filter(x-> connectionBridge.checkUserConnected(x.getUsername())).findFirst();
                     if(!optionalPlayer.isPresent()){
                         throw new NullPointerException();
+                    }
+                    for (String u : userToGame.keySet()) {
+                        if (userToGame.get(u).equals(userToGame.get(username)) && !u.equals(username)) {
+                            connectionBridge.playerDisconnected(username, u, true);
+                        }
                     }
                     connectionBridge.noOtherPlayerConnected(optionalPlayer.get().getUsername());
                     Timer timer = new Timer();
