@@ -168,11 +168,7 @@ public class GUI extends UIManager {
         });
         try {
             queue.clear();
-            Decks decks = Decks.getDeck((int) queue.take());
-            if (data.noOtherPlayerConnected()) {
-                Platform.runLater(() -> mainController.setTitle("Waiting for other players to reconnect"));
-            }
-            return decks;
+            return Decks.getDeck((int) queue.take());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -363,8 +359,12 @@ public class GUI extends UIManager {
      */
     @Override
     public void drawCardSuccess() {
-        Platform.runLater(mainController::updateData
-        );
+        Platform.runLater(() -> {
+            mainController.updateData();
+            if (data.noOtherPlayerConnected()) {
+                mainController.setTitle(UIMessagesConstants.waitingReconnect);
+            }
+        });
     }
 
     /**

@@ -472,6 +472,9 @@ public class TUI extends UIManager {
             printColorDebug(TUIColors.CYAN, "This is your updated hand:");
             data.getHand().forEach(x -> this.printDebug(String.format("Card id: %s", x.getId())));
             printColorDebug(TUIColors.YELLOW, "Type :card [cardId] to see the card description or :hand to see all three");
+            if (data.noOtherPlayerConnected()) {
+                printDebug(UIMessagesConstants.waitingReconnect);
+            }
         }
     }
 
