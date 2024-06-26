@@ -17,7 +17,6 @@ import it.polimi.ingsw.model.player.Player;
 
 import java.awt.Point;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * GameController is a singleton class that manages the game logic.

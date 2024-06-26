@@ -33,7 +33,7 @@ class PatternGoalDiagonalTest implements GoalTest, ConstructorTest {
         points = 2;
         isPrimaryDiagonal = true;
         kingdom = BUTTERFLY;
-        goal = new PatternGoalDiagonal(id, points, isPrimaryDiagonal, kingdom);
+        goal = new PatternGoalDiagonal(id, points, true, kingdom);
         ArrayList<Goal> sharedGoals = new ArrayList<>();
         sharedGoals.add(new PatternGoalDiagonal("002", 2, false, WOLF));
         sharedGoals.add(new PatternGoalDiagonal("003", 2, true, BUTTERFLY));

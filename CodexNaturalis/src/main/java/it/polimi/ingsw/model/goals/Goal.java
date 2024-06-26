@@ -20,7 +20,7 @@ public abstract class Goal {
 
     /**
      * Abstract method to calculate the points scored by the player with this Goal
-     * @param board
+     * @param board player board
      */
     public abstract int checkGoal(Board board);
 

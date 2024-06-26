@@ -10,5 +10,5 @@ public interface StreamRunnable extends Runnable{
      * Close the stream
      * @throws IOException if an error occurs while closing the stream
      */
-    public void close() throws IOException;
+    void close() throws IOException;
 }

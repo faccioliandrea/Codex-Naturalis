@@ -97,7 +97,6 @@ public class Client {
                     }
                 }
             } catch (Exception e) {
-                // FIXME: Handle server crash (on its thread)
                 ui.showErrorMessage("An error occurred.");
             }
         } else {
@@ -112,7 +111,6 @@ public class Client {
             } catch (ConnectException e) {
                 ui.connectingToServer();
             } catch (Exception e) {
-                // FIXME: Handle server crash (on its thread)
                 ui.showErrorMessage("An error occurred.");
             }
         }

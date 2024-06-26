@@ -11,7 +11,6 @@ import it.polimi.ingsw.model.enumeration.PlayerColor;
 
 import java.awt.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Class that contains the data to be displayed in the UI

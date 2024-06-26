@@ -2,7 +2,6 @@ package it.polimi.ingsw.controller.server;
 
 import it.polimi.ingsw.chat.ServerChatHandler;
 import it.polimi.ingsw.model.GameModel;
-import it.polimi.ingsw.model.enumeration.PlayerColor;
 import it.polimi.ingsw.model.exceptions.DeckInitializationException;
 import it.polimi.ingsw.model.exceptions.InvalidNumberOfPlayersException;
 import it.polimi.ingsw.model.player.Player;

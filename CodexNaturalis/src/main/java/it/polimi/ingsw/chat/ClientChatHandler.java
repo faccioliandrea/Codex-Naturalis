@@ -3,8 +3,6 @@ package it.polimi.ingsw.chat;
 import it.polimi.ingsw.connections.client.ConnectionBridge;
 import it.polimi.ingsw.controller.client.ClientController;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
