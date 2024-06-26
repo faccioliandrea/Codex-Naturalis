@@ -9,7 +9,6 @@ import java.util.HashMap;
 public class LobbyController {
     private static LobbyController instance;
     private final ArrayList<String> users = new ArrayList<>();
-
     private final HashMap<String, Lobby> lobbies = new HashMap<>();
 
     /**
@@ -37,7 +36,6 @@ public class LobbyController {
         users.add(username);
         lobbies.get(lobbyId).addPlayer(username);
     }
-
 
     /**
      * Get the lobbies

@@ -23,7 +23,6 @@ public class ClientController {
     private static ClientController instance;
     private UIManager ui;
     private String username;
-
     private ClientGameData gameData = new ClientGameData();
 
     /**
@@ -204,8 +203,8 @@ public class ClientController {
     public void placeCardSuccess(PlaceCardSuccessInfo placeCardSuccessInfo) {
         this.gameData.removeCardFromHand(placeCardSuccessInfo.getPlayedCard().getId());
         this.gameData.addToList(this.gameData.getBoard(), placeCardSuccessInfo.getPlayedCard());
-        this.gameData.replaceEntry(this.gameData.getLeaderboard(), this.username, placeCardSuccessInfo.getCardsPoint());
-        this.gameData.setCardPoints(placeCardSuccessInfo.getCardsPoint());
+        this.gameData.replaceEntry(this.gameData.getLeaderboard(), this.username, placeCardSuccessInfo.getCardsPoints());
+        this.gameData.setCardPoints(placeCardSuccessInfo.getCardsPoints());
         this.gameData.setGoalPoints(placeCardSuccessInfo.getGoalsPoint());
         this.gameData.setAvailablePositions(placeCardSuccessInfo.getAvailable());
         this.gameData.setSymbols(placeCardSuccessInfo.getSymbols());

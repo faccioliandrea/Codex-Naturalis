@@ -92,8 +92,6 @@ public class ConnectionBridge {
         return connections.get(username).getStatus() == ConnectionStatus.ONLINE;
     }
 
-
-
     // Client -> Server methods
     /**
      * @param username the username of the player
@@ -440,7 +438,6 @@ public class ConnectionBridge {
         }
     }
 
-
     /**
      * Handle the disconnection of a player
      * @param c the connection of the player that disconnected
@@ -501,7 +498,6 @@ public class ConnectionBridge {
         } catch (IOException e) {
             connections.get(username).setOffline();
         }
-
     }
 
     /**

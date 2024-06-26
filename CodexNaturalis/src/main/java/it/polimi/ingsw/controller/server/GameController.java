@@ -446,8 +446,6 @@ public class GameController {
         Map<String, Integer> leaderboard = new LinkedHashMap<>();
         for( int i = 0; i < games.get(gameId).getPlayers().size(); i++)
             leaderboard.put(games.get(gameId).getPlayers().get(i).getUsername(), games.get(gameId).getPlayers().get(i).getCardsPoints() + games.get(gameId).getPlayers().get(i).getGoalPoints());
-
-
         return leaderboard;
     }
 

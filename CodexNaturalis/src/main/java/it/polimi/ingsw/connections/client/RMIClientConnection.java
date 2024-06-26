@@ -144,6 +144,11 @@ public class RMIClientConnection extends UnicastRemoteObject implements RMIClien
     public void ping() throws RemoteException {
     }
 
+    /**
+     * Method to handle a received chat message
+     * @param msg the chat message data
+     * @throws RemoteException if the connection fails
+     */
     @Override
     public void recvChatMessage(ChatMessageData msg) throws RemoteException {
         connectionBridge.recvChatMessage(msg);

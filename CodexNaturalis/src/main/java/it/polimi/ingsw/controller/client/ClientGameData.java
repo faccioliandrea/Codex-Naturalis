@@ -66,7 +66,7 @@ public class ClientGameData extends Observable {
     }
 
     public synchronized void removeCardFromHand(String cardId){
-        hand.remove(hand.stream().filter(x->x.getId().equals(cardId)).findFirst().get());
+        hand.remove(hand.stream().filter(x->x.getId().equals(cardId)).findFirst().orElse(null));
         setChanged();
         notifyObservers();
     }

@@ -12,6 +12,8 @@ import java.net.UnknownHostException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+/** Server class */
+
 public class Server
 {
     private static final int localPort = 5555;

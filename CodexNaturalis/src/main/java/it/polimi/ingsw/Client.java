@@ -17,6 +17,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
+/** Client class */
 public class Client {
 
     private static final int DEFAULT_PORT = 5555;

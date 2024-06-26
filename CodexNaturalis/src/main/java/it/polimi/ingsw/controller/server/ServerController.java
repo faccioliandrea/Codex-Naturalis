@@ -396,10 +396,6 @@ public class ServerController {
                     }
                 }
             }
-
-
-
-
         } else if (userToLobby.containsKey(username)) {
             for (String u : userToLobby.keySet()) {
                 if (userToLobby.get(u).equals(userToLobby.get(username)) && !u.equals(username)) {
@@ -474,7 +470,6 @@ public class ServerController {
         return response;
     }
 
-
     /**
      * Add a player to a lobby
      * @param username the username of the player
@@ -513,11 +508,9 @@ public class ServerController {
             else {
                 return new ArrayList<>(lobbyController.getLobbies().keySet());
             }
-            //the lobbies can't be full, when a lobby is full a game is created and the lobby is removed
         }
         return new ArrayList<>();
     }
-
 
     /**
      * @param username the username of the player
@@ -573,9 +566,13 @@ public class ServerController {
             ServerChatHandler chatHandler = gameController.getGames().get(gameId).getChatHandler();
             chatHandler.distributeMessage(msg);
         }
-
     }
 
+    /**
+     * Sort the leaderboard
+     * @param leaderboard the leaderboard to sort
+     * @return the sorted leaderboard
+     */
     private Map<String, Integer> sortLeaderboard(Map<String, Integer> leaderboard){
         return leaderboard.entrySet()
                 .stream()
