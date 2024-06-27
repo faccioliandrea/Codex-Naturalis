@@ -46,7 +46,7 @@
 
 You will be prompted to choose between TUI or GUI mode and Socket or RMI communication protocol.
 <br/>
-> ***Please note that GUI not started from provided JARs will not work, as it requires resources that are not present in the repository because they are covered by copyright.***
+> ***Please note that GUI <ins>NOT</ins> started from provided JARs will not work, as it requires resources that are not present in the repository because they are covered by copyright.***
 
 ## Testing coverage
 
