@@ -48,4 +48,4 @@ You will be prompted to choose between TUI or GUI mode and Socket or RMI communi
 
 ![Line coverage](https://img.shields.io/badge/Line%20coverage-91%25-green?style=flat) 
 ![Class coverage](https://img.shields.io/badge/Class%20coverage-89%25-blue?style=flat)
-![Method coverage](https://img.shields.io/badge/Class%20coverage-79%25-purple?style=flat)
+![Method coverage](https://img.shields.io/badge/Method%20coverage-79%25-purple?style=flat)
