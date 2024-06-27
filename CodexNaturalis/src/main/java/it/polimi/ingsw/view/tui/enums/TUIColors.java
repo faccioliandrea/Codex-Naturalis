@@ -16,6 +16,10 @@ public enum TUIColors {
     private final String colorCode;
     private final int value;
 
+    /**
+     * Constructor
+     * @param code Color code
+     */
     TUIColors(int code) {
         String ansi =  "\u001B[%d%dm";
         this.value = code;

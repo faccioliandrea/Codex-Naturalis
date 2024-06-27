@@ -16,6 +16,9 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Class representing the game model
+ */
 public class GameModel {
     private String gameId;
     private int currentTurn;

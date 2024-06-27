@@ -9,7 +9,9 @@ import it.polimi.ingsw.model.goals.Goal;
 import java.awt.Point;
 import java.util.*;
 
-
+/**
+ * Class representing the board of a player
+ */
 public class Board {
 
     private ArrayList<Card> playedCards;

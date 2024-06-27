@@ -21,6 +21,10 @@ public class CommandHandler implements Runnable {
     private final HashMap<String, Consumer<String>> commands = new HashMap<>();
     private final HashMap<String, String> manPages = new LinkedHashMap<>();
 
+    /**
+     * Constructor
+     * @param commandQueue Blocking queue for the commands
+     */
     CommandHandler(BlockingQueue<String> commandQueue) {
         this.commandQueue = commandQueue;
         this.ui = (TUI) TUI.getInstance();

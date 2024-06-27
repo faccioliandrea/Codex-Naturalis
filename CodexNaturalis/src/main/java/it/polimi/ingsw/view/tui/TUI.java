@@ -15,6 +15,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Stream;
 
+/**
+ * Class that handles the Text User Interface
+ */
 public class TUI extends UIManager {
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private final Object lock = new Object();

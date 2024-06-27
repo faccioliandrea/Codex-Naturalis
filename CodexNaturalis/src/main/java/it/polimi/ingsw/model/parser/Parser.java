@@ -17,6 +17,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * Class that parses the json files to create cards
+ */
 public class Parser {
 
     public static final Parser parser = new Parser();
@@ -49,6 +52,13 @@ public class Parser {
         return  corners;
     }
 
+    /**
+     * Initializes the resource cards
+     * @return array of resource cards
+     * @throws IllegalArgumentException if the json file is not found
+     * @throws FileNotFoundException if the json file is not found
+     * @throws JsonParseException if the json file is not valid
+     */
     public ResourceCard[] initResourceCards() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
         InputStream jsonStream = getClass().getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.RESOURCE_CARD_FILENAME);
         if (jsonStream == null) {
@@ -69,6 +79,13 @@ public class Parser {
         return resourceCards;
     }
 
+    /**
+     * Initializes the gold cards
+     * @return array of gold cards
+     * @throws IllegalArgumentException if the json file is not found
+     * @throws FileNotFoundException if the json file is not found
+     * @throws JsonParseException if the json file is not valid
+     */
     public GoldCard[] initGoldCards() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
         InputStream jsonStream = getClass().getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.GOLD_CARD_FILENAME);
         if (jsonStream == null) {
@@ -116,6 +133,12 @@ public class Parser {
         return goldCards;
     }
 
+    /** Initializes the starter cards
+     * @return array of starter cards
+     * @throws IllegalArgumentException if the json file is not valid
+     * @throws FileNotFoundException if the json file is not found
+     * @throws JsonParseException if the json file is not valid
+     */
     public StarterCard[] initStarterCards() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
         InputStream jsonStream = Parser.class.getResourceAsStream(Constants.JSON_ROOT_PATH + Constants.STARTER_CARD_FILENAME);
         if (jsonStream == null) {
@@ -217,6 +240,13 @@ public class Parser {
         return symbolGoals;
     }
 
+/**
+     * Initializes the goals
+     * @return array of goals
+     * @throws IllegalArgumentException if the json file is not found
+     * @throws FileNotFoundException if the json file is not found
+     * @throws JsonParseException if the json file is not valid
+     */
     public Goal[] initGoals() throws IllegalArgumentException, FileNotFoundException, JsonParseException {
         Goal[] goals = new Goal[16];
         int index = 0;
