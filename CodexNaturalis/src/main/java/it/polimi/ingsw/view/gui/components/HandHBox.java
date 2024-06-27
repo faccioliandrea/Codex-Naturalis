@@ -34,13 +34,12 @@ public class HandHBox extends HBox {
         }
     }
 
-    public void setupHand(BoardStackPane board, boolean interactable) {
+    public void setupHand(BoardStackPane board, boolean selectable) {
         handHBox.getChildren().clear();
         for (CardInfo card : GUI.getInstance().getData().getHand()) {
             ImageView imageView = GUIUtility.createCardImageView(GUIUtility.getCardPath(card), 0, screenWidth * GUIConstants.BigCardToScreenWidthRatio);
-            if (interactable) {
                 imageView.setOnMouseClicked(e -> {
-                    if (e.getButton().equals(MouseButton.PRIMARY)) {
+                    if (e.getButton().equals(MouseButton.PRIMARY) && selectable) {
                         if (selectedCard != null && selectedCard.getKey() != card) {
                             selectedCard.getValue().setEffect(null);
                         }
@@ -54,7 +53,6 @@ public class HandHBox extends HBox {
                         imageView.setImage(GUIUtility.createImage(GUIUtility.getCardPath(card)));
                     }
                 });
-            }
             handHBox.getChildren().add(imageView);
         }
     }

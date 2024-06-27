@@ -170,7 +170,7 @@ public class MainController implements Initializable {
      * Updates the GUI (hand, goals, board, leaderboard, resource deck, gold deck)
      */
     public void updateData() {
-        handHBox.setupHand(boardStackPane, true);
+        handHBox.setupHand(boardStackPane, false);
         setupGoals();
         setupBoard(false);
         updateLeaderboard();
