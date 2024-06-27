@@ -35,7 +35,7 @@
 ## How to use
 
 **From Github:**<br>
-1. Go to /deliverables/JAR folder
+1. Go to /CodexNaturalis/deliverables/final/jar folder
 2. Download `Server.jar` and `Client.jar`
 3. Open `CMD` and navigate to C:/[dir]/[directory where you downloaded the jar files]
 4. From here, just type in the `CMD`:  
