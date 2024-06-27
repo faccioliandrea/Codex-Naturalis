@@ -12,7 +12,6 @@
 - [Figini Edoardo](https://github.com/EdoardoFigini)
 - [Finardi Alberto](https://github.com/albertofinardi)
 
-
 ## Advanced features
 
 |  Feature   | Status  | 
@@ -28,6 +27,8 @@
 | Disconnections | ✅ | 
 | Chat | ✅ |
 
+[📄 Deliverables](/CodexNaturalis/deliverables)
+
 [📖 Requirements](/documents/requirements.pdf)
 
 [🌐 Official website](https://www.craniocreations.it/prodotto/codex-naturalis)
@@ -35,14 +36,17 @@
 ## How to use
 
 **From Github:**<br>
-1. Go to /CodexNaturalis/deliverables/final/jar folder
-2. Download `Server.jar` and `Client.jar`
-3. Open `CMD` and navigate to C:/[dir]/[directory where you downloaded the jar files]
-4. From here, just type in the `CMD`:  
+1. Go to `/CodexNaturalis/deliverables/final/jar` folder
+2. Select CPU architecture (`x86` or `aarch64`)
+3. Download `Server.jar` and `Client.jar`
+4. Open `CMD` and navigate to C:/[dir]/[directory where you downloaded the jar files]
+5. From here, just type in the `CMD`:  
    -> `java -jar Server.jar` (to run the server)<br>
    -> `java -jar Client.jar` (to run the clients)
 
 You will be prompted to choose between TUI or GUI mode and Socket or RMI communication protocol.
+<br/>
+> ***Please note that GUI not started from provided JARs will not work, as it requires resources that are not present in the repository because they are covered by copyright.***
 
 ## Testing coverage
 
