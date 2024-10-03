@@ -53,3 +53,7 @@ You will be prompted to choose between TUI or GUI mode and Socket or RMI communi
 ![Line coverage](https://img.shields.io/badge/Line%20coverage-91%25-green?style=flat) 
 ![Class coverage](https://img.shields.io/badge/Class%20coverage-89%25-blue?style=flat)
 ![Method coverage](https://img.shields.io/badge/Method%20coverage-79%25-purple?style=flat)
+
+## Disclaimer
+
+Codex Naturalis is a board game developed and published by Cranio Creations Srl. The graphic contents of this project attributable to the editorial board product are used with the prior approval of Cranio Creations Srl for educational purposes only. The distribution, copying or reproduction of the contents and images in any form outside the project is prohibited, as is the redistribution and publication of the contents and images for purposes other than those mentioned above. Commercial use of the aforementioned contents is also prohibited.
